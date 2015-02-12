@@ -62,7 +62,7 @@ php artisan vendor:publish --provider="Prettus\Repository\RepositoryServiceProvi
 ```php
 use Prettus\Repository\Eloquent\Repository;
 
-class PostRepository extends RepositoryBase {
+class PostRepository extends Repository {
 
     public function __construct(Post $model)
     {
@@ -203,7 +203,7 @@ To use the Criteria in your repository , you can add a new criteria in the boot 
 use Prettus\Repository\Eloquent\Repository;
 use Prettus\Repository\Criteria\RequestCriteria;
 
-class PostRepository extends RepositoryBase {
+class PostRepository extends Repository {
 
 	/**
      * @var array
