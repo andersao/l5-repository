@@ -117,6 +117,8 @@ class PostsController extends BaseController {
 
 ### Create a Criteria
 
+Criteria is a way to change the repository of the query by applying specific conditions according to their need . You can add multiple Criteria in your repository
+
 ```php
 class MyCriteria implements \Prettus\Repository\Contracts\Criteria {
 
@@ -165,7 +167,7 @@ Setting Criteria default in Repository
 ```php
 use Prettus\Repository\Eloquent\Repository;
 
-class PostRepository extends RepositoryBase {
+class PostRepository extends Repository {
 
     public function __construct(Post $model)
     {
@@ -234,7 +236,7 @@ You can set the type of condition will be used to perform the query , the defaul
 ```php
 protected $fieldSearchable = [
 	'name'=>'like',
-	'email', // Default Condition "**=**"
+	'email', // Default Condition "="
 	'your_field'=>'condition'
 ];
 ```
@@ -258,29 +260,29 @@ Request all data without filter by request
 
 ```json
 [
-{
-id: 1,
-name: "Anderson Andrade",
-email: "email@gmail.com",
-created_at: "-0001-11-30 00:00:00",
-updated_at: "-0001-11-30 00:00:00"
-},
-{
-id: 2,
-name: "Lorem Ipsum",
-email: "lorem@ipsum.com",
-created_at: "-0001-11-30 00:00:00",
-updated_at: "-0001-11-30 00:00:00"
-},
-{
-id: 3,
-name: "Laravel",
-email: "laravel@gmail.com",
-created_at: "-0001-11-30 00:00:00",
-updated_at: "-0001-11-30 00:00:00"
-}
+    {
+        "id": 1,
+        "name": "Anderson Andrade",
+        "email": "email@gmail.com",
+        "created_at": "-0001-11-30 00:00:00",
+        "updated_at": "-0001-11-30 00:00:00"
+    },
+    {
+        "id": 2,
+        "name": "Lorem Ipsum",
+        "email": "lorem@ipsum.com",
+        "created_at": "-0001-11-30 00:00:00",
+        "updated_at": "-0001-11-30 00:00:00"
+    },
+    {
+        "id": 3,
+        "name": "Laravel",
+        "email": "laravel@gmail.com",
+        "created_at": "-0001-11-30 00:00:00",
+        "updated_at": "-0001-11-30 00:00:00"
+    }
 ]
-``
+```
 
 Conducting research in the repository
 
@@ -296,13 +298,13 @@ or
 
 ```json
 [
-{
-id: 1,
-name: "Anderson Andrade",
-email: "email@gmail.com",
-created_at: "-0001-11-30 00:00:00",
-updated_at: "-0001-11-30 00:00:00"
-}
+    {
+        "id": 1,
+        "name": "Anderson Andrade",
+        "email": "email@gmail.com",
+        "created_at": "-0001-11-30 00:00:00",
+        "updated_at": "-0001-11-30 00:00:00"
+    }
 ]
 ```
 
@@ -312,18 +314,18 @@ Filtering fields
 
 ```json
 [
-{
-id: 1,
-name: "Anderson Andrade"
-},
-{
-id: 2,
-name: "Lorem Ipsum"
-},
-{
-id: 3,
-name: "Laravel"
-}
+    {
+        "id": 1,
+        "name: "Anderson Andrade"
+    },
+    {
+        "id": 2,
+        "name": "Lorem Ipsum"
+    },
+    {
+        "id": 3,
+        "name": "Laravel"
+    }
 ]
 ```
 
@@ -333,18 +335,18 @@ Sorting the results
 
 ```json
 [
-{
-id: 3,
-name: "Laravel"
-},
-{
-id: 2,
-name: "Lorem Ipsum"
-},
-{
-id: 1,
-name: "Anderson Andrade"
-}
+    {
+        "id": 3,
+        "name": "Laravel"
+    },
+    {
+        "id": 2,
+        "name: "Lorem Ipsum"
+    },
+    {
+        "id: 1,
+        "name": "Anderson Andrade"
+    }
 ]
 ```
 
