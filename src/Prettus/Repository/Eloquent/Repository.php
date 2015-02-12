@@ -42,6 +42,7 @@ class Repository implements RepositoryInterface {
     public function __construct(Model $model){
         $this->model = $model;
         $this->criteria = new Collection();
+        $this->boot();
         $this->scopeReset();
     }
 
@@ -56,6 +57,11 @@ class Repository implements RepositoryInterface {
         $this->skipCriteria(false);
         return $this;
     }
+
+    /**
+     *
+     */
+    public function boot(){}
 
     /**
      * Find data by id
