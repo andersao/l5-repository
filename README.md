@@ -341,7 +341,7 @@ Sorting the results
     },
     {
         "id": 2,
-        "name: "Lorem Ipsum"
+        "name": "Lorem Ipsum"
     },
     {
         "id: 1,
