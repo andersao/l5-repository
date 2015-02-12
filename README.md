@@ -316,7 +316,7 @@ Filtering fields
 [
     {
         "id": 1,
-        "name: "Anderson Andrade"
+        "name": "Anderson Andrade"
     },
     {
         "id": 2,
@@ -344,7 +344,7 @@ Sorting the results
         "name": "Lorem Ipsum"
     },
     {
-        "id: 1,
+        "id": 1,
         "name": "Anderson Andrade"
     }
 ]
