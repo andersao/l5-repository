@@ -55,7 +55,7 @@ php artisan vendor:publish --provider="Prettus\Repository\RepositoryServiceProvi
 
 - apply($query)
 
-## Utilisation
+## Usage
 
 ### Create a Repository
 
@@ -72,10 +72,9 @@ class PostRepository extends Repository {
 }
 ```
 
-### Using the Repository in a Controller
+### Use methods
 
 ```php
-
 class PostsController extends BaseController {
 
     /**
@@ -86,40 +85,42 @@ class PostsController extends BaseController {
     public function __construct(PostRepository $repository){
         $this->repository = $repository;
     }
-
-
-    public function index()
-    {
-        $posts = $this->repository->all();
-		...
-    }
-
-
-    public function show($id)
-    {
-        $post = $this->repository->find($id);
-		...
-    }
-
-    public function store()
-    {
-
-        $post = $this->repository->create( Input::all() );
-        ...
-    }
-
-    public function update($id)
-    {
-    	$post = $this->repository->update( Input::all(), $id );
-    	...
-    }
-
-    public function destroy($id){
-        $this->repository->delete($id)
-        ...
-    }
+    
+    ....
 }
 ```
+
+Find all results in Repository
+
+
+```php
+$posts = $this->repository->all();
+```
+
+Find by result by id
+
+```php
+$post = $this->repository->find($id);
+```
+
+Create new entry in Repository
+
+```php
+$post = $this->repository->create( Input::all() );
+```
+
+Update entry in Repository
+
+```php
+$post = $this->repository->update( Input::all(), $id );
+```
+
+Delete entry in Repository
+
+```php
+$this->repository->delete($id)
+```
+
 
 ### Create a Criteria
 
