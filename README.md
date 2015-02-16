@@ -364,3 +364,7 @@ You can change the name of the parameters in the configuration file **config/rep
 # Author
 
 Anderson Andrade - <contato@andersonandra.de>
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/andersao/l5-repository/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
