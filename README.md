@@ -57,6 +57,23 @@ php artisan vendor:publish --provider="Prettus\Repository\RepositoryServiceProvi
 
 ## Usage
 
+### Create a Model
+
+Create your model normally , but it is important to define the attributes that can be filled from the input form data.
+
+```php
+class Post extends Eloquent { // or Ardent, Or any other Model Class
+
+    protected $fillable = [
+        'title',
+        'author',
+        ...
+     ];
+
+     ...
+}
+```
+
 ### Create a Repository
 
 ```php
