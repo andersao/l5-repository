@@ -17,7 +17,8 @@ class RepositoryServiceProvider extends ServiceProvider {
     {
         $this->loadTranslationsFrom(__DIR__.'/../../lang', 'prettus-repository');
         $this->publishes([
-            __DIR__.'/../../config/repository-criteria.php' => config_path('repository-criteria.php')
+            __DIR__.'/../../config/repository-criteria.php' => config_path('repository-criteria.php'),
+            __DIR__.'/../../config/repository.php' => config_path('repository.php')
         ]);
     }
 }

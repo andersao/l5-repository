@@ -109,9 +109,14 @@ class PostsController extends BaseController {
 
 Find all results in Repository
 
-
 ```php
 $posts = $this->repository->all();
+```
+
+Find all results in Repository with pagination
+
+```php
+$posts = $this->repository->paginate($limit = null, $columns = ['*']);
 ```
 
 Find by result by id
@@ -205,6 +210,16 @@ class PostRepository extends Repository {
     }
     
 }
+```
+
+### Skip criteria defined in the repository
+
+Use *skipCriteria* before any method in the repository
+
+```php
+
+$posts = $this->repository->skipCriteria()->all();
+
 ```
 
 ### Using the RequestCriteria
