@@ -116,6 +116,7 @@ class Repository implements RepositoryInterface {
     public function paginate($limit = null, $columns = array('*'))
     {
         $this->applyCriteria();
+        $limit = is_null($limit) ? config('repository.pagination.limit', 15) : $limit;
         return $this->query->paginate($limit, $columns);
     }
 
