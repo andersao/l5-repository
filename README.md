@@ -220,7 +220,7 @@ class PostRepository extends Repository {
     }
     
     public function boot(){
-        $this->pushCriteria(new RequestCriteria(app('request')));
+        $this->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         ...
     }
     
@@ -253,7 +253,7 @@ protected $fieldSearchable = [
 ```php
 	public function index()
     {
-        $this->repository->pushCriteria(new RequestCriteria(app('request')));
+        $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         $posts = $this->repository->all();
 		...
     }
