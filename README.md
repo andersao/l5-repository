@@ -154,9 +154,12 @@ $this->repository->delete($id)
 Criteria is a way to change the repository of the query by applying specific conditions according to their need . You can add multiple Criteria in your repository
 
 ```php
+
+use Prettus\Repository\Contracts\Repository;
+
 class MyCriteria implements \Prettus\Repository\Contracts\Criteria {
 
-    public function apply($query)
+    public function apply($query, Repository $repository)
     {
         $query = $query->where('user_id','=', Auth::user()->id );
         return $query;
