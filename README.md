@@ -10,10 +10,15 @@ Laravel 5 Repositories is used to abstract the data layer, making our applicatio
 
 ## Installation
 
-Add this line "prettus/l5-repository": "1.0.*" in your composer.json.
+In your terminal run **composer require prettus/l5-repository.** This will grab the last release.
+
+Or
+
+Edit your composer.json like this:
 
 ```json
 "require": {
+    ....
     "prettus/l5-repository": "1.0.*"
 }
 ```
