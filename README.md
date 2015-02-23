@@ -39,7 +39,7 @@ php artisan vendor:publish --provider="Prettus\Repository\RepositoryServiceProvi
 
 ## Methods
 
-### Repository
+### Prettus\Repository\Contracts\Repository
 
 - scopeReset()
 - find($id, $columns = ['*'])
@@ -56,9 +56,9 @@ php artisan vendor:publish --provider="Prettus\Repository\RepositoryServiceProvi
 - getByCriteria(Criteria $criteria)
 - skipCriteria()
 
-### Criteria
+### Prettus\Repository\Contracts\Criteria
 
-- apply($query)
+- apply($query, Repository $repository)
 
 ## Usage
 
