@@ -142,7 +142,8 @@ class Repository implements RepositoryInterface {
     {
         $model = $this->find($id);
         $model->fill($attributes);
-        return $model->save();
+        $model->save();
+        return $model
     }
 
     /**
