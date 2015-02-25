@@ -97,9 +97,55 @@ interface Repository {
      * Push Criteria for filter the query
      *
      * @param Criteria $criteria
-     * @return mixed
+     * @return $this
      */
     public function pushCriteria(Criteria $criteria);
+
+    /**
+     * Push mutator to be applied before saving and update
+     *
+     * @param Mutator $mutator
+     * @return $this
+     */
+    public function pushMutatorBeforeAll(Mutator $mutator);
+
+    /**
+     * Push mutator to be applied before saving
+     *
+     * @param Mutator $mutator
+     * @return $this
+     */
+    public function pushMutatorBeforeSave(Mutator $mutator);
+
+    /**
+     * Push mutator to be applied before update
+     *
+     * @param Mutator $mutator
+     * @return $this
+     */
+    public function pushMutatorBeforeUpdate(Mutator $mutator);
+
+    /**
+     * Get Collection of Mutator Before Save
+     *
+     * @return Collection
+     */
+    public function getMutatorBeforeSave();
+
+    /**
+     * Get Collection of Mutator Before Update
+     *
+     * @return Collection
+     */
+    public function getMutatorBeforeUpdate();
+
+    /**
+     * Skip Mutators
+     *
+     * @param bool $status
+     * @return $this
+     */
+    public function skipMutators($status = true);
 
     /**
      * Get Collection of Criteria
@@ -119,9 +165,10 @@ interface Repository {
     /**
      * Skip Criteria
      *
+     * @param bool $status
      * @return $this
      */
-    public function skipCriteria();
+    public function skipCriteria($status = true);
 
     /**
      * Get Searchable Fields

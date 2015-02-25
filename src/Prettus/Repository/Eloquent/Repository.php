@@ -1,6 +1,8 @@
 <?php namespace Prettus\Repository\Eloquent;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use Prettus\Repository\Contracts\Mutator;
 use Prettus\Repository\Contracts\Repository as RepositoryInterface;
 use Prettus\Repository\Contracts\Criteria;
 use Illuminate\Database\Eloquent\Model;
@@ -20,12 +22,26 @@ class Repository implements RepositoryInterface {
     protected $criteria;
 
     /**
+     * Collection of Mutator applied before save
+     *
+     * @var Collection
+     */
+    protected $mutatorsBeforeSave;
+
+    /**
+     * Collection of Mutator applied before update
+     *
+     * @var Collection
+     */
+    protected $mutatorsBeforeUpdate;
+
+    /**
      * @var Model
      */
     protected $model;
 
     /**
-     * @var $query
+     * @var Model|Builder
      */
     protected $query;
 
@@ -39,9 +55,16 @@ class Repository implements RepositoryInterface {
      */
     protected $skipCriteria = false;
 
+    /**
+     * @var bool
+     */
+    protected $skipMutator  = false;
+
     public function __construct(Model $model){
         $this->model = $model;
         $this->criteria = new Collection();
+        $this->mutatorsBeforeSave = new Collection();
+        $this->mutatorsBeforeUpdate = new Collection();
         $this->boot();
         $this->scopeReset();
     }
@@ -128,7 +151,10 @@ class Repository implements RepositoryInterface {
      */
     public function create(array $attributes)
     {
-        return $this->query->create($attributes);
+        $model = $this->query->newInstance($attributes);
+        $model = $this->applyMutator("save", $model);
+        $model->save();
+        return $model;
     }
 
     /**
@@ -142,6 +168,7 @@ class Repository implements RepositoryInterface {
     {
         $model = $this->find($id);
         $model->fill($attributes);
+        $model = $this->applyMutator("update", $model);
         $model->save();
         
         return $model;
@@ -185,7 +212,7 @@ class Repository implements RepositoryInterface {
      * Push Criteria for filter the query
      *
      * @param Criteria $criteria
-     * @return mixed
+     * @return $this
      */
     public function pushCriteria(Criteria $criteria)
     {
@@ -217,6 +244,7 @@ class Repository implements RepositoryInterface {
     /**
      * Skip Criteria
      *
+     * @param bool $status
      * @return $this
      */
     public function skipCriteria($status = true){
@@ -252,5 +280,103 @@ class Repository implements RepositoryInterface {
      */
     public function getFieldsSearchable(){
         return $this->fieldSearchable;
+    }
+
+    /**
+     * Push mutator to be applied before saving and update
+     *
+     * @param Mutator $mutator
+     * @return $this
+     */
+    public function pushMutatorBeforeAll(Mutator $mutator)
+    {
+        $this->pushMutatorBeforeSave($mutator);
+        $this->pushMutatorBeforeUpdate($mutator);
+
+        return $this;
+    }
+
+    /**
+     * Push mutator to be applied before saving
+     *
+     * @param Mutator $mutator
+     * @return $this
+     */
+    public function pushMutatorBeforeSave(Mutator $mutator)
+    {
+        $this->mutatorsBeforeSave->push($mutator);
+        return $this;
+    }
+
+    /**
+     * Push mutator to be applied before update
+     *
+     * @param Mutator $mutator
+     * @return $this
+     */
+    public function pushMutatorBeforeUpdate(Mutator $mutator)
+    {
+        $this->mutatorsBeforeUpdate->push($mutator);
+        return $this;
+    }
+
+    /**
+     * Apply mutator for the action
+     *
+     * @param $action
+     * @param Model $model
+     * @return Model
+     */
+    protected function applyMutator($action, Model $model){
+
+        if( $this->skipMutator === true )
+            return  $model;
+
+        switch($action){
+            case "save"     : $mutators = $this->getMutatorBeforeSave(); break;
+            case "update"   : $mutators = $this->getMutatorBeforeUpdate(); break;
+            default         : $mutators = false; break;
+        }
+
+        if( $mutators ){
+            foreach($mutators as $mutator){
+                if( $mutator instanceof Mutator ){
+                    $model = $mutator->transform($model);
+                }
+            }
+        }
+
+        return $model;
+    }
+
+    /**
+     * Skip Mutators
+     *
+     * @param bool $status
+     * @return $this
+     */
+    public function skipMutators($status = true){
+        $this->skipMutator = $status;
+        return $this;
+    }
+
+    /**
+     * Get Collection of Mutator Before Save
+     *
+     * @return Collection
+     */
+    public function getMutatorBeforeSave()
+    {
+        return $this->mutatorsBeforeSave;
+    }
+
+    /**
+     * Get Collection of Mutator Before Update
+     *
+     * @return Collection
+     */
+    public function getMutatorBeforeUpdate()
+    {
+        return $this->mutatorsBeforeUpdate;
     }
 }
