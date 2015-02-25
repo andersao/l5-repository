@@ -111,10 +111,10 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase {
             ->andReturnSelf()
             ->getMock()
             ->shouldReceive('save')
-            ->andReturn('foo');
+            ->andReturnSelf();
 
         $this->repository = $this->createRepository($this->mock);
-        $this->assertEquals('foo', $this->repository->update($attributes, 1));
+        $this->assertEquals($this->mock, $this->repository->update($attributes, 1));
 
     }
 
