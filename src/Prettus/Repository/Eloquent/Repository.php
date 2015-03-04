@@ -1,12 +1,18 @@
 <?php namespace Prettus\Repository\Eloquent;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Contracts\Pagination\Paginator as PaginatorInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginatorInterface;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Prettus\Repository\Contracts\Mutator;
 use Prettus\Repository\Contracts\Repository as RepositoryInterface;
 use Prettus\Repository\Contracts\Criteria;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Robbo\Presenter\Presenter;
+use Exception;
 
 /**
  * Class Repository
@@ -39,6 +45,11 @@ class Repository implements RepositoryInterface {
      * @var Model
      */
     protected $model;
+
+    /**
+     * @var Presenter
+     */
+    protected $presenter = null;
 
     /**
      * @var Model|Builder
@@ -96,7 +107,8 @@ class Repository implements RepositoryInterface {
     public function find($id, $columns = array('*'))
     {
         $this->applyCriteria();
-        return $this->query->find($id, $columns);
+        $result = $this->query->find($id, $columns);
+        return $this->parserResult( $result );
     }
 
     /**
@@ -110,7 +122,8 @@ class Repository implements RepositoryInterface {
     public function findByField($field, $value, $columns = array('*'))
     {
         $this->applyCriteria();
-        return $this->query->where($field,'=',$value)->first();
+        $result = $this->query->where($field,'=',$value)->first();
+        return $this->parserResult( $result );
     }
 
     /**
@@ -127,20 +140,24 @@ class Repository implements RepositoryInterface {
             return $this->query->get($columns);
         }
 
-        return $this->query->all($columns);
+        $results = $this->query->all($columns);
+
+        return $this->parserResult( $results );
     }
 
     /**
      * Retrieve all data of repository, paginated
      * @param null $limit
      * @param array $columns
-     * @return LengthAwarePaginator
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function paginate($limit = null, $columns = array('*'))
     {
         $this->applyCriteria();
         $limit = is_null($limit) ? config('repository.pagination.limit', 15) : $limit;
-        return $this->query->paginate($limit, $columns);
+        $results = $this->query->paginate($limit, $columns);
+        return $this->parserResult( $results );
+
     }
 
     /**
@@ -154,7 +171,8 @@ class Repository implements RepositoryInterface {
         $model = $this->query->newInstance($attributes);
         $model = $this->applyMutator("save", $model);
         $model->save();
-        return $model;
+
+        return $this->parserResult( $model );
     }
 
     /**
@@ -170,8 +188,8 @@ class Repository implements RepositoryInterface {
         $model->fill($attributes);
         $model = $this->applyMutator("update", $model);
         $model->save();
-        
-        return $model;
+
+        return $this->parserResult( $model );
     }
 
     /**
@@ -238,7 +256,8 @@ class Repository implements RepositoryInterface {
     public function getByCriteria(Criteria $criteria)
     {
         $this->query = $criteria->apply($this->query, $this);
-        return $this->query->get();
+        $results = $this->query->get();
+        return $this->parserResult( $results );
     }
 
     /**
@@ -378,5 +397,70 @@ class Repository implements RepositoryInterface {
     public function getMutatorBeforeUpdate()
     {
         return $this->mutatorsBeforeUpdate;
+    }
+
+    /**
+     * @param $result
+     * @return mixed
+     */
+    protected function parserResult($result){
+
+        if( $result instanceof Model )
+        {
+            return $this->wrapperModelPresenter($result);
+        }
+        elseif( $result instanceof Collection )
+        {
+            $that = $this;
+            $result->transform(function($item) use($that){
+                return $that->wrapperModelPresenter($item);
+            });
+
+        }
+        elseif( $result instanceof AbstractPaginator )
+        {
+            $collection = $result->getCollection();
+            $that = $this;
+            $collection->transform(function($item) use($that){
+                return $that->wrapperModelPresenter($item);
+            });
+
+            $page = Paginator::resolveCurrentPage();
+            $perPage = $result->perPage();
+
+            if( $result instanceof LengthAwarePaginatorInterface )
+            {
+                return new LengthAwarePaginator($collection, $result->total(), $result->perPage(), $page, [
+                    'path' => Paginator::resolveCurrentPath()
+                ]);
+            }
+            elseif( $result instanceof PaginatorInterface )
+            {
+                return new Paginator($collection, $perPage, $page, [
+                    'path' => Paginator::resolveCurrentPath()
+                ]);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     *
+     * @param Model $model
+     * @return Model|Presenter
+     * @throws Exception
+     */
+    protected function wrapperModelPresenter(Model $model){
+
+        if( is_null($this->presenter) ){
+            return $model;
+        }
+
+        if( !empty($this->presenter) && class_exists($this->presenter) ){
+            return new $this->presenter($model);
+        }
+
+        throw new Exception("Class {$this->presenter} not found or not a Presenter valid");
     }
 }
