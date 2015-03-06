@@ -18,7 +18,7 @@ Edit your composer.json like this:
 
 ```json
 "require": {
-    ....
+    ...
     "prettus/l5-repository": "1.0.*"
 }
 ```
@@ -416,7 +416,7 @@ Sorting the results
 
 ### Create a Mutator
 
-Mutatator has integrarir capacity with the Model and transform its attributes before saving
+Mutator gives the capacity to transform the Model attributes before saving
 
 ```php
 
