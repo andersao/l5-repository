@@ -117,12 +117,12 @@ class Repository implements RepositoryInterface {
      * @param $field
      * @param $value
      * @param array $columns
-     * @return Model|Collection
+     * @return Collection
      */
     public function findByField($field, $value, $columns = array('*'))
     {
         $this->applyCriteria();
-        $result = $this->query->where($field,'=',$value)->first();
+        $result = $this->query->where($field,'=',$value)->get();
         return $this->parserResult( $result );
     }
 
