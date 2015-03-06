@@ -54,11 +54,22 @@ php artisan vendor:publish --provider="Prettus\Repository\RepositoryServiceProvi
 - pushCriteria(Criteria $criteria)
 - getCriteria()
 - getByCriteria(Criteria $criteria)
-- skipCriteria()
+- skipCriteria($status = true)
+- getFieldsSearchable()
+- pushMutatorBeforeAll(Mutator $mutator)
+- pushMutatorBeforeSave(Mutator $mutator)
+- pushMutatorBeforeUpdate(Mutator $mutator)
+- getMutatorBeforeSave()
+- getMutatorBeforeUpdate()
+- skipMutators($status = true)
 
 ### Prettus\Repository\Contracts\Criteria
 
 - apply($query, Repository $repository)
+
+### Prettus\Repository\Contracts\Mutator
+
+- transform(Model $model);
 
 ## Usage
 
@@ -128,6 +139,12 @@ Find by result by id
 
 ```php
 $post = $this->repository->find($id);
+```
+
+Find by result by field name
+
+```php
+$posts = $this->repository->findByField('country_id','15');
 ```
 
 Create new entry in Repository
@@ -397,6 +414,88 @@ Sorting the results
 ]
 ```
 
+### Create a Mutator
+
+Mutatator has integrarir capacity with the Model and transform its attributes before saving
+
+```php
+
+use Prettus\Repository\Contracts\Mutator;
+
+class UserAttributeMutator implements Mutator {
+
+    public function transform(Model $model){
+        $model->setAttribute('user_id',Auth::user()->id);
+        return $model;
+    }
+}
+```
+
+####Enabling in your Repository
+
+Transform the data before saving
+
+```php
+public function boot(){
+    $this->pushMutatorBeforeSave(new UserAttributeMutator());
+    ...
+}
+```
+
+Transform the data before update
+
+```php
+public function boot(){
+    $this->pushMutatorBeforeUpdate(new UserAttributeMutator());
+    ...
+}
+```
+
+
+Transform the data before saving and update
+
+```php
+public function boot(){
+    $this->pushMutatorBeforeAll(new UserAttributeMutator());
+    ...
+}
+```
+
+### Using Presenter
+
+Presenter to wrap and render objects. See more [robclancy/presenter](https://github.com/robclancy/presenter)
+
+####Create Presenter
+
+```php
+use Robbo\Presenter\Presenter;
+
+class PostPresenter extends Presenter {
+
+	 public function url()
+     {
+         return Str::slug($this->title.'-'.$this->id);
+     }
+    
+}
+```
+
+####Enable Presenter
+
+```php
+use Prettus\Repository\Eloquent\Repository;
+use Robbo\Presenter\Presenter;
+
+class PostRepository extends Repository {
+
+	 /**
+     * @var Robbo\Presenter\Presenter
+     */
+    protected $presenter = 'PostPresenter';
+    
+}
+```
+
 ####Overwrite params name
 
 You can change the name of the parameters in the configuration file **config/repository-criteria.php**
@@ -404,7 +503,3 @@ You can change the name of the parameters in the configuration file **config/rep
 # Author
 
 Anderson Andrade - <contato@andersonandra.de>
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/andersao/l5-repository/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
