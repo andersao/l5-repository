@@ -107,7 +107,7 @@ class Repository implements RepositoryInterface {
     public function find($id, $columns = array('*'))
     {
         $this->applyCriteria();
-        $result = $this->query->find($id, $columns);
+        $result = $this->query->findOrFail($id, $columns);
         return $this->parserResult( $result );
     }
 
