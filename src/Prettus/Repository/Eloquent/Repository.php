@@ -137,10 +137,10 @@ class Repository implements RepositoryInterface {
         $this->applyCriteria();
 
         if( $this->query instanceof \Illuminate\Database\Eloquent\Builder ){
-            return $this->query->get($columns);
+            $results = $this->query->get($columns);
+        } else {
+            $results = $this->query->all($columns);
         }
-
-        $results = $this->query->all($columns);
 
         return $this->parserResult( $results );
     }
