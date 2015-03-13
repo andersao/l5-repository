@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Interface Mutator
- * @package Prettus\Repository\Contracts]
+ * @package Prettus\Repository\Contracts
  */
 interface Mutator {
 
