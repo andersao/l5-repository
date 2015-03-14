@@ -110,12 +110,21 @@ interface Repository {
     public function pushMutatorBeforeAll(Mutator $mutator);
 
     /**
+     * Push mutator to be applied before saving ( Create )
+     *
+     * @deprecated Use pushMutatorBeforeCreate(Mutator $mutator)
+     * @param Mutator $mutator
+     * @return $this
+     */
+    public function pushMutatorBeforeSave(Mutator $mutator);
+
+    /**
      * Push mutator to be applied before saving
      *
      * @param Mutator $mutator
      * @return $this
      */
-    public function pushMutatorBeforeSave(Mutator $mutator);
+    public function pushMutatorBeforeCreate(Mutator $mutator);
 
     /**
      * Push mutator to be applied before update
@@ -128,9 +137,17 @@ interface Repository {
     /**
      * Get Collection of Mutator Before Save
      *
+     * @deprecated See getMutatorBeforeCreate
      * @return Collection
      */
     public function getMutatorBeforeSave();
+
+    /**
+     * Get Collection of Mutator Before Save
+     *
+     * @return Collection
+     */
+    public function getMutatorBeforeCreate();
 
     /**
      * Get Collection of Mutator Before Update

@@ -57,9 +57,9 @@ php artisan vendor:publish --provider="Prettus\Repository\RepositoryServiceProvi
 - skipCriteria($status = true)
 - getFieldsSearchable()
 - pushMutatorBeforeAll(Mutator $mutator)
-- pushMutatorBeforeSave(Mutator $mutator)
+- pushMutatorBeforeCreate(Mutator $mutator)  // pushMutatorBeforeSave is deprecated
 - pushMutatorBeforeUpdate(Mutator $mutator)
-- getMutatorBeforeSave()
+- getMutatorBeforeCreate() // getMutatorBeforeSave is deprecated
 - getMutatorBeforeUpdate()
 - skipMutators($status = true)
 
@@ -416,6 +416,10 @@ Sorting the results
 ]
 ```
 
+####Overwrite params name
+
+You can change the name of the parameters in the configuration file **config/repository-criteria.php**
+
 ### Create a Mutator
 
 Mutator gives the capacity to transform the Model attributes before saving
@@ -437,9 +441,11 @@ class UserAttributeMutator implements Mutator {
 
 Transform the data before saving
 
+- pushMutatorBefore**Save**(Mutator $mutator) renamed to pushMutatorBefore**Create**(Mutator $mutator);
+
 ```php
 public function boot(){
-    $this->pushMutatorBeforeSave(new UserAttributeMutator());
+    $this->pushMutatorBeforeCreate(new UserAttributeMutator());
     ...
 }
 ```
@@ -497,10 +503,6 @@ class PostRepository extends Repository {
     
 }
 ```
-
-####Overwrite params name
-
-You can change the name of the parameters in the configuration file **config/repository-criteria.php**
 
 # Author
 

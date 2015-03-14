@@ -28,11 +28,11 @@ class Repository implements RepositoryInterface {
     protected $criteria;
 
     /**
-     * Collection of Mutator applied before save
+     * Collection of Mutator applied before create
      *
      * @var Collection
      */
-    protected $mutatorsBeforeSave;
+    protected $mutatorsBeforeCreate;
 
     /**
      * Collection of Mutator applied before update
@@ -74,7 +74,7 @@ class Repository implements RepositoryInterface {
     public function __construct(Model $model){
         $this->model = $model;
         $this->criteria = new Collection();
-        $this->mutatorsBeforeSave = new Collection();
+        $this->mutatorsBeforeCreate = new Collection();
         $this->mutatorsBeforeUpdate = new Collection();
         $this->boot();
         $this->scopeReset();
@@ -169,7 +169,7 @@ class Repository implements RepositoryInterface {
     public function create(array $attributes)
     {
         $model = $this->query->newInstance($attributes);
-        $model = $this->applyMutator("save", $model);
+        $model = $this->applyMutator("create", $model);
         $model->save();
 
         return $this->parserResult( $model );
@@ -309,10 +309,22 @@ class Repository implements RepositoryInterface {
      */
     public function pushMutatorBeforeAll(Mutator $mutator)
     {
-        $this->pushMutatorBeforeSave($mutator);
+        $this->pushMutatorBeforeCreate($mutator);
         $this->pushMutatorBeforeUpdate($mutator);
 
         return $this;
+    }
+
+    /**
+     * Push mutator to be applied before saving ( Create )
+     *
+     * @deprecated Use pushMutatorBeforeCreate(Mutator $mutator)
+     * @param Mutator $mutator
+     * @return $this
+     */
+    public function pushMutatorBeforeSave(Mutator $mutator)
+    {
+        return $this->pushMutatorBeforeCreate($mutator);
     }
 
     /**
@@ -321,9 +333,9 @@ class Repository implements RepositoryInterface {
      * @param Mutator $mutator
      * @return $this
      */
-    public function pushMutatorBeforeSave(Mutator $mutator)
+    public function pushMutatorBeforeCreate(Mutator $mutator)
     {
-        $this->mutatorsBeforeSave->push($mutator);
+        $this->mutatorsBeforeCreate->push($mutator);
         return $this;
     }
 
@@ -352,7 +364,7 @@ class Repository implements RepositoryInterface {
             return  $model;
 
         switch($action){
-            case "save"     : $mutators = $this->getMutatorBeforeSave(); break;
+            case "create"   : $mutators = $this->getMutatorBeforeCreate(); break;
             case "update"   : $mutators = $this->getMutatorBeforeUpdate(); break;
             default         : $mutators = false; break;
         }
@@ -382,11 +394,22 @@ class Repository implements RepositoryInterface {
     /**
      * Get Collection of Mutator Before Save
      *
+     * @deprecated See getMutatorBeforeCreate
      * @return Collection
      */
     public function getMutatorBeforeSave()
     {
-        return $this->mutatorsBeforeSave;
+        return $this->getMutatorBeforeCreate();
+    }
+
+    /**
+     * Get Collection of Mutator Before Create
+     *
+     * @return Collection
+     */
+    public function getMutatorBeforeCreate()
+    {
+        return $this->mutatorsBeforeCreate;
     }
 
     /**
