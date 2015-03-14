@@ -73,6 +73,8 @@ php artisan vendor:publish --provider="Prettus\Repository\RepositoryServiceProvi
 
 ## Usage
 
+[Example](https://gist.github.com/andersao/7b92fa026fd4ffe74fbb)
+
 ### Create a Model
 
 Create your model normally, but it is important to define the attributes that can be filled from the input form data.
