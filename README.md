@@ -75,7 +75,7 @@ php artisan vendor:publish --provider="Prettus\Repository\RepositoryServiceProvi
 
 ### Create a Model
 
-Create your model normally , but it is important to define the attributes that can be filled from the input form data.
+Create your model normally, but it is important to define the attributes that can be filled from the input form data.
 
 ```php
 class Post extends Eloquent { // or Ardent, Or any other Model Class
@@ -168,7 +168,7 @@ $this->repository->delete($id)
 
 ### Create a Criteria
 
-Criteria is a way to change the repository of the query by applying specific conditions according to their need . You can add multiple Criteria in your repository
+Criteria is a way to change the repository of the query by applying specific conditions according to their need. You can add multiple Criteria in your repository
 
 ```php
 
@@ -210,13 +210,13 @@ class PostsController extends BaseController {
 }
 ```
 
-Getting results from criteria
+Getting results from Criteria
 
 ```php
 $posts = $this->repository->getByCriteria(new MyCriteria());
 ```
 
-Setting Criteria default in Repository
+Setting the default Criteria in Repository
 
 ```php
 use Prettus\Repository\Eloquent\Repository;
@@ -249,11 +249,11 @@ $posts = $this->repository->skipCriteria()->all();
 
 ### Using the RequestCriteria
 
-RequestCriteria is a standard Criteria implementation. It enables filters perform in the repository from parameters sent in the request.
+RequestCriteria is a standard Criteria implementation. It enables filters to perform in the repository from parameters sent in the request.
 
-You can perform a dynamic search , filtering the data and customize queries
+You can perform a dynamic search, filter the data and customize the queries
 
-To use the Criteria in your repository , you can add a new criteria in the boot method of your repository , or directly use in your controller , in order to filter out only a few requests
+To use the Criteria in your repository, you can add a new criteria in the boot method of your repository, or directly use in your controller, in order to filter out only a few requests
 
 ####Enabling in your Repository
 
@@ -284,9 +284,9 @@ class PostRepository extends Repository {
 }
 ```
 
-Remember, you need to define which fields from the model can are searchable.
+Remember, you need to define which fields from the model can be searchable.
 
-In your repository set **$fieldSearchable** with their fields searchable.
+In your repository set **$fieldSearchable** with the name of the fields to be searchable.
 
 ```php
 protected $fieldSearchable = [
@@ -295,7 +295,7 @@ protected $fieldSearchable = [
 ];
 ```
 
-You can set the type of condition will be used to perform the query , the default condition is "**=**"
+You can set the type of condition which will be used to perform the query, the default condition is "**=**"
 
 ```php
 protected $fieldSearchable = [
@@ -316,7 +316,7 @@ protected $fieldSearchable = [
     }
 ```
 
-#### Example the Crirteria
+#### Example the Criteria
 
 Request all data without filter by request
 
