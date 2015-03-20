@@ -2,6 +2,12 @@
 
 Laravel 5 Repositories is used to abstract the data layer, making our application more flexible to maintain.
 
+[![Build Status](https://travis-ci.org/andersao/l5-repository.svg)](https://travis-ci.org/andersao/l5-repository.svg)
+[![Total Downloads](https://poser.pugx.org/prettus/l5-repository/downloads.svg)](https://packagist.org/packages/prettus/l5-repository)
+[![Latest Stable Version](https://poser.pugx.org/prettus/l5-repository/v/stable.svg)](https://packagist.org/packages/prettus/l5-repository)
+[![Latest Unstable Version](https://poser.pugx.org/prettus/l5-repository/v/unstable.svg)](https://packagist.org/packages/prettus/l5-repository)
+[![License](https://poser.pugx.org/prettus/l5-repository/license.svg)](https://packagist.org/packages/prettus/l5-repository)
+
 #### [See to version 1.0.*](https://github.com/andersao/l5-repository/tree/1.0.4)
 
 ## Table of Contents
