@@ -8,10 +8,10 @@ Laravel 5 Repositories is used to abstract the data layer, making our applicatio
     - <a href="#composer">Composer</a>
     - <a href="#laravel">Laravel</a>
 - <a href="#methods">Methods</a>
-    - <a href="#prettuswarehousecontractsrepositoryinterface">RepositoryInterface</a>
-    - <a href="#prettuswarehousecontractsrepositorycriteriainterface">RepositoryCriteriaInterface</a>
-    - <a href="#prettuswarehousecontractspresenterinterface">PresenterInterface</a>
-    - <a href="#prettuswarehousecontractscriteriainterface">CriteriaInterface</a>
+    - <a href="#prettusrepositorycontractsrepositoryinterface">RepositoryInterface</a>
+    - <a href="#prettusrepositorycontractsrepositorycriteriainterface">RepositoryCriteriaInterface</a>
+    - <a href="#prettusrepositorycontractspresenterinterface">PresenterInterface</a>
+    - <a href="#prettusrepositorycontractscriteriainterface">CriteriaInterface</a>
 - <a href="#usage">Usage</a>
 	- <a href="#create-a-model">Create a Model</a>
 	- <a href="#create-a-repository">Create a Repository</a>
