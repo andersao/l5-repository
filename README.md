@@ -2,7 +2,7 @@
 
 Laravel 5 Repositories is used to abstract the data layer, making our application more flexible to maintain.
 
-#### Version 1.0.* [See](https://github.com/andersao/l5-repository/tree/1.0.4)
+#### [See to version 1.0.*](https://github.com/andersao/l5-repository/tree/1.0.4)
 
 ## Table of Contents
 
@@ -33,7 +33,7 @@ Laravel 5 Repositories is used to abstract the data layer, making our applicatio
 Add `prettus/l5-repository` to the "require" section of your `composer.json` file.
 
 ```json
-	"prettus/l5-repository": "dev-master"
+	"prettus/l5-repository": "2.0.*"
 ```
 
 Run `composer update` to get the latest version of the package.
