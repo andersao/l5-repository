@@ -2,6 +2,8 @@
 
 Laravel 5 Repositories is used to abstract the data layer, making our application more flexible to maintain.
 
+#### Version 1.0.* [See](https://github.com/andersao/l5-repository/tree/1.0.4)
+
 ## Table of Contents
 
 - <a href="#installation">Installation</a>
