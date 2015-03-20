@@ -1,85 +1,99 @@
 # Laravel 5 Repositories
 
-[![Build Status](https://travis-ci.org/andersao/l5-repository.svg)](https://travis-ci.org/andersao/l5-repository.svg)
-[![Total Downloads](https://poser.pugx.org/prettus/l5-repository/downloads.svg)](https://packagist.org/packages/prettus/l5-repository)
-[![Latest Stable Version](https://poser.pugx.org/prettus/l5-repository/v/stable.svg)](https://packagist.org/packages/prettus/l5-repository)
-[![Latest Unstable Version](https://poser.pugx.org/prettus/l5-repository/v/unstable.svg)](https://packagist.org/packages/prettus/l5-repository)
-[![License](https://poser.pugx.org/prettus/l5-repository/license.svg)](https://packagist.org/packages/prettus/l5-repository)
-
 Laravel 5 Repositories is used to abstract the data layer, making our application more flexible to maintain.
+
+## Table of Contents
+
+- <a href="#installation">Installation</a>
+    - <a href="#composer">Composer</a>
+    - <a href="#laravel">Laravel</a>
+- <a href="#methods">Methods</a>
+    - <a href="#prettuswarehousecontractsrepositoryinterface">RepositoryInterface</a>
+    - <a href="#prettuswarehousecontractsrepositorycriteriainterface">RepositoryCriteriaInterface</a>
+    - <a href="#prettuswarehousecontractspresenterinterface">PresenterInterface</a>
+    - <a href="#prettuswarehousecontractscriteriainterface">CriteriaInterface</a>
+- <a href="#usage">Usage</a>
+	- <a href="#create-a-model">Create a Model</a>
+	- <a href="#create-a-repository">Create a Repository</a>
+	- <a href="#use-methods">Use methods</a>
+	- <a href="#create-a-criteria">Create a Criteria</a>
+	- <a href="#using-the-criteria-in-a-controller">Using the Criteria in a Controller</a>
+	- <a href="#using-the-requestcriteria">Using the RequestCriteria</a>
+- <a href="#presenters">Presenters</a>
+    - <a href="#fractal-presenter">Fractal Presenter</a>
+        - <a href="#create-a-presenter">Create a Fractal Presenter</a>
+    - <a href="#enabling-in-your-repository-1">Enabling in your Repository</a>
 
 ## Installation
 
-In your terminal run **composer require prettus/l5-repository.** This will grab the last release.
+### Composer
 
-Or
-
-Edit your composer.json like this:
+Add `prettus/l5-repository` to the "require" section of your `composer.json` file.
 
 ```json
-"require": {
-    ...
-    "prettus/l5-repository": "1.0.*"
-}
+	"prettus/l5-repository": "dev-master"
 ```
 
-Issue composer update
+Run `composer update` to get the latest version of the package.
 
-Add to app/config/app.php service provider array:
+### Laravel
+
+In your `config/app.php` add `'Prettus\Repository\Providers\RepositoryServiceProvider'` to the end of the `providers` array:
 
 ```php
-    'Prettus\Repository\RepositoryServiceProvider',
+'providers' => array(
+    ...,
+    'Illuminate\Workbench\WorkbenchServiceProvider',
+    'Prettus\Repository\Providers\RepositoryServiceProvider',
+),
 ```
 
 Publish Configuration
 
 ```shell
-php artisan vendor:publish --provider="Prettus\Repository\RepositoryServiceProvider"
+php artisan vendor:publish --provider="Prettus\Repository\Providers\RepositoryServiceProvider"
 ```
 
 ## Methods
 
-### Prettus\Repository\Contracts\Repository
+### Prettus\Repository\Contracts\RepositoryInterface
 
-- scopeReset()
-- find($id, $columns = ['*'])
-- findByField($field, $value, $columns = ['*'])
 - all($columns = array('*'))
 - paginate($limit = null, $columns = ['*'])
+- find($id, $columns = ['*'])
+- findByField($field, $value, $columns = ['*'])
 - create(array $attributes)
 - update(array $attributes, $id)
 - delete($id)
-- getModel()
 - with(array $relations);
-- pushCriteria(Criteria $criteria)
+- getFieldsSearchable();
+
+
+### Prettus\Repository\Contracts\RepositoryCriteriaInterface
+
+- pushCriteria(CriteriaInterface $criteria)
 - getCriteria()
-- getByCriteria(Criteria $criteria)
+- getByCriteria(CriteriaInterface $criteria)
 - skipCriteria($status = true)
 - getFieldsSearchable()
-- pushMutatorBeforeAll(Mutator $mutator)
-- pushMutatorBeforeCreate(Mutator $mutator)  // pushMutatorBeforeSave is deprecated
-- pushMutatorBeforeUpdate(Mutator $mutator)
-- getMutatorBeforeCreate() // getMutatorBeforeSave is deprecated
-- getMutatorBeforeUpdate()
-- skipMutators($status = true)
 
-### Prettus\Repository\Contracts\Criteria
+### Prettus\Repository\Contracts\PresenterInterface
 
-- apply($query, Repository $repository)
+- present($data);
 
-### Prettus\Repository\Contracts\Mutator
+### Prettus\Repository\Contracts\CriteriaInterface
 
-- transform(Model $model);
+- apply($model, RepositoryInterface $repository);
 
 ## Usage
-
-[Example](https://gist.github.com/andersao/7b92fa026fd4ffe74fbb)
 
 ### Create a Model
 
 Create your model normally, but it is important to define the attributes that can be filled from the input form data.
 
 ```php
+namespace App;
+
 class Post extends Eloquent { // or Ardent, Or any other Model Class
 
     protected $fillable = [
@@ -95,21 +109,31 @@ class Post extends Eloquent { // or Ardent, Or any other Model Class
 ### Create a Repository
 
 ```php
-use Prettus\Repository\Eloquent\Repository;
+namespace App;
 
-class PostRepository extends Repository {
+use Prettus\Repository\Eloquent\BaseRepository;
 
-    public function __construct(Post $model)
-    {
-        parent::__construct($model);
-    }   
+class PostRepository extends BaseRepository {
     
+    /**
+     * Specify Model class name
+     *
+     * @return string
+     */
+    function model()
+    {
+        return "App\\Post";
+    }
 }
 ```
 
 ### Use methods
 
 ```php
+namespace App\Http\Controllers;
+
+use App\PostRepository;
+
 class PostsController extends BaseController {
 
     /**
@@ -167,18 +191,18 @@ Delete entry in Repository
 $this->repository->delete($id)
 ```
 
-
 ### Create a Criteria
 
 Criteria is a way to change the repository of the query by applying specific conditions according to their need. You can add multiple Criteria in your repository
 
 ```php
 
-use Prettus\Repository\Contracts\Repository;
+use Prettus\Repository\Contracts\RepositoryInterface; 
+use Prettus\Repository\Contracts\CriteriaInterface;
 
-class MyCriteria implements \Prettus\Repository\Contracts\Criteria {
+class MyCriteria implements CriteriaInterface {
 
-    public function apply($query, Repository $repository)
+    public function apply($model, RepositoryInterface $repository)
     {
         $query = $query->where('user_id','=', Auth::user()->id );
         return $query;
@@ -189,6 +213,9 @@ class MyCriteria implements \Prettus\Repository\Contracts\Criteria {
 ### Using the Criteria in a Controller
 
 ```php
+
+namespace App\Http\Controllers;
+use App\PostRepository;
 
 class PostsController extends BaseController {
 
@@ -221,21 +248,19 @@ $posts = $this->repository->getByCriteria(new MyCriteria());
 Setting the default Criteria in Repository
 
 ```php
-use Prettus\Repository\Eloquent\Repository;
+use Prettus\Repository\Eloquent\BaseRepository;
 
-class PostRepository extends Repository {
-
-    public function __construct(Post $model)
-    {
-        parent::__construct($model);
-    }
-    
+class PostRepository extends BaseRepository {
+   
     public function boot(){
         $this->pushCriteria(new MyCriteria());
         $this->pushCriteria(new AnotherCriteria());
         ...
     }
     
+    function model(){
+       return "App\\Post";
+    }
 }
 ```
 
@@ -249,6 +274,7 @@ $posts = $this->repository->skipCriteria()->all();
 
 ```
 
+
 ### Using the RequestCriteria
 
 RequestCriteria is a standard Criteria implementation. It enables filters to perform in the repository from parameters sent in the request.
@@ -260,10 +286,11 @@ To use the Criteria in your repository, you can add a new criteria in the boot m
 ####Enabling in your Repository
 
 ```php
-use Prettus\Repository\Eloquent\Repository;
+use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
 
-class PostRepository extends Repository {
+
+class PostRepository extends BaseRepository {
 
 	/**
      * @var array
@@ -273,16 +300,14 @@ class PostRepository extends Repository {
         'email'
     ];
 
-    public function __construct(Post $model)
-    {
-        parent::__construct($model);
-    }
-    
     public function boot(){
         $this->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         ...
     }
     
+    function model(){
+       return "App\\Post";
+    }
 }
 ```
 
@@ -328,8 +353,8 @@ Request all data without filter by request
 [
     {
         "id": 1,
-        "name": "Anderson Andrade",
-        "email": "email@gmail.com",
+        "name": "John Doe",
+        "email": "john@gmail.com",
         "created_at": "-0001-11-30 00:00:00",
         "updated_at": "-0001-11-30 00:00:00"
     },
@@ -352,22 +377,22 @@ Request all data without filter by request
 
 Conducting research in the repository
 
-*http://prettus.local/users?search=Anderson%20Andrade*
+*http://prettus.local/users?search=John%20Doe*
 
 or
 
-*http://prettus.local/users?search=Anderson&searchFields=name:like*
+*http://prettus.local/users?search=John&searchFields=name:like*
 
 or
 
-*http://prettus.local/users?search=email@gmail.com&searchFields=email:=*
+*http://prettus.local/users?search=john@gmail.com&searchFields=email:=*
 
 ```json
 [
     {
         "id": 1,
-        "name": "Anderson Andrade",
-        "email": "email@gmail.com",
+        "name": "John Doe",
+        "email": "john@gmail.com",
         "created_at": "-0001-11-30 00:00:00",
         "updated_at": "-0001-11-30 00:00:00"
     }
@@ -382,7 +407,7 @@ Filtering fields
 [
     {
         "id": 1,
-        "name": "Anderson Andrade"
+        "name": "John Doe"
     },
     {
         "id": 2,
@@ -411,99 +436,85 @@ Sorting the results
     },
     {
         "id": 1,
-        "name": "Anderson Andrade"
+        "name": "John Doe"
     }
 ]
 ```
 
 ####Overwrite params name
 
-You can change the name of the parameters in the configuration file **config/repository-criteria.php**
+You can change the name of the parameters in the configuration file **config/warehouse.php**
 
-### Create a Mutator
+### Presenters
 
-Mutator gives the capacity to transform the Model attributes before saving
+Presenter to wrap and render objects.
+
+#### Fractal Presenter
+
+##### Create a Transformer Class
 
 ```php
 
-use Prettus\Repository\Contracts\Mutator;
+use App\Post;
+use League\Fractal\TransformerAbstract;
 
-class UserAttributeMutator implements Mutator {
-
-    public function transform(Model $model){
-        $model->setAttribute('user_id',Auth::user()->id);
-        return $model;
+class PostTransformer extends TransformerAbstract
+{
+    public function transform(Post $post)
+    {
+        return [
+            'id'      => (int) $post->id,
+            'title'   => $post->title,
+            'content' => $post->content
+        ];
     }
 }
 ```
 
-####Enabling in your Repository
-
-Transform the data before saving
-
-- pushMutatorBefore**Save**(Mutator $mutator) renamed to pushMutatorBefore**Create**(Mutator $mutator);
+##### Create a Presenter
 
 ```php
-public function boot(){
-    $this->pushMutatorBeforeCreate(new UserAttributeMutator());
-    ...
-}
-```
+use Prettus\Repository\Presenter\FractalPresenter;
 
-Transform the data before update
+class PostPresenter extends FractalPresenter {
 
-```php
-public function boot(){
-    $this->pushMutatorBeforeUpdate(new UserAttributeMutator());
-    ...
-}
-```
-
-
-Transform the data before saving and update
-
-```php
-public function boot(){
-    $this->pushMutatorBeforeAll(new UserAttributeMutator());
-    ...
-}
-```
-
-### Using Presenter
-
-Presenter to wrap and render objects. See more [robclancy/presenter](https://github.com/robclancy/presenter)
-
-####Create Presenter
-
-```php
-use Robbo\Presenter\Presenter;
-
-class PostPresenter extends Presenter {
-
-	 public function url()
-     {
-         return Str::slug($this->title.'-'.$this->id);
-     }
-    
-}
-```
-
-####Enable Presenter
-
-```php
-use Prettus\Repository\Eloquent\Repository;
-use Robbo\Presenter\Presenter;
-
-class PostRepository extends Repository {
-
-	 /**
-     * @var Robbo\Presenter\Presenter
+    /**
+     * Prepare data to present
+     *
+     * @return \League\Fractal\TransformerAbstract
      */
-    protected $presenter = 'PostPresenter';
-    
+    public function getTransformer()
+    {
+        return new PostTransformer();
+    }
 }
 ```
 
-# Author
+##### Enabling in your Repository
 
-Anderson Andrade - <contato@andersonandra.de>
+```php
+use Prettus\Repository\Eloquent\BaseRepository;
+use Prettus\Repository\Criteria\RequestCriteria;
+
+class PostRepository extends BaseRepository {
+
+    /**
+     * Specify Model class name
+     *
+     * @return mixed
+     */
+    function model(){
+       return "App\\Post";
+    }
+    
+    /**
+     * Specify Presenter class name
+     *
+     * @return mixed
+     */
+    public function presenter()
+    {
+        return "App\\Presenter\\PostPresenter";
+    }
+}
+```
