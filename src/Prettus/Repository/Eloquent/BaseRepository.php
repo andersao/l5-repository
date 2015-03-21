@@ -3,12 +3,13 @@
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\PresenterInterface;
 use Prettus\Repository\Contracts\RepositoryCriteriaInterface;
-use Prettus\Repository\Exceptions\PresenterException;
 use Prettus\Repository\Exceptions\RepositoryException;
+use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Container\Container as Application;
 use Illuminate\Support\Collection;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
  * Class BaseRepository
@@ -37,6 +38,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     protected $presenter;
 
     /**
+     * @var ValidatorInterface
+     */
+    protected $validator;
+
+    /**
      * Collection of Criteria
      *
      * @var Collection
@@ -57,6 +63,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->criteria = new Collection();
         $this->makeModel();
         $this->makePresenter();
+        $this->makeValidator();
         $this->boot();
     }
 
@@ -68,16 +75,25 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Specify Model class name
      *
-     * @return mixed
+     * @return string
      */
     abstract public function model();
 
     /**
      * Specify Presenter class name
      *
-     * @return mixed
+     * @return string
      */
     public function presenter(){
+        return null;
+    }
+
+    /**
+     * Specify Validator class name of Prettus\Validator\Contracts\ValidatorInterface
+     *
+     * @return string
+     */
+    public function validator(){
         return null;
     }
 
@@ -110,10 +126,31 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
             if (!$presenter instanceof PresenterInterface )
             {
-                throw new RepositoryException("Class {$this->presenter()} must be an instance of Artesaos\\Warehouse\\Contracts\\PresenterInterface");
+                throw new RepositoryException("Class {$this->presenter()} must be an instance of Prettus\\Repository\\Contracts\\PresenterInterface");
             }
 
             return $this->presenter = $presenter;
+        }
+
+        return null;
+    }
+
+    /**
+     * @return ValidatorInterface
+     * @throws RepositoryException
+     */
+    public function makeValidator()
+    {
+        if( !is_null($this->validator()) )
+        {
+            $validator = $this->app->make($this->validator());
+
+            if (!$validator instanceof ValidatorInterface )
+            {
+                throw new RepositoryException("Class {$this->validator()} must be an instance of Prettus\\Validator\\Contracts\\ValidatorInterface");
+            }
+
+            return $this->validator = $validator;
         }
 
         return null;
@@ -194,11 +231,18 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Save a new entity in repository
      *
+     * @throws ValidatorException
      * @param array $attributes
      * @return mixed
      */
     public function create(array $attributes)
     {
+        if( !is_null($this->validator) )
+        {
+            $this->validator->with($attributes)
+                ->passesOrFail( ValidatorInterface::RULE_CREATE );
+        }
+
         $model = $this->model->newInstance($attributes);
         $model->save();
 
@@ -208,12 +252,20 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Update a entity in repository by id
      *
+     * @throws ValidatorException
      * @param array $attributes
      * @param $id
      * @return mixed
      */
     public function update(array $attributes, $id)
     {
+        if( !is_null($this->validator) )
+        {
+            $this->validator->with($attributes)
+                ->setId($id)
+                ->passesOrFail( ValidatorInterface::RULE_UPDATE );
+        }
+
         $model = $this->find($id);
         $model->fill($attributes);
         $model->save();
