@@ -28,6 +28,9 @@ Laravel 5 Repositories is used to abstract the data layer, making our applicatio
 	- <a href="#create-a-criteria">Create a Criteria</a>
 	- <a href="#using-the-criteria-in-a-controller">Using the Criteria in a Controller</a>
 	- <a href="#using-the-requestcriteria">Using the RequestCriteria</a>
+- <a href="#validators">Validators</a>
+    - <a href="#create-a-validator">Create a Validator</a>
+    - <a href="#enabling-validator-in-your-repository-1">Enabling Validator in your Repository</a>
 - <a href="#presenters">Presenters</a>
     - <a href="#fractal-presenter">Fractal Presenter</a>
         - <a href="#create-a-presenter">Create a Fractal Presenter</a>
@@ -453,6 +456,83 @@ Sorting the results
 ####Overwrite params name
 
 You can change the name of the parameters in the configuration file **config/warehouse.php**
+
+### Validators
+
+Easy validation with [prettus/laravel-validator](https://github.com/andersao/laravel-validator)
+
+[For more details see](https://github.com/andersao/laravel-validator)
+
+##### Create a Validator
+
+In the example below, we define some rules for both creation and edition
+
+```php
+use \Prettus\Validator\LaravelValidator;
+
+class PostValidator extends LaravelValidator {
+
+    protected $rules = [
+        'title' => 'required',
+        'text'  => 'min:3',
+        'author'=> 'required'
+    ];
+
+}
+```
+
+To define specific rules, proceed as shown below:
+
+```php
+use \Prettus\Validator\Contracts\ValidatorInterface;
+use \Prettus\Validator\LaravelValidator;
+    
+class PostValidator extends LaravelValidator {
+
+    protected $rules = [
+        ValidatorInterface::RULE_CREATE => [
+            'title' => 'required',
+            'text'  => 'min:3',
+            'author'=> 'required'
+        ],
+        ValidatorInterface::RULE_UPDATE => [
+            'title' => 'required'
+        ]
+   ];
+
+}
+```
+
+##### Enabling Validator in your Repository
+
+```php
+use Prettus\Repository\Eloquent\BaseRepository;
+use Prettus\Repository\Criteria\RequestCriteria;
+
+class PostRepository extends BaseRepository {
+
+    /**
+     * Specify Model class name
+     *
+     * @return mixed
+     */
+    function model(){
+       return "App\\Post";
+    }
+    
+    /**
+     * Specify Validator class name
+     *
+     * @return mixed
+     */
+    public function validator()
+    {
+        return "App\\PostValidator";
+    }
+}
+```
+
+Validation is ready. In case of failure will be released an exception. *Prettus\Validator\Exceptions\ValidatorException*
 
 ### Presenters
 
