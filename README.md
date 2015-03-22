@@ -80,6 +80,7 @@ php artisan vendor:publish --provider="Prettus\Repository\Providers\RepositorySe
 - delete($id)
 - with(array $relations);
 - getFieldsSearchable();
+- skipPresenter($status = true);
 
 
 ### Prettus\Repository\Contracts\RepositoryCriteriaInterface
@@ -607,4 +608,23 @@ class PostRepository extends BaseRepository {
         return "App\\Presenter\\PostPresenter";
     }
 }
+```
+
+### Skip Presenter defined in the repository
+
+Use *skipPresenter* before any method in the repository
+
+```php
+
+$posts = $this->repository->skipPresenter()->all();
+
+```
+
+or 
+
+```php
+$this->repository->skipPresenter();
+
+$posts = $this->repository->all();
+
 ```

@@ -80,4 +80,12 @@ interface RepositoryInterface {
      * @return array
      */
     public function getFieldsSearchable();
+
+    /**
+     * Skip Presenter Wrapper
+     *
+     * @param bool $status
+     * @return $this
+     */
+    public function skipPresenter($status = true);
 }

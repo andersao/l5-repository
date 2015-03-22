@@ -55,6 +55,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     protected $skipCriteria = false;
 
     /**
+     * @var bool
+     */
+    protected $skipPresenter = false;
+
+    /**
      * @param Application $app
      */
     public function __construct(Application $app)
@@ -374,6 +379,18 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
+     * Skip Presenter Wrapper
+     *
+     * @param bool $status
+     * @return $this
+     */
+    public function skipPresenter($status = true)
+    {
+        $this->skipPresenter = $status;
+        return $this;
+    }
+
+    /**
      * Wrapper result data
      *
      * @param mixed $result
@@ -381,7 +398,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function parserResult($result)
     {
-        if( $this->presenter instanceof PresenterInterface )
+        if( $this->presenter instanceof PresenterInterface && !$this->skipPresenter )
         {
             return $this->presenter->present($result);
         }
