@@ -120,42 +120,48 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
 
     /**
+     * @param null $presenter
      * @return PresenterInterface
      * @throws RepositoryException
      */
-    public function makePresenter()
+    public function makePresenter($presenter = null)
     {
-        if( !is_null($this->presenter()) )
-        {
-            $presenter = $this->app->make($this->presenter());
+        $presenter = !is_null($presenter) ? $presenter : $this->presenter();
 
-            if (!$presenter instanceof PresenterInterface )
+        if( !is_null($presenter) )
+        {
+            $this->presenter = is_string($presenter) ? $this->app->make($presenter) : $presenter;
+
+            if (!$this->presenter instanceof PresenterInterface )
             {
                 throw new RepositoryException("Class {$this->presenter()} must be an instance of Prettus\\Repository\\Contracts\\PresenterInterface");
             }
 
-            return $this->presenter = $presenter;
+            return $this->presenter;
         }
 
         return null;
     }
 
     /**
-     * @return ValidatorInterface
+     * @param null $validator
+     * @return null|ValidatorInterface
      * @throws RepositoryException
      */
-    public function makeValidator()
+    public function makeValidator($validator = null)
     {
-        if( !is_null($this->validator()) )
-        {
-            $validator = $this->app->make($this->validator());
+        $validator = !is_null($validator) ? $validator : $this->validator();
 
-            if (!$validator instanceof ValidatorInterface )
+        if( !is_null($validator) )
+        {
+            $this->validator = is_string($validator) ? $this->app->make($validator) : $validator;
+
+            if (!$this->validator instanceof ValidatorInterface )
             {
                 throw new RepositoryException("Class {$this->validator()} must be an instance of Prettus\\Validator\\Contracts\\ValidatorInterface");
             }
 
-            return $this->validator = $validator;
+            return $this->validator;
         }
 
         return null;
