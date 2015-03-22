@@ -134,7 +134,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
             if (!$this->presenter instanceof PresenterInterface )
             {
-                throw new RepositoryException("Class {$this->presenter()} must be an instance of Prettus\\Repository\\Contracts\\PresenterInterface");
+                throw new RepositoryException("Class {$presenter} must be an instance of Prettus\\Repository\\Contracts\\PresenterInterface");
             }
 
             return $this->presenter;
@@ -158,7 +158,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
             if (!$this->validator instanceof ValidatorInterface )
             {
-                throw new RepositoryException("Class {$this->validator()} must be an instance of Prettus\\Validator\\Contracts\\ValidatorInterface");
+                throw new RepositoryException("Class {$validator} must be an instance of Prettus\\Validator\\Contracts\\ValidatorInterface");
             }
 
             return $this->validator;
