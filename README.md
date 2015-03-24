@@ -30,8 +30,10 @@ Laravel 5 Repositories is used to abstract the data layer, making our applicatio
 	- <a href="#using-the-criteria-in-a-controller">Using the Criteria in a Controller</a>
 	- <a href="#using-the-requestcriteria">Using the RequestCriteria</a>
 - <a href="#validators">Validators</a>
-    - <a href="#create-a-validator">Create a Validator</a>
-    - <a href="#enabling-validator-in-your-repository-1">Enabling Validator in your Repository</a>
+    - <a href="#using-a-validator-class">Using a Validator Class</a>
+        - <a href="#create-a-validator">Create a Validator</a>
+        - <a href="#enabling-validator-in-your-repository-1">Enabling Validator in your Repository</a>
+    - <a href="#defining-rules-in-the-repository">Defining rules in the repository</a>
 - <a href="#presenters">Presenters</a>
     - <a href="#fractal-presenter">Fractal Presenter</a>
         - <a href="#create-a-presenter">Create a Fractal Presenter</a>
@@ -465,6 +467,8 @@ Easy validation with [prettus/laravel-validator](https://github.com/andersao/lar
 
 [For more details see](https://github.com/andersao/laravel-validator)
 
+#### Using a Validator Class
+
 ##### Create a Validator
 
 In the example below, we define some rules for both creation and edition
@@ -531,6 +535,44 @@ class PostRepository extends BaseRepository {
     {
         return "App\\PostValidator";
     }
+}
+```
+
+#### Defining rules in the repository
+
+Alternatively , instead of using a class to define its validation rules, you can set your rules directly into the rules repository property , it will have the same effect Validation class
+
+```php
+use Prettus\Repository\Eloquent\BaseRepository;
+use Prettus\Repository\Criteria\RequestCriteria;
+use Prettus\Validator\Contracts\ValidatorInterface;
+
+class PostRepository extends BaseRepository {
+
+    /**
+     * Specify Validator Rules
+     * @var array
+     */
+     protected $rules = [
+        ValidatorInterface::RULE_CREATE => [
+            'title' => 'required',
+            'text'  => 'min:3',
+            'author'=> 'required'
+        ],
+        ValidatorInterface::RULE_UPDATE => [
+            'title' => 'required'
+        ]
+   ];
+
+    /**
+     * Specify Model class name
+     *
+     * @return mixed
+     */
+    function model(){
+       return "App\\Post";
+    }
+    
 }
 ```
 

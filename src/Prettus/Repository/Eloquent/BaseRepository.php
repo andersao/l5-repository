@@ -43,6 +43,13 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     protected $validator;
 
     /**
+     * Validation Rules
+     *
+     * @var array
+     */
+    protected $rules = null;
+
+    /**
      * Collection of Criteria
      *
      * @var Collection
@@ -89,7 +96,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      *
      * @return string
      */
-    public function presenter(){
+    public function presenter()
+    {
         return null;
     }
 
@@ -98,7 +106,20 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      *
      * @return string
      */
-    public function validator(){
+    public function validator()
+    {
+
+        if( isset($this->rules) && is_null($this->rules) && is_array($this->rules) )
+        {
+            $validator = app('Prettus\Validator\LaravelValidator');
+
+            if( $validator instanceof ValidatorInterface )
+            {
+                $validator->setRules($this->rules);
+                return $validator;
+            }
+        }
+
         return null;
     }
 
