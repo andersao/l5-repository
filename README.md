@@ -77,10 +77,13 @@ php artisan vendor:publish --provider="Prettus\Repository\Providers\RepositorySe
 - paginate($limit = null, $columns = ['*'])
 - find($id, $columns = ['*'])
 - findByField($field, $value, $columns = ['*'])
+- findWhere(array $where, $columns = ['*'])
 - create(array $attributes)
 - update(array $attributes, $id)
 - delete($id)
 - with(array $relations);
+- hidden(array $fields);
+- visible(array $fields);
 - getFieldsSearchable();
 - skipPresenter($status = true);
 
@@ -183,10 +186,37 @@ Find by result by id
 $post = $this->repository->find($id);
 ```
 
+Hiding attributes of the model
+
+```php
+$post = $this->repository->hidden(['country_id'])->find($id);
+```
+
+Showing only specific attributes of the model
+
+```php
+$post = $this->repository->visible(['id', 'state_id'])->find($id);
+```
+
+Loading the Model relationships
+
+```php
+$post = $this->repository->with(['state'])->find($id);
+```
+
 Find by result by field name
 
 ```php
 $posts = $this->repository->findByField('country_id','15');
+```
+
+Find by result by multiple fields
+
+```php
+$posts = $this->repository->findByField([
+    'state_id'=>'10',
+    'country_id'=>'15'
+]);
 ```
 
 Create new entry in Repository

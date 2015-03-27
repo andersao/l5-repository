@@ -42,6 +42,15 @@ interface RepositoryInterface {
     public function findByField($field, $value, $columns = array('*'));
 
     /**
+     * Find data by multiple fields
+     *
+     * @param array $where
+     * @param array $columns
+     * @return mixed
+     */
+    public function findWhere( array $where , $columns = array('*'));
+
+    /**
      * Save a new entity in repository
      *
      * @param array $attributes
@@ -73,6 +82,22 @@ interface RepositoryInterface {
      * @return $this
      */
     public function with(array $relations);
+
+    /**
+     * Set hidden fields
+     *
+     * @param array $fields
+     * @return $this
+     */
+    public function hidden(array $fields);
+
+    /**
+     * Set visible fields
+     *
+     * @param array $fields
+     * @return $this
+     */
+    public function visible(array $fields);
 
     /**
      * Get Searchable Fields

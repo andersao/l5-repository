@@ -139,7 +139,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         return $this->model = $model;
     }
 
-
     /**
      * @param null $presenter
      * @return PresenterInterface
@@ -253,10 +252,24 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * @param array $columns
      * @return mixed
      */
-    public function findByField($field, $value, $columns = array('*'))
+    public function findByField($field, $value = null, $columns = array('*'))
     {
         $this->applyCriteria();
-        $model = $this->model->where($field,'=',$value)->get();
+        $model = $this->model->where($field,'=',$value)->get($columns);
+        return $this->parserResult($model);
+    }
+
+    /**
+     * Find data by multiple fields
+     *
+     * @param array $where
+     * @param array $columns
+     * @return mixed
+     */
+    public function findWhere( array $where , $columns = array('*'))
+    {
+        $this->applyCriteria();
+        $model = $this->model->where($where)->get($columns);
         return $this->parserResult($model);
     }
 
@@ -326,6 +339,30 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function with(array $relations)
     {
         $this->model = $this->model->with($relations);
+        return $this;
+    }
+
+    /**
+     * Set hidden fields
+     *
+     * @param array $fields
+     * @return $this
+     */
+    public function hidden(array $fields)
+    {
+        $this->model->setHidden($fields);
+        return $this;
+    }
+
+    /**
+     * Set visible fields
+     *
+     * @param array $fields
+     * @return $this
+     */
+    public function visible(array $fields)
+    {
+        $this->model->setVisible($fields);
         return $this;
     }
 
