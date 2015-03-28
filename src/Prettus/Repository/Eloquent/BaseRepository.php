@@ -269,7 +269,23 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function findWhere( array $where , $columns = array('*'))
     {
         $this->applyCriteria();
-        $model = $this->model->where($where)->get($columns);
+
+        foreach($where as $field => $value)
+        {
+            if( is_array($value) )
+            {
+                list($field, $condition, $value) = $value;
+                $this->model = $this->model->where($field,$condition,$value);
+            }
+            else
+            {
+                $this->model = $this->model->where($field,'=',$value);
+            }
+
+        }
+
+        $model = $this->model->get($columns);
+
         return $this->parserResult($model);
     }
 
