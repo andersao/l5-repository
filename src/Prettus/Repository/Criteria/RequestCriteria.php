@@ -140,7 +140,7 @@ class RequestCriteria implements CriteriaInterface {
      */
     protected function parserSearchValue($search){
 
-        if( stripos($search,';') )
+        if( stripos($search,';') || stripos($search,':') )
         {
             $values = explode(';', $search);
             foreach($values as $value)
