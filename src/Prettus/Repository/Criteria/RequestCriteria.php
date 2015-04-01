@@ -44,7 +44,8 @@ class RequestCriteria implements CriteriaInterface {
             $searchFields       = is_array($searchFields) || is_null($searchFields) ? $searchFields : explode(';',$searchFields);
             $fields             = $this->parserFieldsSearch($fieldsSearchable, $searchFields);
             $isFirstField       = true;
-            $searchData         = array();
+            $searchData         = $this->parserSearchData($search);
+            $search             = $this->parserSearchValue($search);
             $modelForceAndWhere = false;
 
             foreach($fields as $field=>$condition)
@@ -53,23 +54,37 @@ class RequestCriteria implements CriteriaInterface {
                     $field = $condition;
                     $condition = "=";
                 }
+
+                $value = null;
+
                 $condition  = trim(strtolower($condition));
+
                 if( isset($searchData[$field]) )
                 {
                     $value = $condition == "like" ? "%{$searchData[$field]}%" : $searchData[$field];
                 }
                 else
                 {
-                    $value = $condition == "like" ? "%{$search}%" : $search;
+                    if( !is_null($search) )
+                    {
+                        $value = $condition == "like" ? "%{$search}%" : $search;
+                    }
                 }
+
                 if( $isFirstField || $modelForceAndWhere )
                 {
-                    $model = $model->where($field,$condition,$value);
-                    $isFirstField = false;
+                    if(!is_null($value))
+                    {
+                        $model = $model->where($field,$condition,$value);
+                        $isFirstField = false;
+                    }
                 }
                 else
                 {
-                    $model = $model->orWhere($field,$condition,$value);
+                    if(!is_null($value))
+                    {
+                        $model = $model->orWhere($field,$condition,$value);
+                    }
                 }
             }
         }
@@ -90,6 +105,57 @@ class RequestCriteria implements CriteriaInterface {
         }
 
         return $model;
+    }
+
+    /**
+     * @param $search
+     * @return array
+     */
+    protected function parserSearchData($search){
+
+        $searchData = [];
+
+        if( stripos($search,':') )
+        {
+            $fields = explode(';', $search);
+
+            foreach($fields as $row)
+            {
+                try
+                {
+                    list($field, $value) = explode(':', $row);
+                    $searchData[$field] = $value;
+                }catch (\Exception $e){
+                    //Surround offset error
+                }
+            }
+        }
+
+        return $searchData;
+    }
+
+    /**
+     * @param $search
+     * @return null
+     */
+    protected function parserSearchValue($search){
+
+        if( stripos($search,';') )
+        {
+            $values = explode(';', $search);
+            foreach($values as $value)
+            {
+                $s = explode(':', $value);
+                if( count($s) == 1 )
+                {
+                    return $s[0];
+                }
+            }
+
+            return null;
+        }
+
+        return $search;
     }
 
 
