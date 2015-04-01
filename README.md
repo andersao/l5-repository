@@ -315,12 +315,10 @@ class PostRepository extends BaseRepository {
 
 ### Skip criteria defined in the repository
 
-Use *skipCriteria* before any method in the repository
+Use `skipCriteria` before any method in the repository
 
 ```php
-
 $posts = $this->repository->skipCriteria()->all();
-
 ```
 
 
@@ -396,7 +394,7 @@ protected $fieldSearchable = [
 
 Request all data without filter by request
 
-*http://prettus.local/users*
+`http://prettus.local/users`
 
 ```json
 [
@@ -426,15 +424,23 @@ Request all data without filter by request
 
 Conducting research in the repository
 
-*http://prettus.local/users?search=John%20Doe*
+`http://prettus.local/users?search=John%20Doe`
 
 or
 
-*http://prettus.local/users?search=John&searchFields=name:like*
+`http://prettus.local/users?search=John&searchFields=name:like`
 
 or
 
-*http://prettus.local/users?search=john@gmail.com&searchFields=email:=*
+`http://prettus.local/users?search=john@gmail.com&searchFields=email:=`
+
+or
+
+`http://prettus.local/users?search=name:John Doe;email:john@gmail.com`
+
+or
+
+`http://prettus.local/users?search=name:John;email:john@gmail.com&searchFields=name:like;email:=`
 
 ```json
 [
@@ -450,7 +456,7 @@ or
 
 Filtering fields
 
-*http://prettus.local/users?filter=id;name*
+`http://prettus.local/users?filter=id;name`
 
 ```json
 [
@@ -471,7 +477,7 @@ Filtering fields
 
 Sorting the results
 
-*http://prettus.local/users?filter=id;name&orderBy=id&sortedBy=desc*
+`http://prettus.local/users?filter=id;name&orderBy=id&sortedBy=desc`
 
 ```json
 [
@@ -489,6 +495,7 @@ Sorting the results
     }
 ]
 ```
+
 
 ####Overwrite params name
 
@@ -690,9 +697,7 @@ class PostRepository extends BaseRepository {
 Use *skipPresenter* before any method in the repository
 
 ```php
-
 $posts = $this->repository->skipPresenter()->all();
-
 ```
 
 or 
@@ -701,5 +706,4 @@ or
 $this->repository->skipPresenter();
 
 $posts = $this->repository->all();
-
 ```
