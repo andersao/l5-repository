@@ -213,7 +213,7 @@ $posts = $this->repository->findByField('country_id','15');
 Find by result by multiple fields
 
 ```php
-$posts = $this->repository->findByField([
+$posts = $this->repository->findWhere([
     //Default Condition = 
     'state_id'=>'10',
     'country_id'=>'15',
