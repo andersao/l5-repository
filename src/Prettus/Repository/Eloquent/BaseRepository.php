@@ -109,7 +109,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function validator()
     {
 
-        if( isset($this->rules) && is_null($this->rules) && is_array($this->rules) )
+        if( isset($this->rules) && ! is_null($this->rules) && is_array($this->rules) )
         {
             $validator = app('Prettus\Validator\LaravelValidator');
 
