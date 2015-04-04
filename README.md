@@ -37,6 +37,7 @@ Laravel 5 Repositories is used to abstract the data layer, making our applicatio
 - <a href="#presenters">Presenters</a>
     - <a href="#fractal-presenter">Fractal Presenter</a>
         - <a href="#create-a-presenter">Create a Fractal Presenter</a>
+        - <a href="#implement-interface">Model Transformable</a>
     - <a href="#enabling-in-your-repository-1">Enabling in your Repository</a>
 
 ## Installation
@@ -104,6 +105,10 @@ php artisan vendor:publish --provider="Prettus\Repository\Providers\RepositorySe
 ### Prettus\Repository\Contracts\CriteriaInterface
 
 - apply($model, RepositoryInterface $repository);
+
+### Prettus\Repository\Contracts\Transformable
+
+- transform();
 
 ## Usage
 

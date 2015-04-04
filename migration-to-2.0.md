@@ -1,5 +1,7 @@
 # Laravel 5 Repositories
 
+[![Analytics](https://ga-beacon.appspot.com/UA-61050740-1/l5-repository/migration-to-2.0)](https://packagist.org/packages/prettus/l5-repository)
+
 ## Migrate from version 1.0 to 2.0
 
 ### Registering the model's repository
