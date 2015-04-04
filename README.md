@@ -701,7 +701,7 @@ namespace App;
 
 use Prettus\Repository\Contracts\Transformable;
 
-class Post extends Eloquent implement Transformable {
+class Post extends Eloquent implements Transformable {
      ...
      /**
       * @return array
