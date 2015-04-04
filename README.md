@@ -625,7 +625,13 @@ Presenter to wrap and render objects.
 
 #### Fractal Presenter
 
-##### Create a Transformer Class
+There are two ways to implement Presenter, the first is creating a TransformerAbstract and Set using your Presenter class as described in the Create a Transformer Class.
+
+The second way is to make your model implement Transformable interface, and use the default Prenseter ModelFractarPresenter, ready, this will have the same effect.
+
+##### Transformer Class
+
+###### Create a Transformer Class
 
 ```php
 
@@ -645,7 +651,7 @@ class PostTransformer extends TransformerAbstract
 }
 ```
 
-##### Create a Presenter
+###### Create a Presenter
 
 ```php
 use Prettus\Repository\Presenter\FractalPresenter;
@@ -664,33 +670,75 @@ class PostPresenter extends FractalPresenter {
 }
 ```
 
-##### Enabling in your Repository
+###### Enabling in your Repository
 
 ```php
 use Prettus\Repository\Eloquent\BaseRepository;
-use Prettus\Repository\Criteria\RequestCriteria;
 
 class PostRepository extends BaseRepository {
-
-    /**
-     * Specify Model class name
-     *
-     * @return mixed
-     */
-    function model(){
-       return "App\\Post";
-    }
     
-    /**
-     * Specify Presenter class name
-     *
-     * @return mixed
-     */
+    ...
+    
     public function presenter()
     {
         return "App\\Presenter\\PostPresenter";
     }
 }
+```
+
+or enable in your controller with 
+
+```php
+$this->repository->setPresenter("App\\Presenter\\PostPresenter");
+```
+
+##### Model Class
+
+###### Implement Interface
+
+```php
+namespace App;
+
+use Prettus\Repository\Contracts\Transformable;
+
+class Post extends Eloquent implement Transformable {
+     ...
+     /**
+      * @return array
+      */
+     public function transform()
+     {
+         return [
+             'id'      => (int) $this->id,
+             'title'   => $this->title,
+             'content' => $this->content
+         ];
+     }
+}
+```
+
+###### Enabling in your Repository
+
+`Prettus\Repository\Presenter\ModelFractalPresenter` is a Presenter default for Model implementing Transformable 
+
+```php
+use Prettus\Repository\Eloquent\BaseRepository;
+
+class PostRepository extends BaseRepository {
+    
+    ...
+    
+    public function presenter()
+    {
+        return "Prettus\\Repository\\Presenter\\ModelFractalPresenter";
+    }
+}
+```
+
+or enable in your controller with 
+
+```php
+$this->repository->setPresenter("Prettus\\Repository\\Presenter\\ModelFractalPresenter");
 ```
 
 ### Skip Presenter defined in the repository
