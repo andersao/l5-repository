@@ -124,6 +124,18 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
+     * Set Presenter
+     *
+     * @param $presenter
+     * @return $this
+     */
+    public function setPresenter($presenter)
+    {
+        $this->makePresenter($presenter);
+        return $this;
+    }
+
+    /**
      * @return Model
      * @throws RepositoryException
      */

@@ -85,6 +85,7 @@ php artisan vendor:publish --provider="Prettus\Repository\Providers\RepositorySe
 - hidden(array $fields);
 - visible(array $fields);
 - getFieldsSearchable();
+- setPresenter($presenter);
 - skipPresenter($status = true);
 
 
