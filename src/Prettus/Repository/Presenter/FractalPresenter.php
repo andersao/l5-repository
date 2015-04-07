@@ -1,7 +1,7 @@
 <?php namespace Prettus\Repository\Presenter;
 
 use Prettus\Repository\Contracts\PresenterInterface;
-use Prettus\Repository\Pagination\IlluminatePaginatorAdapter;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
@@ -10,7 +10,6 @@ use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\SerializerAbstract;
-use League\Fractal\TransformerAbstract;
 
 /**
  * Class FractalPresenter

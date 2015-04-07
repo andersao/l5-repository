@@ -13,7 +13,7 @@
     "php": ">=5.4.0",
     "illuminate/config": "5.0.*",
     "illuminate/support": "5.0.*",
-    "league/fractal": "0.11.*",
+    "league/fractal": "0.12.*",
     "robclancy/presenter": "1.3.*",
     "prettus/laravel-validation": "1.1.*"
   },
