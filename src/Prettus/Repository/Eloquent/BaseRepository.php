@@ -361,7 +361,13 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function delete($id)
     {
+        $_skipPresenter = $this->skipPresenter;
+        $this->skipPresenter(true);
+
         $model = $this->find($id);
+
+        $this->skipPresenter($_skipPresenter);
+
         return $model->delete();
     }
 
