@@ -339,9 +339,16 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
                 ->passesOrFail( ValidatorInterface::RULE_UPDATE );
         }
 
+        $_skipPresenter = $this->skipPresenter;
+
+        $this->skipPresenter(true);
+
         $model = $this->find($id);
         $model->fill($attributes);
         $model->save();
+
+        $this->skipPresenter($_skipPresenter);
+
 
         return $this->parserResult($model);
     }
