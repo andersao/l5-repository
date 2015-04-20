@@ -259,8 +259,8 @@ class MyCriteria implements CriteriaInterface {
 
     public function apply($model, RepositoryInterface $repository)
     {
-        $query = $query->where('user_id','=', Auth::user()->id );
-        return $query;
+        $model = $model->where('user_id','=', Auth::user()->id );
+        return $model;
     }
 }
 ```
