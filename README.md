@@ -505,7 +505,7 @@ Sorting the results
 
 ####Overwrite params name
 
-You can change the name of the parameters in the configuration file **config/warehouse.php**
+You can change the name of the parameters in the configuration file **config/repository.php**
 
 ### Validators
 
