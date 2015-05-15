@@ -1,0 +1,33 @@
+<?php $NAMESPACE$
+
+use Prettus\Repository\Eloquent\BaseRepository;
+
+/**
+ * Class $CLASS$RepositoryEloquent
+ * @package $NAMESPACE$
+ */
+class $CLASS$RepositoryEloquent extends BaseRepository implements $CLASS$Repository {
+
+    /**
+     * @var array
+     */
+    protected $rules = [];
+
+    /**
+     * Specify Model class name
+     *
+     * @return string
+     */
+    public function model()
+    {
+        return "$MODEL$";
+    }
+
+    /**
+     *
+     */
+    public function boot()
+    {
+        $this->pushCriteria( app('Prettus\Repository\Criteria\RequestCriteria') );
+    }
+}
