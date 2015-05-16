@@ -21,6 +21,7 @@ Laravel 5 Repositories is used to abstract the data layer, making our applicatio
 - <a href="#usage">Usage</a>
 	- <a href="#create-a-model">Create a Model</a>
 	- <a href="#create-a-repository">Create a Repository</a>
+	- <a href="#generatos">Generators</a>
 	- <a href="#use-methods">Use methods</a>
 	- <a href="#create-a-criteria">Create a Criteria</a>
 	- <a href="#using-the-criteria-in-a-controller">Using the Criteria in a Controller</a>
@@ -106,6 +107,7 @@ php artisan vendor:publish --provider="Prettus\Repository\Providers\RepositorySe
 
 - transform();
 
+
 ## Usage
 
 ### Create a Model
@@ -145,6 +147,68 @@ class PostRepository extends BaseRepository {
     {
         return "App\\Post";
     }
+}
+```
+
+### Generators
+
+Create your repositories easily through the generator.
+
+#### Config
+
+You must first configure the storage location of the repository files. By default is the "app" folder and the namespace "App".
+
+```php
+    ...
+    'generator'=>[
+        'basePath'      =>app_path(),
+        'rootNamespace' =>'App\\'
+    ]
+```
+
+You may want to save the root of your project folder out of the app and add another namespace for example
+
+```php
+    ...
+     'generator'=>[
+        'basePath'      => base_path('src/Lorem'),
+        'rootNamespace' => 'Lorem\\'
+    ]
+```
+
+#### Commands
+
+To generate a repository for your Post model, use the following command
+
+```terminal
+php artisan repository:generate Post
+```
+
+To generate a repository for your Post model with Blog namespace, use the following command
+
+```terminal
+php artisan repository:generate "Blog\Post"
+```
+
+Added fields that are fillable
+
+```terminal
+php artisan repository:generate "Blog\Post" --fillable="title,content"
+```
+
+When running commado, you will be creating the "Entities" folder and "Repositories" inside the folder that you set as the default.
+
+Done, done that just now you do bind its interface for your real repository
+
+```php
+App::bind('{YOUR_NAMESPACE}Repositories\PostRepository', '{YOUR_NAMESPACE}Repositories\PostRepositoryEloquent');
+```
+
+And use
+
+```php
+public function __construct({YOUR_NAMESPACE}Repositories\PostRepository $repository){
+    $this->repository = $repository;
 }
 ```
 
