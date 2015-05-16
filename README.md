@@ -21,7 +21,7 @@ Laravel 5 Repositories is used to abstract the data layer, making our applicatio
 - <a href="#usage">Usage</a>
 	- <a href="#create-a-model">Create a Model</a>
 	- <a href="#create-a-repository">Create a Repository</a>
-	- <a href="#generatos">Generators</a>
+	- <a href="#generators">Generators</a>
 	- <a href="#use-methods">Use methods</a>
 	- <a href="#create-a-criteria">Create a Criteria</a>
 	- <a href="#using-the-criteria-in-a-controller">Using the Criteria in a Controller</a>
