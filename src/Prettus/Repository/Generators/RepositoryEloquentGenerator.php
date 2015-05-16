@@ -22,8 +22,19 @@ class RepositoryEloquentGenerator extends Generator {
      */
     public function getBasePath()
     {
-        return app_path();
+        return config('repository.generator.basePath', app_path());
     }
+
+    /**
+     * Get root namespace.
+     *
+     * @return string
+     */
+    public function getRootNamespace()
+    {
+        return parent::getRootNamespace().'Repositories\\';
+    }
+
     /**
      * Get destination path for generated file.
      *
@@ -31,7 +42,7 @@ class RepositoryEloquentGenerator extends Generator {
      */
     public function getPath()
     {
-        return $this->getBasePath() . '/' . $this->getName() . '.php';
+        return $this->getBasePath() . '/Repositories/' . $this->getName() . 'RepositoryEloquent.php';
     }
 
     /**
@@ -42,7 +53,8 @@ class RepositoryEloquentGenerator extends Generator {
     public function getReplacements()
     {
         return array_merge(parent::getReplacements(), [
-            'fillable' => $this->getFillable()
+            'fillable' => $this->getFillable(),
+            'model'    => isset($this->options['model']) ? $this->options['model'] : ''
         ]);
     }
     /**

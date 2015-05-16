@@ -20,7 +20,7 @@ class $CLASS$RepositoryEloquent extends BaseRepository implements $CLASS$Reposit
      */
     public function model()
     {
-        return "$MODEL$";
+        return '$MODEL$';
     }
 
     /**

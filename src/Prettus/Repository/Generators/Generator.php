@@ -148,6 +148,7 @@ abstract class Generator
     {
         return explode('/', $this->getName());
     }
+
     /**
      * Get root namespace.
      *
@@ -155,7 +156,7 @@ abstract class Generator
      */
     public function getRootNamespace()
     {
-        return $this->getAppNamespace();
+        return config('repository.generator.rootNamespace', $this->getAppNamespace());
     }
 
     /**

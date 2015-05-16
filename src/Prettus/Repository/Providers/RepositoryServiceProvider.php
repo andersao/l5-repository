@@ -30,6 +30,7 @@ class RepositoryServiceProvider extends ServiceProvider
 
         $this->loadTranslationsFrom(__DIR__ . '/../../../resources/lang', 'repository');
     }
+
     /**
      * Register the service provider.
      *
@@ -37,8 +38,9 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
+        $this->commands('Prettus\Repository\Generators\Commands\RepositoryCommand');
     }
+
     /**
      * Get the services provided by the provider.
      *

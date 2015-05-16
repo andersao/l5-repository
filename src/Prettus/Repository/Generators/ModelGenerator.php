@@ -7,21 +7,36 @@ use Prettus\Repository\Generators\Migrations\SchemaParser;
  * @package Prettus\Repository\Generators
  */
 class ModelGenerator extends Generator {
+
     /**
      * Get stub name.
      *
      * @var string
      */
     protected $stub = 'model';
+
+    /**
+     * Get root namespace.
+     *
+     * @return string
+     */
+    public function getRootNamespace()
+    {
+        return parent::getRootNamespace().'Entities\\';
+    }
+
+
     /**
      * Get base path of destination file.
      *
      * @return string
      */
+
     public function getBasePath()
     {
-        return app_path();
+        return config('repository.generator.basePath', app_path());
     }
+
     /**
      * Get destination path for generated file.
      *
@@ -29,7 +44,7 @@ class ModelGenerator extends Generator {
      */
     public function getPath()
     {
-        return $this->getBasePath() . '/' . $this->getName() . '.php';
+        return $this->getBasePath() . '/Entities/' . $this->getName() . '.php';
     }
 
     /**
@@ -43,6 +58,7 @@ class ModelGenerator extends Generator {
             'fillable' => $this->getFillable()
         ]);
     }
+
     /**
      * Get schema parser.
      *
@@ -52,6 +68,7 @@ class ModelGenerator extends Generator {
     {
         return new SchemaParser($this->fillable);
     }
+
     /**
      * Get the fillable attributes.
      *

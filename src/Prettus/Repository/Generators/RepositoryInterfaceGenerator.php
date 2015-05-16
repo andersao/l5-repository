@@ -16,13 +16,23 @@ class RepositoryInterfaceGenerator extends Generator {
     protected $stub = 'repository/interface';
 
     /**
+     * Get root namespace.
+     *
+     * @return string
+     */
+    public function getRootNamespace()
+    {
+        return parent::getRootNamespace().'Repositories\\';
+    }
+
+    /**
      * Get base path of destination file.
      *
      * @return string
      */
     public function getBasePath()
     {
-        return app_path();
+        return config('repository.generator.basePath', app_path());
     }
 
     /**
@@ -32,7 +42,7 @@ class RepositoryInterfaceGenerator extends Generator {
      */
     public function getPath()
     {
-        return $this->getBasePath() . '/' . $this->getName() . '.php';
+        return $this->getBasePath() . '/Repositories/' . $this->getName() . 'Repository.php';
     }
 
     /**

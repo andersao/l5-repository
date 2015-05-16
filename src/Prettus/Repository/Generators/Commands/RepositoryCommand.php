@@ -39,19 +39,27 @@ class RepositoryCommand extends Command {
     {
         $this->generators = new Collection();
 
-        $this->generators->push(new RepositoryInterfaceGenerator([
-            'name' => $this->argument('name')
-        ]));
-
-        $this->generators->push(new RepositoryEloquentGenerator([
-            'name' => $this->argument('name')
-        ]));
-
-        $this->generators->push(new ModelGenerator([
+        $modelGenerator = new ModelGenerator([
             'name'      => $this->argument('name'),
             'fillable'  => $this->option('fillable'),
             'force'     => $this->option('force')
+        ]);
+
+        $this->generators->push($modelGenerator);
+
+        $this->generators->push(new RepositoryInterfaceGenerator([
+            'name'      => $this->argument('name')
         ]));
+
+        $model = $modelGenerator->getRootNamespace().$modelGenerator->getName();
+        $model = str_replace(["\\",'/'],'\\', $model);
+
+        $this->generators->push(new RepositoryEloquentGenerator([
+            'name'      => $this->argument('name'),
+            'rules'     => $this->option('rules'),
+            'model'     => $model
+        ]));
+
 
         foreach( $this->generators as $generator)
         {
@@ -82,7 +90,8 @@ class RepositoryCommand extends Command {
     {
         return [
             ['fillable', null, InputOption::VALUE_OPTIONAL, 'The fillable attributes.', null],
-            ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null],
+            ['rules', null, InputOption::VALUE_OPTIONAL, 'The rules of validation attributes.', null],
+            ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null]
         ];
     }
 }
