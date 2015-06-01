@@ -85,6 +85,13 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function boot(){}
 
     /**
+     * @throws RepositoryException
+     */
+    public function resetModel(){
+        $this->makeModel();
+    }
+
+    /**
      * Specify Model class name
      *
      * @return string
@@ -225,6 +232,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             $results = $this->model->all($columns);
         }
 
+        $this->resetModel();
+
         return $this->parserResult($results);
     }
 
@@ -239,6 +248,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->applyCriteria();
         $limit = is_null($limit) ? config('repository.pagination.limit', 15) : $limit;
         $results = $this->model->paginate($limit, $columns);
+        $this->resetModel();
         return $this->parserResult($results);
     }
 
@@ -253,6 +263,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         $this->applyCriteria();
         $model = $this->model->findOrFail($id, $columns);
+        $this->resetModel();
         return $this->parserResult($model);
     }
 
@@ -268,6 +279,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         $this->applyCriteria();
         $model = $this->model->where($field,'=',$value)->get($columns);
+        $this->resetModel();
         return $this->parserResult($model);
     }
 
@@ -297,6 +309,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         }
 
         $model = $this->model->get($columns);
+        $this->resetModel();
 
         return $this->parserResult($model);
     }
@@ -318,6 +331,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         $model = $this->model->newInstance($attributes);
         $model->save();
+        $this->resetModel();
 
         return $this->parserResult($model);
     }
@@ -348,7 +362,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $model->save();
 
         $this->skipPresenter($_skipPresenter);
-
+        $this->resetModel();
 
         return $this->parserResult($model);
     }
@@ -367,6 +381,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $model = $this->find($id);
 
         $this->skipPresenter($_skipPresenter);
+        $this->resetModel();
 
         return $model->delete();
     }
@@ -439,6 +454,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         $this->model = $criteria->apply($this->model, $this);
         $results = $this->model->get();
+        $this->resetModel();
         return $this->parserResult( $results );
     }
 
