@@ -389,10 +389,10 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Load relations
      *
-     * @param array $relations
+     * @param array|string $relations
      * @return $this
      */
-    public function with(array $relations)
+    public function with($relations)
     {
         $this->model = $this->model->with($relations);
         return $this;
