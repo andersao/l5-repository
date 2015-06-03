@@ -8,6 +8,8 @@ Laravel 5 Repositories is used to abstract the data layer, making our applicatio
 #### [See to version 1.0.*](https://github.com/andersao/l5-repository/tree/1.0.4)
 #### [Migrate to 2.0](migration-to-2.0.md)
 
+You want to understand a little more about the Repository pattern? [Read this great article](http://bosnadev.com/2015/03/07/using-repository-pattern-in-laravel-5/?utm_source=prettus-l5-repository&utm_medium=readme&utm_campaign=prettus-l5-repository).
+
 ## Table of Contents
 
 - <a href="#installation">Installation</a>
