@@ -78,10 +78,10 @@ interface RepositoryInterface {
     /**
      * Load relations
      *
-     * @param array $relations
+     * @param $relations
      * @return $this
      */
-    public function with(array $relations);
+    public function with($relations);
 
     /**
      * Set hidden fields
