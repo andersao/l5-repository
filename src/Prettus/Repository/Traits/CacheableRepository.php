@@ -2,6 +2,7 @@
 
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Prettus\Repository\Contracts\CriteriaInterface;
+use Prettus\Repository\Helpers\CacheKeys;
 
 /**
  * Class CacheableRepository
@@ -112,11 +113,14 @@ trait CacheableRepository {
     public function getCacheKey($method, $args = null){
 
         $request = app('Illuminate\Http\Request');
-        $args = serialize($args);
-        $key  = sprintf('%s-%s',
+        $args    = serialize($args);
+        $key     = sprintf('%s@%s-%s',
+            get_called_class(),
             $method,
             md5($args.$request->fullUrl())
         );
+
+        CacheKeys::putKey(get_called_class(), $key);
 
         return $key;
 

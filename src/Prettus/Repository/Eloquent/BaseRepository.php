@@ -3,6 +3,9 @@
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\PresenterInterface;
 use Prettus\Repository\Contracts\RepositoryCriteriaInterface;
+use Prettus\Repository\Events\RepositoryEntityCreated;
+use Prettus\Repository\Events\RepositoryEntityDeleted;
+use Prettus\Repository\Events\RepositoryEntityUpdated;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
@@ -333,6 +336,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $model->save();
         $this->resetModel();
 
+        event(new RepositoryEntityCreated($this, $model));
+
         return $this->parserResult($model);
     }
 
@@ -357,12 +362,14 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         $this->skipPresenter(true);
 
-        $model = $this->find($id);
+        $model = $this->model->findOrFail($id);
         $model->fill($attributes);
         $model->save();
 
         $this->skipPresenter($_skipPresenter);
         $this->resetModel();
+
+        event(new RepositoryEntityUpdated($this, $model));
 
         return $this->parserResult($model);
     }
@@ -379,11 +386,16 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->skipPresenter(true);
 
         $model = $this->find($id);
+        $originalModel = clone $model;
 
         $this->skipPresenter($_skipPresenter);
         $this->resetModel();
 
-        return $model->delete();
+        $deleted = $model->delete();
+
+        event(new RepositoryEntityDeleted($this, $originalModel));
+
+        return $deleted;
     }
 
     /**
