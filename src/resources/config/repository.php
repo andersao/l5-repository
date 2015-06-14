@@ -32,6 +32,112 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Cache Config
+    |--------------------------------------------------------------------------
+    |
+    */
+    'cache'=>[
+        /*
+         |--------------------------------------------------------------------------
+         | Cache Status
+         |--------------------------------------------------------------------------
+         |
+         | Enable or disable cache
+         |
+         */
+        'enabled'   => true,
+
+        /*
+         |--------------------------------------------------------------------------
+         | Cache Minutes
+         |--------------------------------------------------------------------------
+         |
+         | Time of expiration cache
+         |
+         */
+        'minutes'   => 30,
+
+         /*
+          |--------------------------------------------------------------------------
+          | Cache Repository
+          |--------------------------------------------------------------------------
+          |
+          | Instance of Illuminate\Contracts\Cache\Repository
+          |
+          */
+        'repository'=> 'cache',
+
+        /*
+          |--------------------------------------------------------------------------
+          | Cache Clean Listener
+          |--------------------------------------------------------------------------
+          |
+          |
+          |
+          */
+        'clean'     => [
+
+            /*
+              |--------------------------------------------------------------------------
+              | Enable clear cache on repository changes
+              |--------------------------------------------------------------------------
+              |
+              */
+            'enabled' => true,
+
+            /*
+              |--------------------------------------------------------------------------
+              | Actions in Repository
+              |--------------------------------------------------------------------------
+              |
+              | create : Clear Cache on create Entry in repository
+              | update : Clear Cache on update Entry in repository
+              | delete : Clear Cache on delete Entry in repository
+              |
+              */
+            'on' => [
+                'create'=>true,
+                'update'=>true,
+                'delete'=>true,
+            ]
+        ],
+
+        'params'    => [
+              /*
+              |--------------------------------------------------------------------------
+              | Skip Cache Params
+              |--------------------------------------------------------------------------
+              |
+              |
+              | Ex: http://prettus.local/?search=lorem&skipCache=true
+              |
+              */
+            'skipCache'=>'skipCache'
+        ],
+
+        /*
+       |--------------------------------------------------------------------------
+       | Methods Allowed
+       |--------------------------------------------------------------------------
+       |
+       | methods cacheable : all, paginate, find, findByField, findWhere, getByCriteria
+       |
+       | Ex:
+       |
+       | 'only'  =>['all','paginate'],
+       |
+       | or
+       |
+       | 'except'  =>['find'],
+       */
+        'allowed'=>[
+            'only'  =>null,
+            'except'=>null
+        ]
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Criteria Config
     |--------------------------------------------------------------------------
     |
@@ -67,26 +173,26 @@ return [
         | Params :
         |
         | - search : Searched value
-        |   Ex: http://artesaos/?search=lorem
+        |   Ex: http://prettus.local/?search=lorem
         |
         | - searchFields : Fields in which research should be carried out
         |   Ex:
-        |    http://artesaos/?search=lorem&searchFields=name;email
-        |    http://artesaos/?search=lorem&searchFields=name:like;email
-        |    http://artesaos/?search=lorem&searchFields=name:like
+        |    http://prettus.local/?search=lorem&searchFields=name;email
+        |    http://prettus.local/?search=lorem&searchFields=name:like;email
+        |    http://prettus.local/?search=lorem&searchFields=name:like
         |
         | - filter : Fields that must be returned to the response object
         |   Ex:
-        |   http://artesaos/?search=lorem&filter=id,name
+        |   http://prettus.local/?search=lorem&filter=id,name
         |
         | - orderBy : Order By
         |   Ex:
-        |   http://artesaos/?search=lorem&orderBy=id
+        |   http://prettus.local/?search=lorem&orderBy=id
         |
         | - sortedBy : Sort
         |   Ex:
-        |   http://artesaos/?search=lorem&orderBy=id&sortedBy=asc
-        |   http://artesaos/?search=lorem&orderBy=id&sortedBy=desc
+        |   http://prettus.local/?search=lorem&orderBy=id&sortedBy=asc
+        |   http://prettus.local/?search=lorem&orderBy=id&sortedBy=desc
         |
         */
         'params'=>[
