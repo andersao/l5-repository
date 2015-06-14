@@ -610,7 +610,7 @@ You can change the cache settings in the file *config/repository.php* and also d
 
 *config/repository.php*
 
-```
+```php
 'cache'=>[
     //Enable or disable cache repositories
     'enabled'   => true,
