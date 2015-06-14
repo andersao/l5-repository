@@ -298,8 +298,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         {
             if( is_array($value) )
             {
-                list($field, $condition, $value) = $value;
-                $this->model = $this->model->where($field,$condition,$value);
+                list($field, $condition, $val) = $value;
+                $this->model = $this->model->where($field,$condition,$val);
             }
             else
             {
