@@ -1,4 +1,6 @@
-<?php $NAMESPACE$
+<?php
+
+$NAMESPACE$
 
 use Prettus\Repository\Eloquent\BaseRepository;
 
@@ -6,8 +8,8 @@ use Prettus\Repository\Eloquent\BaseRepository;
  * Class $CLASS$RepositoryEloquent
  * @package $NAMESPACE$
  */
-class $CLASS$RepositoryEloquent extends BaseRepository implements $CLASS$Repository {
-
+class $CLASS$RepositoryEloquent extends BaseRepository implements $CLASS$Repository
+{
     /**
      * @var array
      */
@@ -24,7 +26,7 @@ class $CLASS$RepositoryEloquent extends BaseRepository implements $CLASS$Reposit
     }
 
     /**
-     *
+     * Boot up the repository, pushing criteria
      */
     public function boot()
     {
