@@ -1,10 +1,12 @@
-<?php $NAMESPACE$
+<?php
+
+$NAMESPACE$
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class $CLASS$ extends Seeder {
-
+class $CLASS$ extends Seeder
+{
 	/**
 	 * Run the database seeds.
 	 *
