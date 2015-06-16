@@ -5,10 +5,10 @@ Laravel 5 Repositories is used to abstract the data layer, making our applicatio
 [![Latest Stable Version](https://poser.pugx.org/prettus/l5-repository/v/stable)](https://packagist.org/packages/prettus/l5-repository) [![Total Downloads](https://poser.pugx.org/prettus/l5-repository/downloads)](https://packagist.org/packages/prettus/l5-repository) [![Latest Unstable Version](https://poser.pugx.org/prettus/l5-repository/v/unstable)](https://packagist.org/packages/prettus/l5-repository) [![License](https://poser.pugx.org/prettus/l5-repository/license)](https://packagist.org/packages/prettus/l5-repository)
 [![Analytics](https://ga-beacon.appspot.com/UA-61050740-1/l5-repository/readme)](https://packagist.org/packages/prettus/l5-repository)
 
-#### [See to version 1.0.*](https://github.com/andersao/l5-repository/tree/1.0.4)
+#### [See version 1.0.*](https://github.com/andersao/l5-repository/tree/1.0.4)
 #### [Migrate to 2.0](migration-to-2.0.md)
 
-You want to understand a little more about the Repository pattern? [Read this great article](http://bit.ly/1IdmRNS).
+You want to know a little more about the Repository pattern? [Read this great article](http://bit.ly/1IdmRNS).
 
 ## Table of Contents
 
@@ -47,30 +47,27 @@ You want to understand a little more about the Repository pattern? [Read this gr
 
 ### Composer
 
-Add `prettus/l5-repository` to the "require" section of your `composer.json` file.
+Execute the following command to get the latest version of the package:
 
-```json
-	"prettus/l5-repository": "2.0.*"
+```bash
+	composer require prettus/l5-repository
 ```
-
-Run `composer update` to get the latest version of the package.
 
 ### Laravel
 
-In your `config/app.php` add `'Prettus\Repository\Providers\RepositoryServiceProvider'` to the end of the `providers` array:
+In your `config/app.php` add `Prettus\Repository\Providers\RepositoryServiceProvider:class` to the end of the `providers` array:
 
 ```php
-'providers' => array(
-    ...,
-    'Illuminate\Workbench\WorkbenchServiceProvider',
-    'Prettus\Repository\Providers\RepositoryServiceProvider',
-),
+'providers' => [
+    ...
+    Prettus\Repository\Providers\RepositoryServiceProvider::class,
+],
 ```
 
 Publish Configuration
 
 ```shell
-php artisan vendor:publish --provider="Prettus\Repository\Providers\RepositoryServiceProvider"
+php artisan vendor:publish
 ```
 
 ## Methods
@@ -180,7 +177,7 @@ You must first configure the storage location of the repository files. By defaul
     ]
 ```
 
-You may want to save the root of your project folder out of the app and add another namespace for example
+You may want to save the root of your project folder out of the app and add another namespace, for example
 
 ```php
     ...
@@ -212,7 +209,7 @@ php artisan repository:generate "Blog\Post" --fillable="title,content"
 
 When running commado, you will be creating the "Entities" folder and "Repositories" inside the folder that you set as the default.
 
-Done, done that just now you do bind its interface for your real repository
+Done, done that just now you do bind its interface for your real repository, for example in your own Repositories Service Provider.
 
 ```php
 App::bind('{YOUR_NAMESPACE}Repositories\PostRepository', '{YOUR_NAMESPACE}Repositories\PostRepositoryEloquent');
@@ -322,7 +319,7 @@ $this->repository->delete($id)
 
 ### Create a Criteria
 
-Criteria is a way to change the repository of the query by applying specific conditions according to their need. You can add multiple Criteria in your repository
+Criteria are a way to change the repository of the query by applying specific conditions according to your needs. You can add multiple Criteria in your repository.
 
 ```php
 
@@ -344,6 +341,7 @@ class MyCriteria implements CriteriaInterface {
 ```php
 
 namespace App\Http\Controllers;
+
 use App\PostRepository;
 
 class PostsController extends BaseController {
@@ -395,7 +393,7 @@ class PostRepository extends BaseRepository {
 
 ### Skip criteria defined in the repository
 
-Use `skipCriteria` before any method in the repository
+Use `skipCriteria` before any other chaining method
 
 ```php
 $posts = $this->repository->skipCriteria()->all();
@@ -406,9 +404,9 @@ $posts = $this->repository->skipCriteria()->all();
 
 RequestCriteria is a standard Criteria implementation. It enables filters to perform in the repository from parameters sent in the request.
 
-You can perform a dynamic search, filter the data and customize the queries
+You can perform a dynamic search, filter the data and customize the queries.
 
-To use the Criteria in your repository, you can add a new criteria in the boot method of your repository, or directly use in your controller, in order to filter out only a few requests
+To use the Criteria in your repository, you can add a new criteria in the boot method of your repository, or directly use in your controller, in order to filter out only a few requests.
 
 ####Enabling in your Repository
 
@@ -602,7 +600,7 @@ class PostRepository extends BaseRepository implements CacheableInterface {
 }
 ```
 
-Done , done that your repository will be cached , and the repository cache is cleared whenever an item is created , modified or deleted .
+Done , done that your repository will be cached , and the repository cache is cleared whenever an item is created, modified or deleted.
 
 #### Cache Config
 
@@ -677,9 +675,9 @@ The cacheable methods are : all, paginate, find, findByField, findWhere, getByCr
 
 ### Validators
 
-Easy validation with [prettus/laravel-validator](https://github.com/andersao/laravel-validator)
+Easy validation with `prettus/laravel-validator`
 
-[For more details see](https://github.com/andersao/laravel-validator)
+[For more details click here](https://github.com/andersao/laravel-validator)
 
 #### Using a Validator Class
 
@@ -754,7 +752,7 @@ class PostRepository extends BaseRepository {
 
 #### Defining rules in the repository
 
-Alternatively , instead of using a class to define its validation rules, you can set your rules directly into the rules repository property , it will have the same effect Validation class
+Alternatively, instead of using a class to define its validation rules, you can set your rules directly into the rules repository property, it will have the same effect as a Validation class.
 
 ```php
 use Prettus\Repository\Eloquent\BaseRepository;
@@ -790,24 +788,23 @@ class PostRepository extends BaseRepository {
 }
 ```
 
-Validation is ready. In case of failure will be released an exception. *Prettus\Validator\Exceptions\ValidatorException*
+Validation is now ready. In case of a failure an exception will be given of the type: *Prettus\Validator\Exceptions\ValidatorException*
 
 ### Presenters
 
-Presenter to wrap and render objects.
+Presenters function as a wrapper and renderer for objects.
 
 #### Fractal Presenter
 
-There are two ways to implement Presenter, the first is creating a TransformerAbstract and Set using your Presenter class as described in the Create a Transformer Class.
+There are two ways to implement the Presenter, the first is creating a TransformerAbstract and set it using your Presenter class as described in the Create a Transformer Class.
 
-The second way is to make your model implement Transformable interface, and use the default Prenseter ModelFractarPresenter, ready, this will have the same effect.
+The second way is to make your model implement the Transformable interface, and use the default Prenseter ModelFractarPresenter, this will have the same effect.
 
 ##### Transformer Class
 
 ###### Create a Transformer Class
 
 ```php
-
 use App\Post;
 use League\Fractal\TransformerAbstract;
 
@@ -859,7 +856,7 @@ class PostRepository extends BaseRepository {
 }
 ```
 
-or enable in your controller with 
+Or enable it in your controller with 
 
 ```php
 $this->repository->setPresenter("App\\Presenter\\PostPresenter");
@@ -892,7 +889,7 @@ class Post extends Eloquent implements Transformable {
 
 ###### Enabling in your Repository
 
-`Prettus\Repository\Presenter\ModelFractalPresenter` is a Presenter default for Model implementing Transformable 
+`Prettus\Repository\Presenter\ModelFractalPresenter` is a Presenter default for Models implementing Transformable 
 
 ```php
 use Prettus\Repository\Eloquent\BaseRepository;
@@ -908,7 +905,7 @@ class PostRepository extends BaseRepository {
 }
 ```
 
-or enable in your controller with 
+Or enable it in your controller with 
 
 ```php
 $this->repository->setPresenter("Prettus\\Repository\\Presenter\\ModelFractalPresenter");
@@ -916,7 +913,7 @@ $this->repository->setPresenter("Prettus\\Repository\\Presenter\\ModelFractalPre
 
 ### Skip Presenter defined in the repository
 
-Use *skipPresenter* before any method in the repository
+Use *skipPresenter* before any other chaining method
 
 ```php
 $posts = $this->repository->skipPresenter()->all();
