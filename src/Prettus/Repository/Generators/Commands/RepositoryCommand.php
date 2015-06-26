@@ -15,14 +15,14 @@ class RepositoryCommand extends Command {
      *
      * @var string
      */
-    protected $name = 'repository:generate';
+    protected $name = 'make:repository';
 
     /**
      * The description of command.
      *
      * @var string
      */
-    protected $description = 'Generate a new repository.';
+    protected $description = 'Create a new repository.';
 
 
     /**
