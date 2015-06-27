@@ -6,7 +6,9 @@ Laravel 5 Repositories is used to abstract the data layer, making our applicatio
 [![Analytics](https://ga-beacon.appspot.com/UA-61050740-1/l5-repository/readme)](https://packagist.org/packages/prettus/l5-repository)
 
 #### [See version 1.0.*](https://github.com/andersao/l5-repository/tree/1.0.4)
+#### [See version 2.0.*](https://github.com/andersao/l5-repository/tree/2.0.14)
 #### [Migrate to 2.0](migration-to-2.0.md)
+#### [Migrate to 2.1](migration-to-2.1.md)
 
 You want to know a little more about the Repository pattern? [Read this great article](http://bit.ly/1IdmRNS).
 
@@ -691,9 +693,11 @@ The cacheable methods are : all, paginate, find, findByField, findWhere, getByCr
 
 ### Validators
 
+Requires [prettus/laravel-validator](https://github.com/prettus/laravel-validator). `composer require prettus/laravel-validator`
+
 Easy validation with `prettus/laravel-validator`
 
-[For more details click here](https://github.com/andersao/laravel-validator)
+[For more details click here](https://github.com/prettus/laravel-validator)
 
 #### Using a Validator Class
 
@@ -811,6 +815,8 @@ Validation is now ready. In case of a failure an exception will be given of the 
 Presenters function as a wrapper and renderer for objects.
 
 #### Fractal Presenter
+
+Requires [Fractal](http://fractal.thephpleague.com/). `composer require league/fractal`
 
 There are two ways to implement the Presenter, the first is creating a TransformerAbstract and set it using your Presenter class as described in the Create a Transformer Class.
 
