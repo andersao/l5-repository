@@ -1,11 +1,12 @@
-<?php namespace Prettus\Repository\Contracts;
+<?php
+namespace Prettus\Repository\Contracts;
 
 /**
  * Interface Transformable
  * @package Prettus\Repository\Contracts
  */
-interface Transformable {
-
+interface Transformable
+{
     /**
      * @return array
      */

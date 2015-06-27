@@ -1,4 +1,5 @@
-<?php namespace Prettus\Repository\Exceptions;
+<?php
+namespace Prettus\Repository\Exceptions;
 
 use \Exception;
 
@@ -6,6 +7,7 @@ use \Exception;
  * Class RepositoryException
  * @package Prettus\Repository\Exceptions
  */
-class RepositoryException extends Exception {
+class RepositoryException extends Exception
+{
 
 }

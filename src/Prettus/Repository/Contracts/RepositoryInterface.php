@@ -1,10 +1,12 @@
-<?php namespace Prettus\Repository\Contracts;
+<?php
+namespace Prettus\Repository\Contracts;
 
 /**
  * Interface RepositoryInterface
  * @package Prettus\Repository\Contracts
  */
-interface RepositoryInterface {
+interface RepositoryInterface
+{
 
     /**
      * Retrieve all data of repository

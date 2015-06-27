@@ -1,4 +1,5 @@
-<?php namespace Prettus\Repository\Events;
+<?php
+namespace Prettus\Repository\Events;
 
 /**
  * Class RepositoryEntityCreated

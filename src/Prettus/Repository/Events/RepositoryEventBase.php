@@ -1,4 +1,5 @@
-<?php namespace Prettus\Repository\Events;
+<?php
+namespace Prettus\Repository\Events;
 
 use Illuminate\Database\Eloquent\Model;
 use Prettus\Repository\Contracts\RepositoryInterface;
@@ -7,8 +8,8 @@ use Prettus\Repository\Contracts\RepositoryInterface;
  * Class RepositoryEventBase
  * @package Prettus\Repository\Events
  */
-abstract class RepositoryEventBase {
-
+abstract class RepositoryEventBase
+{
     /**
      * @var Model
      */

@@ -1,5 +1,7 @@
-<?php namespace Prettus\Repository\Presenter;
+<?php
+namespace Prettus\Repository\Presenter;
 
+use Exception;
 use Prettus\Repository\Contracts\PresenterInterface;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Illuminate\Pagination\AbstractPaginator;
@@ -15,8 +17,8 @@ use League\Fractal\Serializer\SerializerAbstract;
  * Class FractalPresenter
  * @package Prettus\Repository\Presenter
  */
-abstract class FractalPresenter implements PresenterInterface {
-
+abstract class FractalPresenter implements PresenterInterface
+{
     /**
      * @var string
      */
@@ -38,9 +40,14 @@ abstract class FractalPresenter implements PresenterInterface {
     protected $resource = null;
 
     /**
-     *
+     * @throws Exception
      */
-    public function __construct(){
+    public function __construct()
+    {
+        if ( !class_exists('League\Fractal\Manager') ){
+            throw new Exception( trans('repository::packages.league_fractal_required') );
+        }
+
         $this->fractal  = new Manager();
         $this->parseIncludes();
         $this->setupSerializer();
@@ -53,7 +60,7 @@ abstract class FractalPresenter implements PresenterInterface {
     {
         $serializer = $this->serializer();
 
-        if( $serializer instanceof SerializerAbstract ){
+        if ( $serializer instanceof SerializerAbstract ){
             $this->fractal->setSerializer($serializer);
         }
 
@@ -69,8 +76,7 @@ abstract class FractalPresenter implements PresenterInterface {
         $request        = app('Illuminate\Http\Request');
         $paramIncludes  = config('repository.fractal.params.include','include');
 
-        if ( $request->has( $paramIncludes ) )
-        {
+        if ( $request->has( $paramIncludes ) ) {
             $this->fractal->parseIncludes( $request->get( $paramIncludes ) );
         }
 
@@ -99,19 +105,19 @@ abstract class FractalPresenter implements PresenterInterface {
      *
      * @param $data
      * @return mixed
+     * @throws Exception
      */
     public function present($data)
     {
-        if( $data instanceof EloquentCollection )
-        {
+        if ( !class_exists('League\Fractal\Manager') ){
+            throw new Exception( trans('repository::packages.league_fractal_required') );
+        }
+
+        if ( $data instanceof EloquentCollection ) {
             $this->resource = $this->transformCollection($data);
-        }
-        elseif( $data instanceof AbstractPaginator )
-        {
+        } elseif ( $data instanceof AbstractPaginator ) {
             $this->resource = $this->transformPaginator($data);
-        }
-        else
-        {
+        } else {
             $this->resource = $this->transformItem($data);
         }
 
