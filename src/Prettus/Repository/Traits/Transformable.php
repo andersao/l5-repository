@@ -1,11 +1,10 @@
 <?php namespace Prettus\Repository\Traits;
 
 /**
- * Class TransformableTrait
+ * Class Transformable
  * @package Prettus\Repository\Traits
- * @deprecated since version 2.0.15. Use the Transformable trait.
  */
-trait TransformableTrait {
+trait Transformable {
 
     /**
      * @return array
