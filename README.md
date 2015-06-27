@@ -64,6 +64,12 @@ In your `config/app.php` add `Prettus\Repository\Providers\RepositoryServiceProv
 ],
 ```
 
+If Lumen
+
+```php
+$app->register(Prettus\Repository\Providers\LumenRepositoryServiceProvider::class);
+```
+
 Publish Configuration
 
 ```shell
