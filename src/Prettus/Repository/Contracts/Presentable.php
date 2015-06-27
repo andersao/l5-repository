@@ -2,10 +2,10 @@
 namespace Prettus\Repository\Contracts;
 
 /**
- * Interface PresentableInterface
+ * Interface Presentable
  * @package Prettus\Repository\Contracts
  */
-interface PresentableInterface
+interface Presentable
 {
     /**
      * @param PresenterInterface $presenter
@@ -16,5 +16,5 @@ interface PresentableInterface
     /**
      * @return mixed
      */
-    public function presentable();
+    public function presenter();
 }
