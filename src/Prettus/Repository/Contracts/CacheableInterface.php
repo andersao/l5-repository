@@ -1,4 +1,5 @@
-<?php namespace Prettus\Repository\Contracts;
+<?php
+namespace Prettus\Repository\Contracts;
 
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 
@@ -6,8 +7,8 @@ use Illuminate\Contracts\Cache\Repository as CacheRepository;
  * Interface CacheableInterface
  * @package Prettus\Repository\Contracts
  */
-interface CacheableInterface {
-
+interface CacheableInterface
+{
     /**
      * Set Cache Repository
      *

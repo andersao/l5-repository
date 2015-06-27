@@ -1,5 +1,7 @@
-<?php namespace Prettus\Repository\Eloquent;
+<?php
+namespace Prettus\Repository\Eloquent;
 
+use Exception;
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\PresenterInterface;
 use Prettus\Repository\Contracts\RepositoryCriteriaInterface;
@@ -18,7 +20,8 @@ use Prettus\Validator\Exceptions\ValidatorException;
  * Class BaseRepository
  * @package Prettus\Repository\Eloquent
  */
-abstract class BaseRepository implements RepositoryInterface, RepositoryCriteriaInterface {
+abstract class BaseRepository implements RepositoryInterface, RepositoryCriteriaInterface
+{
 
     /**
      * @var Application
@@ -85,12 +88,16 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      *
      */
-    public function boot(){}
+    public function boot()
+    {
+
+    }
 
     /**
      * @throws RepositoryException
      */
-    public function resetModel(){
+    public function resetModel()
+    {
         $this->makeModel();
     }
 
@@ -114,19 +121,21 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Specify Validator class name of Prettus\Validator\Contracts\ValidatorInterface
      *
-     * @return string
+     * @return null
+     * @throws Exception
      */
     public function validator()
     {
 
-        if( isset($this->rules) && ! is_null($this->rules) && is_array($this->rules) )
-        {
-            $validator = app('Prettus\Validator\LaravelValidator');
-
-            if( $validator instanceof ValidatorInterface )
-            {
-                $validator->setRules($this->rules);
-                return $validator;
+        if ( isset($this->rules) && ! is_null($this->rules) && is_array($this->rules) && !empty($this->rules) ) {
+            if ( class_exists('Prettus\Validator\LaravelValidator') ) {
+                $validator = app('Prettus\Validator\LaravelValidator');
+                if ($validator instanceof ValidatorInterface) {
+                    $validator->setRules($this->rules);
+                    return $validator;
+                }
+            } else {
+                throw new Exception( trans('repository::packages.prettus_laravel_validation_required') );
             }
         }
 
@@ -153,8 +162,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         $model = $this->app->make($this->model());
 
-        if (!$model instanceof Model)
-        {
+        if (!$model instanceof Model) {
             throw new RepositoryException("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");
         }
 
@@ -170,12 +178,10 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         $presenter = !is_null($presenter) ? $presenter : $this->presenter();
 
-        if( !is_null($presenter) )
-        {
+        if ( !is_null($presenter) ) {
             $this->presenter = is_string($presenter) ? $this->app->make($presenter) : $presenter;
 
-            if (!$this->presenter instanceof PresenterInterface )
-            {
+            if (!$this->presenter instanceof PresenterInterface ) {
                 throw new RepositoryException("Class {$presenter} must be an instance of Prettus\\Repository\\Contracts\\PresenterInterface");
             }
 
@@ -194,12 +200,10 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         $validator = !is_null($validator) ? $validator : $this->validator();
 
-        if( !is_null($validator) )
-        {
+        if ( !is_null($validator) ) {
             $this->validator = is_string($validator) ? $this->app->make($validator) : $validator;
 
-            if (!$this->validator instanceof ValidatorInterface )
-            {
+            if (!$this->validator instanceof ValidatorInterface ) {
                 throw new RepositoryException("Class {$validator} must be an instance of Prettus\\Validator\\Contracts\\ValidatorInterface");
             }
 
@@ -229,7 +233,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         $this->applyCriteria();
 
-        if( $this->model instanceof \Illuminate\Database\Eloquent\Builder ){
+        if ( $this->model instanceof \Illuminate\Database\Eloquent\Builder ){
             $results = $this->model->get($columns);
         } else {
             $results = $this->model->all($columns);
@@ -297,18 +301,13 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         $this->applyCriteria();
 
-        foreach($where as $field => $value)
-        {
-            if( is_array($value) )
-            {
+        foreach ($where as $field => $value) {
+            if ( is_array($value) ) {
                 list($field, $condition, $val) = $value;
                 $this->model = $this->model->where($field,$condition,$val);
-            }
-            else
-            {
+            } else {
                 $this->model = $this->model->where($field,'=',$value);
             }
-
         }
 
         $model = $this->model->get($columns);
@@ -326,8 +325,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function create(array $attributes)
     {
-        if( !is_null($this->validator) )
-        {
+        if ( !is_null($this->validator) ) {
             $this->validator->with($attributes)
                 ->passesOrFail( ValidatorInterface::RULE_CREATE );
         }
@@ -351,8 +349,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function update(array $attributes, $id)
     {
-        if( !is_null($this->validator) )
-        {
+        if ( !is_null($this->validator) ) {
             $this->validator->with($attributes)
                 ->setId($id)
                 ->passesOrFail( ValidatorInterface::RULE_UPDATE );
@@ -490,19 +487,15 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     protected function applyCriteria()
     {
 
-        if( $this->skipCriteria === true )
-        {
+        if ( $this->skipCriteria === true ) {
             return  $this;
         }
 
         $criteria = $this->getCriteria();
 
-        if( $criteria )
-        {
-            foreach($criteria as $c)
-            {
-                if( $c instanceof CriteriaInterface )
-                {
+        if ( $criteria ) {
+            foreach ($criteria as $c) {
+                if ( $c instanceof CriteriaInterface ) {
                     $this->model = $c->apply($this->model, $this);
                 }
             }
@@ -531,8 +524,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function parserResult($result)
     {
-        if( $this->presenter instanceof PresenterInterface && !$this->skipPresenter )
-        {
+        if ( $this->presenter instanceof PresenterInterface && !$this->skipPresenter ) {
             return $this->presenter->present($result);
         }
 

@@ -1,4 +1,5 @@
-<?php namespace Prettus\Repository\Generators\Commands;
+<?php
+namespace Prettus\Repository\Generators\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
@@ -8,7 +9,8 @@ use Prettus\Repository\Generators\RepositoryInterfaceGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class RepositoryCommand extends Command {
+class RepositoryCommand extends Command
+{
 
     /**
      * The name of command.
@@ -61,8 +63,7 @@ class RepositoryCommand extends Command {
         ]));
 
 
-        foreach( $this->generators as $generator)
-        {
+        foreach ( $this->generators as $generator) {
             $generator->run();
         }
 

@@ -1,4 +1,6 @@
-<?php namespace Prettus\Repository\Helpers;
+<?php
+
+namespace Prettus\Repository\Helpers;
 
 /**
  * Class CacheKeys
@@ -27,7 +29,7 @@ class CacheKeys {
 
         self::$keys[$group] = self::getKeys($group);
 
-        if( !in_array($key, self::$keys[$group]) ){
+        if ( !in_array($key, self::$keys[$group]) ){
             self::$keys[$group][] = $key;
         }
 
@@ -50,14 +52,14 @@ class CacheKeys {
      */
     public static function loadKeys()
     {
-        if( !is_null(self::$keys) && is_array(self::$keys) )
+        if ( !is_null(self::$keys) && is_array(self::$keys) )
         {
             return self::$keys;
         }
 
         $file = self::getFileKeys();
 
-        if( !file_exists($file) ){
+        if ( !file_exists($file) ){
             self::storeKeys();
         }
 

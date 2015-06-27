@@ -1,10 +1,12 @@
-<?php namespace Prettus\Repository\Generators\Migrations;
+<?php
+namespace Prettus\Repository\Generators\Migrations;
 
 /**
  * Class NameParser
  * @package Prettus\Repository\Generators\Migrations
  */
-class NameParser {
+class NameParser
+{
     /**
      * The migration name.
      *

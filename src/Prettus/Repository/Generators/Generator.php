@@ -1,4 +1,6 @@
-<?php namespace Prettus\Repository\Generators;
+<?php
+
+namespace Prettus\Repository\Generators;
 
 use Illuminate\Console\AppNamespaceDetectorTrait;
 use Illuminate\Filesystem\Filesystem;

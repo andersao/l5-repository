@@ -1,4 +1,5 @@
-<?php namespace Prettus\Repository\Criteria;
+<?php
+namespace Prettus\Repository\Criteria;
 
 use Illuminate\Http\Request;
 use Prettus\Repository\Contracts\CriteriaInterface;
@@ -8,8 +9,8 @@ use Prettus\Repository\Contracts\RepositoryInterface;
  * Class RequestCriteria
  * @package Prettus\Repository\Criteria
  */
-class RequestCriteria implements CriteriaInterface {
-
+class RequestCriteria implements CriteriaInterface
+{
     /**
      * @var \Illuminate\Http\Request
      */
@@ -38,7 +39,7 @@ class RequestCriteria implements CriteriaInterface {
         $sortedBy           = $this->request->get( config('repository.criteria.params.sortedBy','sortedBy') , 'asc');
         $sortedBy           = !empty($sortedBy) ? $sortedBy : 'asc';
         
-        if( $search && is_array($fieldsSearchable) && count($fieldsSearchable) )
+        if ( $search && is_array($fieldsSearchable) && count($fieldsSearchable) )
         {
 
             $searchFields       = is_array($searchFields) || is_null($searchFields) ? $searchFields : explode(';',$searchFields);
@@ -48,9 +49,9 @@ class RequestCriteria implements CriteriaInterface {
             $search             = $this->parserSearchValue($search);
             $modelForceAndWhere = false;
 
-            foreach($fields as $field=>$condition)
-            {
-                if(is_numeric($field)){
+            foreach ($fields as $field=>$condition) {
+
+                if (is_numeric($field)){
                     $field = $condition;
                     $condition = "=";
                 }
@@ -59,45 +60,33 @@ class RequestCriteria implements CriteriaInterface {
 
                 $condition  = trim(strtolower($condition));
 
-                if( isset($searchData[$field]) )
-                {
+                if ( isset($searchData[$field]) ) {
                     $value = $condition == "like" ? "%{$searchData[$field]}%" : $searchData[$field];
-                }
-                else
-                {
-                    if( !is_null($search) )
-                    {
+                } else {
+                    if ( !is_null($search) ) {
                         $value = $condition == "like" ? "%{$search}%" : $search;
                     }
                 }
 
-                if( $isFirstField || $modelForceAndWhere )
-                {
-                    if(!is_null($value))
-                    {
+                if ( $isFirstField || $modelForceAndWhere ) {
+                    if (!is_null($value)) {
                         $model = $model->where($field,$condition,$value);
                         $isFirstField = false;
                     }
-                }
-                else
-                {
-                    if(!is_null($value))
-                    {
+                } else {
+                    if (!is_null($value)) {
                         $model = $model->orWhere($field,$condition,$value);
                     }
                 }
             }
         }
 
-        if( isset($orderBy) && !empty($orderBy) )
-        {
+        if ( isset($orderBy) && !empty($orderBy) ) {
             $model = $model->orderBy($orderBy, $sortedBy);
         }
 
-        if( isset($filter) && !empty($filter) )
-        {
-            if( is_string($filter) )
-            {
+        if ( isset($filter) && !empty($filter) ) {
+            if ( is_string($filter) ) {
                 $filter = explode(';', $filter);
             }
 
@@ -111,21 +100,18 @@ class RequestCriteria implements CriteriaInterface {
      * @param $search
      * @return array
      */
-    protected function parserSearchData($search){
-
+    protected function parserSearchData($search)
+    {
         $searchData = [];
 
-        if( stripos($search,':') )
-        {
+        if ( stripos($search,':') ) {
             $fields = explode(';', $search);
 
-            foreach($fields as $row)
-            {
-                try
-                {
+            foreach ($fields as $row) {
+                try {
                     list($field, $value) = explode(':', $row);
                     $searchData[$field] = $value;
-                }catch (\Exception $e){
+                } catch (\Exception $e) {
                     //Surround offset error
                 }
             }
@@ -138,16 +124,14 @@ class RequestCriteria implements CriteriaInterface {
      * @param $search
      * @return null
      */
-    protected function parserSearchValue($search){
+    protected function parserSearchValue($search)
+    {
 
-        if( stripos($search,';') || stripos($search,':') )
-        {
+        if ( stripos($search,';') || stripos($search,':') ) {
             $values = explode(';', $search);
-            foreach($values as $value)
-            {
+            foreach ($values as $value) {
                 $s = explode(':', $value);
-                if( count($s) == 1 )
-                {
+                if ( count($s) == 1 ) {
                     return $s[0];
                 }
             }
@@ -161,21 +145,17 @@ class RequestCriteria implements CriteriaInterface {
 
     protected function parserFieldsSearch(array $fields = array(), array $searchFields =  null)
     {
-        if( !is_null($searchFields) && count($searchFields) )
-        {
+        if ( !is_null($searchFields) && count($searchFields) ) {
             $acceptedConditions = config('repository.criteria.acceptedConditions', array('=','like') );
             $originalFields     = $fields;
             $fields = [];
 
-            foreach($searchFields as $index => $field)
-            {
+            foreach ($searchFields as $index => $field) {
                 $field_parts = explode(':', $field);
                 $_index = array_search($field_parts[0], $originalFields);
 
-                if( count($field_parts) == 2 )
-                {
-                    if( in_array($field_parts[1],$acceptedConditions) )
-                    {
+                if ( count($field_parts) == 2 ) {
+                    if ( in_array($field_parts[1],$acceptedConditions) ) {
                         unset($originalFields[$_index]);
                         $field                  = $field_parts[0];
                         $condition              = $field_parts[1];
@@ -185,19 +165,18 @@ class RequestCriteria implements CriteriaInterface {
                 }
             }
 
-            foreach($originalFields as $field=>$condition)
-            {
-                if(is_numeric($field)){
+            foreach ($originalFields as $field=>$condition) {
+                if (is_numeric($field)){
                     $field = $condition;
                     $condition = "=";
                 }
-                if( in_array($field, $searchFields) )
+                if ( in_array($field, $searchFields) )
                 {
                     $fields[$field] = $condition;
                 }
             }
 
-            if( count($fields) == 0 ){
+            if ( count($fields) == 0 ){
                 throw new \Exception( trans('repository::criteria.fields_not_accepted', array('field'=>implode(',', $searchFields))) );
             }
 

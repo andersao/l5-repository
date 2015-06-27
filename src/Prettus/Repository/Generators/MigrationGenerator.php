@@ -1,4 +1,6 @@
-<?php namespace Prettus\Repository\Generators;
+<?php
+
+namespace Prettus\Repository\Generators;
 use Prettus\Repository\Generators\Migrations\NameParser;
 use Prettus\Repository\Generators\Migrations\SchemaParser;
 
@@ -6,7 +8,8 @@ use Prettus\Repository\Generators\Migrations\SchemaParser;
  * Class MigrationGenerator
  * @package Prettus\Repository\Generators
  */
-class MigrationGenerator extends Generator {
+class MigrationGenerator extends Generator
+{
     /**
      * Get stub name.
      *

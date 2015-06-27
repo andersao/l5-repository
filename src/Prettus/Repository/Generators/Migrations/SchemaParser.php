@@ -1,4 +1,5 @@
-<?php namespace Prettus\Repository\Generators\Migrations;
+<?php
+namespace Prettus\Repository\Generators\Migrations;
 
 use Illuminate\Contracts\Support\Arrayable;
 
@@ -6,7 +7,8 @@ use Illuminate\Contracts\Support\Arrayable;
  * Class SchemaParser
  * @package Prettus\Repository\Generators\Migrations
  */
-class SchemaParser implements Arrayable {
+class SchemaParser implements Arrayable
+{
     /**
      * The array of custom attributes.
      *

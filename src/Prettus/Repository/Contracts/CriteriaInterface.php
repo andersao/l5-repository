@@ -1,11 +1,12 @@
-<?php namespace Prettus\Repository\Contracts;
+<?php
+namespace Prettus\Repository\Contracts;
 
 /**
  * Interface CriteriaInterface
  * @package Prettus\Repository\Contracts
  */
-interface CriteriaInterface {
-
+interface CriteriaInterface
+{
     /**
      * Apply criteria in query repository
      *
