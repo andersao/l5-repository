@@ -26,7 +26,7 @@ trait PresentableTrait {
     /**
      * @return $this|mixed
      */
-    public function presentable()
+    public function presenter()
     {
         if( isset($this->presenter) && $this->presenter instanceof PresenterInterface )
         {
