@@ -574,6 +574,11 @@ Sorting the results
 ]
 ```
 
+Add relationship
+
+`http://prettus.local/users?with=groups
+
+
 
 ####Overwrite params name
 
