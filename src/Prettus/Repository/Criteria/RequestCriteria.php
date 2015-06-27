@@ -50,36 +50,38 @@ class RequestCriteria implements CriteriaInterface
             $search             = $this->parserSearchValue($search);
             $modelForceAndWhere = false;
 
-            foreach ($fields as $field=>$condition) {
+            $model = $model->where(function ($query) use($fields, $search, $searchData, $isFirstField, $modelForceAndWhere) {
+                foreach ($fields as $field=>$condition) {
 
-                if (is_numeric($field)){
-                    $field = $condition;
-                    $condition = "=";
-                }
+                    if (is_numeric($field)){
+                        $field = $condition;
+                        $condition = "=";
+                    }
 
-                $value = null;
+                    $value = null;
 
-                $condition  = trim(strtolower($condition));
+                    $condition  = trim(strtolower($condition));
 
-                if ( isset($searchData[$field]) ) {
-                    $value = $condition == "like" ? "%{$searchData[$field]}%" : $searchData[$field];
-                } else {
-                    if ( !is_null($search) ) {
-                        $value = $condition == "like" ? "%{$search}%" : $search;
+                    if ( isset($searchData[$field]) ) {
+                        $value = $condition == "like" ? "%{$searchData[$field]}%" : $searchData[$field];
+                    } else {
+                        if ( !is_null($search) ) {
+                            $value = $condition == "like" ? "%{$search}%" : $search;
+                        }
+                    }
+
+                    if ( $isFirstField || $modelForceAndWhere ) {
+                        if (!is_null($value)) {
+                            $query->where($field,$condition,$value);
+                            $isFirstField = false;
+                        }
+                    } else {
+                        if (!is_null($value)) {
+                            $query->orWhere($field,$condition,$value);
+                        }
                     }
                 }
-
-                if ( $isFirstField || $modelForceAndWhere ) {
-                    if (!is_null($value)) {
-                        $model = $model->where($field,$condition,$value);
-                        $isFirstField = false;
-                    }
-                } else {
-                    if (!is_null($value)) {
-                        $model = $model->orWhere($field,$condition,$value);
-                    }
-                }
-            }
+            });
         }
 
         if ( isset($orderBy) && !empty($orderBy) ) {
