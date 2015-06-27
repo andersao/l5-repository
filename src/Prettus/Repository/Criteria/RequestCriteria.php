@@ -37,6 +37,7 @@ class RequestCriteria implements CriteriaInterface
         $filter             = $this->request->get( config('repository.criteria.params.filter','filter') , null);
         $orderBy            = $this->request->get( config('repository.criteria.params.orderBy','orderBy') , null);
         $sortedBy           = $this->request->get( config('repository.criteria.params.sortedBy','sortedBy') , 'asc');
+        $with               = $this->request->get( config('repository.criteria.params.with','with') , null);
         $sortedBy           = !empty($sortedBy) ? $sortedBy : 'asc';
         
         if ( $search && is_array($fieldsSearchable) && count($fieldsSearchable) )
@@ -91,6 +92,11 @@ class RequestCriteria implements CriteriaInterface
             }
 
             $model = $model->select($filter);
+        }
+
+        if( $with ) {
+            $with  = explode(';', $with);
+            $model = $model->with($with);
         }
 
         return $model;
