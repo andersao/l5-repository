@@ -3,6 +3,7 @@ namespace Prettus\Repository\Eloquent;
 
 use Exception;
 use Prettus\Repository\Contracts\CriteriaInterface;
+use Prettus\Repository\Contracts\PresentableInterface;
 use Prettus\Repository\Contracts\PresenterInterface;
 use Prettus\Repository\Contracts\RepositoryCriteriaInterface;
 use Prettus\Repository\Events\RepositoryEntityCreated;
@@ -524,8 +525,22 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function parserResult($result)
     {
-        if ( $this->presenter instanceof PresenterInterface && !$this->skipPresenter ) {
-            return $this->presenter->present($result);
+        if ( $this->presenter instanceof PresenterInterface ) {
+
+            if( $result instanceof Collection ){
+                $result = $result->each(function($model){
+                    if( $model instanceof PresentableInterface ){
+                        $model->setPresenter($this->presenter);
+                    }
+                    return $model;
+                });
+            } elseif ( $result instanceof PresentableInterface ) {
+                $result = $result->setPresenter($this->presenter);
+            }
+
+            if( !$this->skipPresenter){
+                return $this->presenter->present($result);
+            }
         }
 
         return $result;
