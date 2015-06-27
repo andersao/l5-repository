@@ -110,6 +110,11 @@ php artisan vendor:publish
 
 - present($data);
 
+### Prettus\Repository\Contracts\Presentable
+
+- setPresenter(PresenterInterface $presenter);
+- presenter();
+
 ### Prettus\Repository\Contracts\CriteriaInterface
 
 - apply($model, RepositoryInterface $repository);
@@ -865,6 +870,73 @@ Or enable it in your controller with
 
 ```php
 $this->repository->setPresenter("App\\Presenter\\PostPresenter");
+```
+
+###### Using the presenter after from the Model
+
+If you recorded a presenter and sometime used the `skipPresenter()` method or simply you do not want your result is not changed automatically by the presenter. 
+You can implement Presentable interface on your model so you will be able to present your model at any time. See below:
+
+In your model, implement the interface `Prettus\Repository\Contracts\Presentable` and `Prettus\Repository\Traits\PresentableTrait`
+
+```php
+namespace App;
+
+use Prettus\Repository\Contracts\Presentable;
+use Prettus\Repository\Traits\PresentableTrait;
+
+class Post extends Eloquent implements Presentable { 
+
+    use PresentableTrait;
+
+    protected $fillable = [
+        'title',
+        'author',
+        ...
+     ];
+
+     ...
+}
+```
+
+There, now you can submit your Model individually, See an example:
+
+```php
+$repository = app('App\PostRepository');
+$repository->setPresenter("Prettus\\Repository\\Presenter\\ModelFractalPresenter");
+
+//Getting the result transformed by the presenter directly in the search
+$post = $repository->find(1);
+
+print_r( $post ); //It produces an output as array
+
+...
+
+//Skip presenter and bringing the original result of the Model
+$post = $repository->skipPresenter()->find(1);
+
+print_r( $post ); //It produces an output as a Model object
+print_r( $post->presenter() ); //It produces an output as array
+
+```
+
+You can skip the presenter at every visit and use it on demand directly into the model, for it set the `$skipPresenter` attribute to true in your repository:
+
+```php
+use Prettus\Repository\Eloquent\BaseRepository;
+
+class PostRepository extends BaseRepository {
+    
+    /**
+    * @var bool
+    */
+    protected $skipPresenter = true;
+    
+    public function presenter()
+    {
+        return "App\\Presenter\\PostPresenter";
+    }
+}
 ```
 
 ##### Model Class

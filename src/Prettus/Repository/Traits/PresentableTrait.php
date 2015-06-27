@@ -4,10 +4,10 @@ namespace Prettus\Repository\Traits;
 use Prettus\Repository\Contracts\PresenterInterface;
 
 /**
- * Class PresentableRepository
+ * Class PresentableTrait
  * @package Prettus\Repository\Traits
  */
-trait Presentable {
+trait PresentableTrait {
 
     /**
      * @var PresenterInterface
