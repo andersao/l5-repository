@@ -24,12 +24,6 @@ class TransformerCommand extends Command
      */
     protected $description = 'Create a new transformer.';
 
-
-    /**
-     * @var Collection
-     */
-    protected $generators = null;
-
     /**
      * Execute the command.
      *
@@ -37,17 +31,9 @@ class TransformerCommand extends Command
      */
     public function fire()
     {
-        $this->generators = new Collection();
-
-        $this->generators->push(new TransformerGenerator([
+        (new TransformerGenerator([
             'name' => $this->argument('name')
-        ]));
-
-
-        foreach ($this->generators as $generator) {
-            $generator->run();
-        }
-
+        ]))->run();
         $this->info("Transformer created successfully.");
     }
 
