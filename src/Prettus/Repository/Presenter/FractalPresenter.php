@@ -61,7 +61,7 @@ abstract class FractalPresenter implements PresenterInterface
         $serializer = $this->serializer();
 
         if ( $serializer instanceof SerializerAbstract ){
-            $this->fractal->setSerializer($serializer);
+            $this->fractal->setSerializer(new $serializer());
         }
 
         return $this;
@@ -90,7 +90,7 @@ abstract class FractalPresenter implements PresenterInterface
      */
     public function serializer()
     {
-        $serializer = config('repository.fractal.serializer', 'League\\Fractal\\Serializer\\JsonApiSerializer');
+        $serializer = config('repository.fractal.serializer', 'League\\Fractal\\Serializer\\DataArraySerializer');
         return new $serializer();
     }
 
