@@ -22,13 +22,13 @@ You want to know a little more about the Repository pattern? [Read this great ar
     - <a href="#prettusrepositorycontractspresenterinterface">PresenterInterface</a>
     - <a href="#prettusrepositorycontractscriteriainterface">CriteriaInterface</a>
 - <a href="#usage">Usage</a>
-	- <a href="#create-a-model">Create a Model</a>
-	- <a href="#create-a-repository">Create a Repository</a>
-	- <a href="#generators">Generators</a>
-	- <a href="#use-methods">Use methods</a>
-	- <a href="#create-a-criteria">Create a Criteria</a>
-	- <a href="#using-the-criteria-in-a-controller">Using the Criteria in a Controller</a>
-	- <a href="#using-the-requestcriteria">Using the RequestCriteria</a>
+    - <a href="#create-a-model">Create a Model</a>
+    - <a href="#create-a-repository">Create a Repository</a>
+    - <a href="#generators">Generators</a>
+    - <a href="#use-methods">Use methods</a>
+    - <a href="#create-a-criteria">Create a Criteria</a>
+    - <a href="#using-the-criteria-in-a-controller">Using the Criteria in a Controller</a>
+    - <a href="#using-the-requestcriteria">Using the RequestCriteria</a>
 - <a href="#cache">Cache</a>
     - <a href="#cache-usage">Usage</a>
     - <a href="#cache-config">Config</a>
@@ -49,8 +49,8 @@ You want to know a little more about the Repository pattern? [Read this great ar
 
 Execute the following command to get the latest version of the package:
 
-```bash
-	composer require prettus/l5-repository
+```terminal
+    composer require prettus/l5-repository
 ```
 
 ### Laravel
@@ -200,22 +200,30 @@ You may want to save the root of your project folder out of the app and add anot
 
 #### Commands
 
+To generate everything you need for your Model, run this command:
+
+```terminal
+php artisan make:entity Post
+```
+
+This will create the Model, the Repository, the Presenter and the Transformer classes. You can also pass the options from the ```repository``` command, since this command is just a wrapper.
+
 To generate a repository for your Post model, use the following command
 
 ```terminal
-php artisan repository:generate Post
+php artisan make:repository Post
 ```
 
 To generate a repository for your Post model with Blog namespace, use the following command
 
 ```terminal
-php artisan repository:generate "Blog\Post"
+php artisan make:repository "Blog\Post"
 ```
 
 Added fields that are fillable
 
 ```terminal
-php artisan repository:generate "Blog\Post" --fillable="title,content"
+php artisan make:repository "Blog\Post" --fillable="title,content"
 ```
 
 When running commado, you will be creating the "Entities" folder and "Repositories" inside the folder that you set as the default.
@@ -371,7 +379,7 @@ class PostsController extends BaseController {
     {
         $this->repository->pushCriteria(new MyCriteria());
         $posts = $this->repository->all();
-		...
+        ...
     }
 
 }
@@ -428,7 +436,7 @@ use Prettus\Repository\Criteria\RequestCriteria;
 
 class PostRepository extends BaseRepository {
 
-	/**
+    /**
      * @var array
      */
     protected $fieldSearchable = [
@@ -453,8 +461,8 @@ In your repository set **$fieldSearchable** with the name of the fields to be se
 
 ```php
 protected $fieldSearchable = [
-	'name',
-	'email'
+    'name',
+    'email'
 ];
 ```
 
@@ -462,20 +470,20 @@ You can set the type of condition which will be used to perform the query, the d
 
 ```php
 protected $fieldSearchable = [
-	'name'=>'like',
-	'email', // Default Condition "="
-	'your_field'=>'condition'
+    'name'=>'like',
+    'email', // Default Condition "="
+    'your_field'=>'condition'
 ];
 ```
 
 ####Enabling in your Controller
 
 ```php
-	public function index()
+    public function index()
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         $posts = $this->repository->all();
-		...
+        ...
     }
 ```
 
@@ -822,15 +830,22 @@ The second way is to make your model implement the Transformable interface, and 
 
 ##### Transformer Class
 
+###### Create a Transformer using the command
+
+```terminal
+php artisan make:transformer Post
+```
+
+This wil generate the class beneath.
+
 ###### Create a Transformer Class
 
 ```php
-use App\Post;
 use League\Fractal\TransformerAbstract;
 
 class PostTransformer extends TransformerAbstract
 {
-    public function transform(Post $post)
+    public function transform(\Post $post)
     {
         return [
             'id'      => (int) $post->id,
@@ -841,6 +856,13 @@ class PostTransformer extends TransformerAbstract
 }
 ```
 
+###### Create a Presenter using the command
+
+```terminal
+php artisan make:presenter Post
+```
+
+The command will prompt you for creating a Transformer too if you haven't already.
 ###### Create a Presenter
 
 ```php
