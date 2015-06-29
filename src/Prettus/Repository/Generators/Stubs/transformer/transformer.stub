@@ -10,6 +10,13 @@ use League\Fractal\TransformerAbstract;
  */
 class $CLASS$Transformer extends TransformerAbstract
 {
+
+    /**
+     * Transform the \$CLASS$ entity
+     * @param \$CLASS$ $model
+     *
+     * @return array
+     */
     public function transform(\$CLASS$ $model) {
         return [
             'id'         => (int)$model->id,
