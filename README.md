@@ -203,19 +203,19 @@ You may want to save the root of your project folder out of the app and add anot
 To generate a repository for your Post model, use the following command
 
 ```terminal
-php artisan repository:generate Post
+php artisan make:repository Post
 ```
 
 To generate a repository for your Post model with Blog namespace, use the following command
 
 ```terminal
-php artisan repository:generate "Blog\Post"
+php artisan make:repository "Blog\Post"
 ```
 
 Added fields that are fillable
 
 ```terminal
-php artisan repository:generate "Blog\Post" --fillable="title,content"
+php artisan make:repository "Blog\Post" --fillable="title,content"
 ```
 
 When running commado, you will be creating the "Entities" folder and "Repositories" inside the folder that you set as the default.
