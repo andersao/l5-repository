@@ -61,7 +61,7 @@ abstract class FractalPresenter implements PresenterInterface
         $serializer = $this->serializer();
 
         if ( $serializer instanceof SerializerAbstract ){
-            $this->fractal->setSerializer($serializer);
+            $this->fractal->setSerializer(new $serializer());
         }
 
         return $this;
