@@ -22,13 +22,13 @@ You want to know a little more about the Repository pattern? [Read this great ar
     - <a href="#prettusrepositorycontractspresenterinterface">PresenterInterface</a>
     - <a href="#prettusrepositorycontractscriteriainterface">CriteriaInterface</a>
 - <a href="#usage">Usage</a>
-    - <a href="#create-a-model">Create a Model</a>
-    - <a href="#create-a-repository">Create a Repository</a>
-    - <a href="#generators">Generators</a>
-    - <a href="#use-methods">Use methods</a>
-    - <a href="#create-a-criteria">Create a Criteria</a>
-    - <a href="#using-the-criteria-in-a-controller">Using the Criteria in a Controller</a>
-    - <a href="#using-the-requestcriteria">Using the RequestCriteria</a>
+	- <a href="#create-a-model">Create a Model</a>
+	- <a href="#create-a-repository">Create a Repository</a>
+	- <a href="#generators">Generators</a>
+	- <a href="#use-methods">Use methods</a>
+	- <a href="#create-a-criteria">Create a Criteria</a>
+	- <a href="#using-the-criteria-in-a-controller">Using the Criteria in a Controller</a>
+	- <a href="#using-the-requestcriteria">Using the RequestCriteria</a>
 - <a href="#cache">Cache</a>
     - <a href="#cache-usage">Usage</a>
     - <a href="#cache-config">Config</a>
@@ -50,7 +50,7 @@ You want to know a little more about the Repository pattern? [Read this great ar
 Execute the following command to get the latest version of the package:
 
 ```terminal
-    composer require prettus/l5-repository
+	composer require prettus/l5-repository
 ```
 
 ### Laravel
@@ -379,7 +379,7 @@ class PostsController extends BaseController {
     {
         $this->repository->pushCriteria(new MyCriteria());
         $posts = $this->repository->all();
-        ...
+		...
     }
 
 }
@@ -436,7 +436,7 @@ use Prettus\Repository\Criteria\RequestCriteria;
 
 class PostRepository extends BaseRepository {
 
-    /**
+	/**
      * @var array
      */
     protected $fieldSearchable = [
@@ -461,8 +461,8 @@ In your repository set **$fieldSearchable** with the name of the fields to be se
 
 ```php
 protected $fieldSearchable = [
-    'name',
-    'email'
+	'name',
+	'email'
 ];
 ```
 
@@ -470,20 +470,20 @@ You can set the type of condition which will be used to perform the query, the d
 
 ```php
 protected $fieldSearchable = [
-    'name'=>'like',
-    'email', // Default Condition "="
-    'your_field'=>'condition'
+	'name'=>'like',
+	'email', // Default Condition "="
+	'your_field'=>'condition'
 ];
 ```
 
 ####Enabling in your Controller
 
 ```php
-    public function index()
+	public function index()
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         $posts = $this->repository->all();
-        ...
+		...
     }
 ```
 
