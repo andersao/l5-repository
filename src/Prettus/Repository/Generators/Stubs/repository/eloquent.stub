@@ -3,6 +3,8 @@
 $NAMESPACE$
 
 use Prettus\Repository\Eloquent\BaseRepository;
+use Prettus\Repository\Criteria\RequestCriteria;
+use $MODEL$;
 
 /**
  * Class $CLASS$RepositoryEloquent
@@ -17,7 +19,7 @@ class $CLASS$RepositoryEloquent extends BaseRepository implements $CLASS$Reposit
      */
     public function model()
     {
-        return '$MODEL$';
+        return $CLASS$::class;
     }
 
     /**
@@ -25,6 +27,6 @@ class $CLASS$RepositoryEloquent extends BaseRepository implements $CLASS$Reposit
      */
     public function boot()
     {
-        $this->pushCriteria( app('Prettus\Repository\Criteria\RequestCriteria') );
+        $this->pushCriteria( app(RequestCriteria::class) );
     }
 }
