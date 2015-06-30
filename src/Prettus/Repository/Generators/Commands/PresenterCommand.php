@@ -2,7 +2,6 @@
 namespace Prettus\Repository\Generators\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Collection;
 use Prettus\Repository\Generators\PresenterGenerator;
 use Prettus\Repository\Generators\TransformerGenerator;
 use Symfony\Component\Console\Input\InputArgument;
@@ -26,38 +25,26 @@ class PresenterCommand extends Command
     protected $description = 'Create a new presenter.';
 
     /**
-     * @var Collection
-     */
-    protected $generators = null;
-
-    /**
      * Execute the command.
      *
      * @return void
      */
     public function fire()
     {
-        $this->generators = new Collection();
-
-        $this->generators->push(new PresenterGenerator([
+        (new PresenterGenerator([
             'name' => $this->argument('name')
-        ]));
+        ]))->run();
+        $this->info("Presenter created successfully.");
+
 
         if (!\File::exists(app_path() . '/Transformers/' . $this->argument('name') . 'Transformer.php')) {
-            $this->info('It seems that you did not create a Transformer for ' . $this->argument('name'));
-            if ($this->confirm('Would you like to create one? [y|N]')) {
-                $this->generators->push(new TransformerGenerator([
+            if ($this->confirm('Would you like to create a Transformer? [y|N]')) {
+                (new TransformerGenerator([
                     'name' => $this->argument('name')
-                ]));
+                ]))->run();
+                $this->info("Transformer created successfully.");
             }
         }
-
-        foreach ($this->generators as $generator) {
-            $generator->run();
-        }
-
-        $this->info("Presenter created successfully.");
-        $this->info("Transformer created successfully.");
     }
 
     /**
