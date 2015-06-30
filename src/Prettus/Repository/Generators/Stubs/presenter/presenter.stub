@@ -1,0 +1,24 @@
+<?php
+
+$NAMESPACE$
+
+use $APPNAMESPACE$Transformers\$CLASS$Transformer;
+use Prettus\Repository\Presenter\FractalPresenter;
+
+/**
+ * Class $CLASS$Presenter
+ *
+ * @package $APPNAMESPACE$Presenters
+ */
+class $CLASS$Presenter extends FractalPresenter
+{
+    /**
+     * Transformer
+     *
+     * @return \League\Fractal\TransformerAbstract
+     */
+    public function getTransformer()
+    {
+        return new $CLASS$Transformer();
+    }
+}
