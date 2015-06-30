@@ -90,7 +90,8 @@ abstract class FractalPresenter implements PresenterInterface
      */
     public function serializer()
     {
-        return null;
+        $serializer = config('repository.fractal.serializer', 'League\\Fractal\\Serializer\\JsonApiSerializer');
+        return new $serializer();
     }
 
     /**
