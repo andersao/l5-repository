@@ -3,6 +3,7 @@
 $NAMESPACE$
 
 use League\Fractal\TransformerAbstract;
+use $MODEL_NAMESPACE$$CLASS$;
 
 /**
  * Class $CLASS$Transformer
@@ -17,7 +18,7 @@ class $CLASS$Transformer extends TransformerAbstract
      *
      * @return array
      */
-    public function transform(\$CLASS$ $model) {
+    public function transform($CLASS$ $model) {
         return [
             'id'         => (int)$model->id,
 

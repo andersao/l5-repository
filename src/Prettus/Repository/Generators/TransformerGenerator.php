@@ -44,4 +44,17 @@ class TransformerGenerator extends Generator
     {
         return $this->getBasePath() . '/Transformers/' . $this->getName() . 'Transformer.php';
     }
+
+    /**
+     * Get array replacements.
+     *
+     * @return array
+     */
+    public function getReplacements()
+    {
+        $modelGenerator = new ModelGenerator();
+        return array_merge(parent::getReplacements(),[
+            'model_namespace' => $modelGenerator->getRootNamespace()
+        ]);
+    }
 }
