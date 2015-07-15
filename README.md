@@ -91,6 +91,7 @@ php artisan vendor:publish
 - with(array $relations);
 - hidden(array $fields);
 - visible(array $fields);
+- scopeQuery(Closure $scope);
 - getFieldsSearchable();
 - setPresenter($presenter);
 - skipPresenter($status = true);
@@ -316,6 +317,14 @@ $posts = $this->repository->findWhere([
     //Custom Condition
     ['columnName','>','10']
 ]);
+```
+
+Find all using custom scope
+
+```php
+$posts = $this->repository->scopeQuery(function($query){
+    return $query->orderBy('sort_order','asc');
+})->all();
 ```
 
 Create new entry in Repository

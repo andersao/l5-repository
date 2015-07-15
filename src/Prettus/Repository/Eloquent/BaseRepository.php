@@ -514,12 +514,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     protected function applyScope()
     {
-
         if ( isset($this->scopeQuery) && is_callable($this->scopeQuery) ) {
-
-            $this->model = $this->scopeQuery($this->model);
-
-            return  $this;
+            $callback = $this->scopeQuery;
+            $this->model = $callback($this->model);
         }
 
         return  $this;
