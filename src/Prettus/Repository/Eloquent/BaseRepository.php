@@ -1,6 +1,7 @@
 <?php
 namespace Prettus\Repository\Eloquent;
 
+use Closure;
 use Exception;
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\Presentable;
@@ -73,6 +74,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * @var bool
      */
     protected $skipPresenter = false;
+
+    /**
+     * @var \Closure
+     */
+    protected $scopeQuery = null;
 
     /**
      * @param Application $app
@@ -226,6 +232,17 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
+     * Query Scope
+     *
+     * @param \Closure $scope
+     * @return $this
+     */
+    public function scopeQuery(\Closure $scope){
+        $this->scopeQuery = $scope;
+        return $this;
+    }
+
+    /**
      * Retrieve all data of repository
      *
      * @param array $columns
@@ -234,6 +251,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function all($columns = array('*'))
     {
         $this->applyCriteria();
+        $this->applyScope();
 
         if ( $this->model instanceof \Illuminate\Database\Eloquent\Builder ){
             $results = $this->model->get($columns);
@@ -255,6 +273,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function paginate($limit = null, $columns = array('*'))
     {
         $this->applyCriteria();
+        $this->applyScope();
         $limit = is_null($limit) ? config('repository.pagination.limit', 15) : $limit;
         $results = $this->model->paginate($limit, $columns);
         $this->resetModel();
@@ -271,6 +290,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function find($id, $columns = array('*'))
     {
         $this->applyCriteria();
+        $this->applyScope();
         $model = $this->model->findOrFail($id, $columns);
         $this->resetModel();
         return $this->parserResult($model);
@@ -287,6 +307,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function findByField($field, $value = null, $columns = array('*'))
     {
         $this->applyCriteria();
+        $this->applyScope();
         $model = $this->model->where($field,'=',$value)->get($columns);
         $this->resetModel();
         return $this->parserResult($model);
@@ -302,6 +323,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function findWhere( array $where , $columns = array('*'))
     {
         $this->applyCriteria();
+        $this->applyScope();
 
         foreach ($where as $field => $value) {
             if ( is_array($value) ) {
@@ -351,6 +373,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function update(array $attributes, $id)
     {
+        $this->applyScope();
+
         if ( !is_null($this->validator) ) {
             $this->validator->with($attributes)
                 ->setId($id)
@@ -381,6 +405,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function delete($id)
     {
+        $this->applyScope();
+
         $_skipPresenter = $this->skipPresenter;
         $this->skipPresenter(true);
 
@@ -479,6 +505,24 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         $this->skipCriteria = $status;
         return $this;
+    }
+
+    /**
+     * Apply scope in current Query
+     *
+     * @return $this
+     */
+    protected function applyScope()
+    {
+
+        if ( isset($this->scopeQuery) && is_callable($this->scopeQuery) ) {
+
+            $this->model = $this->scopeQuery($this->model);
+
+            return  $this;
+        }
+
+        return  $this;
     }
 
     /**

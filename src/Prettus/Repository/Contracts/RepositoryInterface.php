@@ -102,6 +102,14 @@ interface RepositoryInterface
     public function visible(array $fields);
 
     /**
+     * Query Scope
+     *
+     * @param \Closure $scope
+     * @return $this
+     */
+    public function scopeQuery(\Closure $scope);
+
+    /**
      * Get Searchable Fields
      *
      * @return array
