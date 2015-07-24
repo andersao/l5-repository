@@ -32,7 +32,8 @@ class TransformerCommand extends Command
     public function fire()
     {
         (new TransformerGenerator([
-            'name' => $this->argument('name')
+            'name'  => $this->argument('name'),
+            'force' => $this->option('force'),
         ]))->run();
         $this->info("Transformer created successfully.");
     }
@@ -47,6 +48,18 @@ class TransformerCommand extends Command
     {
         return [
             ['name', InputArgument::REQUIRED, 'The name of model for which the transformer is being generated.', null],
+        ];
+    }
+
+    /**
+     * The array of command options.
+     *
+     * @return array
+     */
+    public function getOptions()
+    {
+        return [
+            ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null]
         ];
     }
 }
