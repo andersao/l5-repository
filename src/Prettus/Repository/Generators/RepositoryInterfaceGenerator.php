@@ -24,7 +24,17 @@ class RepositoryInterfaceGenerator extends Generator {
      */
     public function getRootNamespace()
     {
-        return parent::getRootNamespace().'Repositories\\';
+        return parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode());
+    }
+
+    /**
+     * Get generator path config node.
+     *
+     * @return string
+     */
+    public function getPathConfigNode()
+    {
+        return 'interfaces';
     }
 
     /**
@@ -44,7 +54,7 @@ class RepositoryInterfaceGenerator extends Generator {
      */
     public function getPath()
     {
-        return $this->getBasePath() . '/Repositories/' . $this->getName() . 'Repository.php';
+        return $this->getBasePath() . '/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) . '/' . $this->getName() . 'Repository.php';
     }
 
     /**

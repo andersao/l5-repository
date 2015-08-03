@@ -35,6 +35,15 @@ class MigrationGenerator extends Generator
         return $this->getBasePath() . $this->getFileName() . '.php';
     }
     /**
+     * Get generator path config node.
+     *
+     * @return string
+     */
+    public function getPathConfigNode()
+    {
+        return '';
+    }
+    /**
      * Get root namespace.
      *
      * @return string
