@@ -206,7 +206,7 @@ You may want to save the root of your project folder out of the app and add anot
     ]
 ```
 
-Additionally, you may wish to customize where your generated class end up being saved.  That can be accomplished by editing the `paths` node to your liking.  For example:
+Additionally, you may wish to customize where your generated classes end up being saved.  That can be accomplished by editing the `paths` node to your liking.  For example:
 
 ```php
     'generator'=>[
