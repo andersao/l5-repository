@@ -162,6 +162,43 @@ abstract class Generator
     }
 
     /**
+     * Get class-specific output paths.
+     *
+     * @param $class
+     * @return string
+     */
+    public function getConfigGeneratorClassPath($class, $directoryPath = false)
+    {
+        switch($class) {
+            case ('models' === $class):
+                $path = config('repository.generator.paths.models', 'Entities');
+                break;
+            case ('repositories' === $class):
+                $path = config('repository.generator.paths.repositories', 'Repositories');
+                break;
+            case ('interfaces' === $class):
+                $path = config('repository.generator.paths.interfaces', 'Repositories');
+                break;
+            case ('presenters' === $class):
+                $path = config('repository.generator.paths.presenters', 'Presenters');
+                break;
+            case ('transformers' === $class):
+                $path = config('repository.generator.paths.transformers', 'Transformers');
+                break;
+            default;
+                $path = '';
+        }
+
+        if ($directoryPath) {
+            $path = str_replace('\\', '/', $path);
+        }
+
+        return $path;
+    }
+
+    abstract public function getPathConfigNode();
+
+    /**
      * Get class namespace.
      *
      * @return string

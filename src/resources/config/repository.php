@@ -219,6 +219,13 @@ return [
     */
     'generator'=>[
         'basePath'=>app_path(),
-        'rootNamespace'=>'App\\'
+        'rootNamespace'=>'App\\',
+        'paths'=>[
+            'models'=>'Entities',
+            'repositories'=>'Repositories',
+            'interfaces'=>'Repositories',
+            'transformers'=>'Transformers',
+            'presenters'=>'Presenters'
+        ]
     ]
 ];

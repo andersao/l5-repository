@@ -3,7 +3,7 @@
 $NAMESPACE$
 
 use League\Fractal\TransformerAbstract;
-use $MODEL_NAMESPACE$$CLASS$;
+use $MODEL_NAMESPACE$\$CLASS$;
 
 /**
  * Class $CLASS$Transformer

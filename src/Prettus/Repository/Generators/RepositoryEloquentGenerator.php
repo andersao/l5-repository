@@ -34,7 +34,17 @@ class RepositoryEloquentGenerator extends Generator
      */
     public function getRootNamespace()
     {
-        return parent::getRootNamespace().'Repositories\\';
+        return parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode());
+    }
+
+    /**
+     * Get generator path config node.
+     *
+     * @return string
+     */
+    public function getPathConfigNode()
+    {
+        return 'repositories';
     }
 
     /**
@@ -44,7 +54,7 @@ class RepositoryEloquentGenerator extends Generator
      */
     public function getPath()
     {
-        return $this->getBasePath() . '/Repositories/' . $this->getName() . 'RepositoryEloquent.php';
+        return $this->getBasePath() . '/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) . '/' . $this->getName() . 'RepositoryEloquent.php';
     }
 
     /**
@@ -56,6 +66,7 @@ class RepositoryEloquentGenerator extends Generator
     {
         return array_merge(parent::getReplacements(), [
             'fillable' => $this->getFillable(),
+            'repository' => parent::getRootNamespace() . parent::getConfigGeneratorClassPath('interfaces') . '\\' . $this->getName() . 'Repository;',
             'model'    => isset($this->options['model']) ? $this->options['model'] : ''
         ]);
     }

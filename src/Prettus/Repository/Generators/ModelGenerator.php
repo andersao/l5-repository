@@ -24,9 +24,18 @@ class ModelGenerator extends Generator {
      */
     public function getRootNamespace()
     {
-        return parent::getRootNamespace().'Entities\\';
+        return parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode());
     }
 
+    /**
+     * Get generator path config node.
+     *
+     * @return string
+     */
+    public function getPathConfigNode()
+    {
+        return 'models';
+    }
 
     /**
      * Get base path of destination file.
@@ -46,7 +55,7 @@ class ModelGenerator extends Generator {
      */
     public function getPath()
     {
-        return $this->getBasePath() . '/Entities/' . $this->getName() . '.php';
+        return $this->getBasePath() . '/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) . '/' . $this->getName() . '.php';
     }
 
     /**
