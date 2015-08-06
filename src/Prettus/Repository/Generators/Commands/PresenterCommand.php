@@ -32,7 +32,8 @@ class PresenterCommand extends Command
     public function fire()
     {
         (new PresenterGenerator([
-            'name' => $this->argument('name')
+            'name'  => $this->argument('name'),
+            'force' => $this->option('force'),
         ]))->run();
         $this->info("Presenter created successfully.");
 
@@ -40,7 +41,8 @@ class PresenterCommand extends Command
         if (!\File::exists(app_path() . '/Transformers/' . $this->argument('name') . 'Transformer.php')) {
             if ($this->confirm('Would you like to create a Transformer? [y|N]')) {
                 (new TransformerGenerator([
-                    'name' => $this->argument('name')
+                    'name'  => $this->argument('name'),
+                    'force' => $this->option('force'),
                 ]))->run();
                 $this->info("Transformer created successfully.");
             }
@@ -56,6 +58,18 @@ class PresenterCommand extends Command
     {
         return [
             ['name', InputArgument::REQUIRED, 'The name of model for which the presenter is being generated.', null],
+        ];
+    }
+
+    /**
+     * The array of command options.
+     *
+     * @return array
+     */
+    public function getOptions()
+    {
+        return [
+            ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null]
         ];
     }
 }
