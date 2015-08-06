@@ -50,7 +50,8 @@ class RepositoryCommand extends Command
         $this->generators->push($modelGenerator);
 
         $this->generators->push(new RepositoryInterfaceGenerator([
-            'name'      => $this->argument('name')
+            'name'      => $this->argument('name'),
+            'force'     => $this->option('force'),
         ]));
 
         $model = $modelGenerator->getRootNamespace().'\\'.$modelGenerator->getName();
@@ -59,6 +60,7 @@ class RepositoryCommand extends Command
         $this->generators->push(new RepositoryEloquentGenerator([
             'name'      => $this->argument('name'),
             'rules'     => $this->option('rules'),
+            'force'     => $this->option('force'),
             'model'     => $model
         ]));
 
