@@ -184,8 +184,15 @@ You must first configure the storage location of the repository files. By defaul
 ```php
     ...
     'generator'=>[
-        'basePath'      =>app_path(),
-        'rootNamespace' =>'App\\'
+        'basePath'=>app_path(),
+        'rootNamespace'=>'App\\',
+        'paths'=>[
+            'models'=>'Entities',
+            'repositories'=>'Repositories',
+            'interfaces'=>'Repositories',
+            'transformers'=>'Transformers',
+            'presenters'=>'Presenters'
+        ]
     ]
 ```
 
@@ -196,6 +203,22 @@ You may want to save the root of your project folder out of the app and add anot
      'generator'=>[
         'basePath'      => base_path('src/Lorem'),
         'rootNamespace' => 'Lorem\\'
+    ]
+```
+
+Additionally, you may wish to customize where your generated classes end up being saved.  That can be accomplished by editing the `paths` node to your liking.  For example:
+
+```php
+    'generator'=>[
+        'basePath'=>app_path(),
+        'rootNamespace'=>'App\\',
+        'paths'=>[
+            'models'=>'Models',
+            'repositories'=>'Repositories\\Eloquent',
+            'interfaces'=>'Contracts\\Repositories',
+            'transformers'=>'Transformers',
+            'presenters'=>'Presenters'
+        ]
     ]
 ```
 

@@ -32,7 +32,17 @@ class PresenterGenerator extends Generator
      */
     public function getRootNamespace()
     {
-        return parent::getRootNamespace() . 'Presenters\\';
+        return parent::getRootNamespace().parent::getConfigGeneratorClassPath($this->getPathConfigNode());
+    }
+
+    /**
+     * Get generator path config node.
+     *
+     * @return string
+     */
+    public function getPathConfigNode()
+    {
+        return 'presenters';
     }
 
     /**
@@ -46,7 +56,6 @@ class PresenterGenerator extends Generator
             'appnamespace' => $this->getAppNamespace()
         ]);
     }
-    
 
     /**
      * Get destination path for generated file.
@@ -55,6 +64,6 @@ class PresenterGenerator extends Generator
      */
     public function getPath()
     {
-        return $this->getBasePath() . '/Presenters/' . $this->getName() . 'Presenter.php';
+        return $this->getBasePath() . '/'.parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) .'/' . $this->getName() . 'Presenter.php';
     }
 }
