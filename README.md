@@ -85,6 +85,8 @@ php artisan vendor:publish
 - find($id, $columns = ['*'])
 - findByField($field, $value, $columns = ['*'])
 - findWhere(array $where, $columns = ['*'])
+- findWhereIn($field, array $where, $columns = [*])
+- findWhereNotIn($field, array $where, $columns = [*])
 - create(array $attributes)
 - update(array $attributes, $id)
 - delete($id)
@@ -317,6 +319,18 @@ $posts = $this->repository->findWhere([
     //Custom Condition
     ['columnName','>','10']
 ]);
+```
+
+Find by result by multiple values in one field
+
+```php
+$posts = $this->repository->findWhereIn('id', [1,2,3,4,5]);
+```
+
+Find by result by excluding multiple values in one field
+
+```php
+$posts = $this->repository->findWhereNotIn('id', [6,7,8,9,10]);
 ```
 
 Find all using custom scope

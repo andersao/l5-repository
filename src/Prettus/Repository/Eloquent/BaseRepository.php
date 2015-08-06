@@ -339,6 +339,38 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         return $this->parserResult($model);
     }
+    
+    /**
+     * Find data by multiple values in one field
+     *
+     * @param $field
+     * @param array $values
+     * @param array $columns
+     * @return mixed
+     */
+    public function findWhereIn( $field, array $values, $columns = array('*'))
+    {
+        $this->applyCriteria();
+        $model = $this->model->whereIn($field, $values)->get($columns);
+        $this->resetModel();
+        return $this->parserResult($model);
+    }
+    
+    /**
+     * Find data by excluding multiple values in one field
+     *
+     * @param $field
+     * @param array $values
+     * @param array $columns
+     * @return mixed
+     */
+    public function findWhereNotIn( $field, array $values, $columns = array('*'))
+    {
+        $this->applyCriteria();
+        $model = $this->model->whereNotIn($field, $values)->get($columns);
+        $this->resetModel();
+        return $this->parserResult($model);
+    }
 
     /**
      * Save a new entity in repository
