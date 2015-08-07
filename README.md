@@ -872,7 +872,7 @@ Requires [Fractal](http://fractal.thephpleague.com/). `composer require league/f
 
 There are two ways to implement the Presenter, the first is creating a TransformerAbstract and set it using your Presenter class as described in the Create a Transformer Class.
 
-The second way is to make your model implement the Transformable interface, and use the default Prenseter ModelFractarPresenter, this will have the same effect.
+The second way is to make your model implement the Transformable interface, and use the default Presenter ModelFractarPresenter, this will have the same effect.
 
 ##### Transformer Class
 
