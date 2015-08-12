@@ -55,7 +55,7 @@ Execute the following command to get the latest version of the package:
 
 ### Laravel
 
-In your `config/app.php` add `Prettus\Repository\Providers\RepositoryServiceProvider:class` to the end of the `providers` array:
+In your `config/app.php` add `Prettus\Repository\Providers\RepositoryServiceProvider::class` to the end of the `providers` array:
 
 ```php
 'providers' => [
