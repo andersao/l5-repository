@@ -301,14 +301,15 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      *
      * @param $field
      * @param $value
+     * @param $comparator
      * @param array $columns
      * @return mixed
      */
-    public function findByField($field, $value = null, $columns = array('*'))
+    public function findByField($field, $value = null, $comparator = '=' $columns = array('*'))
     {
         $this->applyCriteria();
         $this->applyScope();
-        $model = $this->model->where($field,'=',$value)->get($columns);
+        $model = $this->model->where($field,$comparator,$value)->get($columns);
         $this->resetModel();
         return $this->parserResult($model);
     }
