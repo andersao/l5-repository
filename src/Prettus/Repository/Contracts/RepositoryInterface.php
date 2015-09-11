@@ -53,6 +53,26 @@ interface RepositoryInterface
     public function findWhere( array $where , $columns = array('*'));
 
     /**
+     * Find data by multiple values in one field
+     *
+     * @param $field
+     * @param array $values
+     * @param array $columns
+     * @return mixed
+     */
+    public function findWhereIn( $field, array $values, $columns = array('*'));
+
+    /**
+     * Find data by excluding multiple values in one field
+     *
+     * @param $field
+     * @param array $values
+     * @param array $columns
+     * @return mixed
+     */
+    public function findWhereNotIn( $field, array $values, $columns = array('*'));
+
+    /**
      * Save a new entity in repository
      *
      * @param array $attributes
