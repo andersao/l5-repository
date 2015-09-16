@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Container\Container as Application;
 use Illuminate\Support\Collection;
 use Prettus\Validator\Exceptions\ValidatorException;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
  * Class BaseRepository
@@ -339,7 +340,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         return $this->parserResult($model);
     }
-    
+
     /**
      * Find data by multiple values in one field
      *
@@ -355,7 +356,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->resetModel();
         return $this->parserResult($model);
     }
-    
+
     /**
      * Find data by excluding multiple values in one field
      *
@@ -601,8 +602,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         if ( $this->presenter instanceof PresenterInterface ) {
 
-            if( $result instanceof Collection ){
-                $result = $result->each(function($model){
+            if( $result instanceof Collection || $result instanceof LengthAwarePaginator){
+                $result->each(function($model){
                     if( $model instanceof Presentable ){
                         $model->setPresenter($this->presenter);
                     }
@@ -611,7 +612,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             } elseif ( $result instanceof Presentable ) {
                 $result = $result->setPresenter($this->presenter);
             }
-
+    
             if( !$this->skipPresenter){
                 return $this->presenter->present($result);
             }
