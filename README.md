@@ -641,7 +641,7 @@ Sorting the results
 
 Add relationship
 
-`http://prettus.local/users?with=groups
+`http://prettus.local/users?with=groups`
 
 
 
