@@ -10,14 +10,13 @@
     }
   ],
   "require": {
-    "php": ">=5.4.0",
-    "illuminate/http": "~5.0|~5.1",
-    "illuminate/config": "~5.0|~5.1",
-    "illuminate/support": "~5.0|~5.1",
-    "illuminate/database": "~5.0|~5.1",
-    "illuminate/pagination": "~5.0|~5.1",
-    "illuminate/console": "~5.0|~5.1",
-    "illuminate/filesystem": "~5.0|~5.1"
+    "illuminate/http": "~5.0|~5.1|~5.2",
+    "illuminate/config": "~5.0|~5.1|~5.2",
+    "illuminate/support": "~5.0|~5.1|~5.2",
+    "illuminate/database": "~5.0|~5.1|~5.2",
+    "illuminate/pagination": "~5.0|~5.1|~5.2",
+    "illuminate/console": "~5.0|~5.1|~5.2",
+    "illuminate/filesystem": "~5.0|~5.1|~5.2"
   },
   "autoload": {
     "psr-4": {
@@ -34,8 +33,8 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-develop": "2.1-dev"
+      "dev-develop": "2.2-dev"
     }
   },
-  "minimum-stability": "dev"
+  "minimum-stability": "stable"
 }
