@@ -87,7 +87,7 @@ trait CacheableRepository {
         $cacheExcept  = isset($this->cacheExcept)   ? $this->cacheExcept  : config('repository.cache.allowed.except',null);
 
         if ( is_array($cacheOnly) ) {
-            return isset($cacheOnly[$method]);
+            return in_array($method, $cacheOnly);
         }
 
         if ( is_array($cacheExcept) ) {
