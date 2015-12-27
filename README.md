@@ -90,6 +90,7 @@ php artisan vendor:publish
 - create(array $attributes)
 - update(array $attributes, $id)
 - delete($id)
+- deleteByField($field, $value);
 - with(array $relations);
 - hidden(array $fields);
 - visible(array $fields);
@@ -380,6 +381,12 @@ Delete entry in Repository
 
 ```php
 $this->repository->delete($id)
+```
+
+Delete entry in Repository by Field and Value
+
+```php
+$this->repository->deleteByField($field, $value)
 ```
 
 ### Create a Criteria
