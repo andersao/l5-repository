@@ -52,8 +52,15 @@ class PresenterGenerator extends Generator
      */
     public function getReplacements()
     {
+        $transformerGenerator = new TransformerGenerator([
+            'name' => $this->name
+        ]);
+        $transformer = $transformerGenerator->getRootNamespace().'\\'.$transformerGenerator->getName() . 'Transformer';
+        $transformer = str_replace(["\\",'/'],'\\', $transformer);
+        echo $transformer;
+
         return array_merge(parent::getReplacements(), [
-            'appnamespace' => $this->getAppNamespace()
+            'transformer' => $transformer
         ]);
     }
 

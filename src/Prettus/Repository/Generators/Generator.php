@@ -185,7 +185,7 @@ abstract class Generator
             case ('transformers' === $class):
                 $path = config('repository.generator.paths.transformers', 'Transformers');
                 break;
-            default;
+            default:
                 $path = '';
         }
 
@@ -210,7 +210,7 @@ abstract class Generator
         $rootNamespace = $this->getRootNamespace();
         if ($rootNamespace == false)
             return null;
-        return 'namespace ' . rtrim($rootNamespace . implode($segments, '\\'), '\\') . ';';
+        return 'namespace ' . rtrim($rootNamespace . '\\' . implode($segments, '\\'), '\\') . ';';
     }
     /**
      * Setup some hook.
