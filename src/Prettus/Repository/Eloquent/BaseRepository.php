@@ -457,6 +457,33 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
+     * Delete an entity in repository by Field and Value
+     *
+     * @param $field name
+     * @param $field value
+     * @return int
+     */
+    public function deleteByField($field_name, $field_value)
+    {
+        $this->applyScope();
+
+        $_skipPresenter = $this->skipPresenter;
+        $this->skipPresenter(true);
+
+        $model = $this->model->where($field_name, $field_value)->first();
+        $originalModel = clone $model;
+
+        $this->skipPresenter($_skipPresenter);
+        $this->resetModel();
+
+        $deleted = $model->where($field_name, $field_value)->delete();
+
+        event(new RepositoryEntityDeleted($this, $originalModel));
+
+        return $deleted;
+    }
+
+    /**
      * Load relations
      *
      * @param array|string $relations
