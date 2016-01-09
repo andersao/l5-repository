@@ -62,9 +62,10 @@ class TransformerGenerator extends Generator
      */
     public function getReplacements()
     {
-        $modelGenerator = new ModelGenerator();
+        $modelGenerator = new ModelGenerator(['name' => $this->name]);
+
         return array_merge(parent::getReplacements(),[
-            'model_namespace' => $modelGenerator->getRootNamespace()
+            'model_namespace' => $modelGenerator->getNamespaceName()
         ]);
     }
 }
