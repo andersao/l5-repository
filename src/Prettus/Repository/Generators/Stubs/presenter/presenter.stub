@@ -2,7 +2,7 @@
 
 $NAMESPACE$
 
-use $APPNAMESPACE$Transformers\$CLASS$Transformer;
+use $TRANSFORMER_NAMESPACE$\$CLASS$Transformer;
 use Prettus\Repository\Presenter\FractalPresenter;
 
 /**

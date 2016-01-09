@@ -52,8 +52,10 @@ class PresenterGenerator extends Generator
      */
     public function getReplacements()
     {
+        $transformerGenerator = new TransformerGenerator(['name' => $this->name]);
+
         return array_merge(parent::getReplacements(), [
-            'appnamespace' => $this->getAppNamespace()
+            'transformer_namespace' => $transformerGenerator->getNamespaceName()
         ]);
     }
 
