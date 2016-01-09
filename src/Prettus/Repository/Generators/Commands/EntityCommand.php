@@ -48,6 +48,13 @@ class EntityCommand extends Command
                 '--force' => $this->option('force'),
             ]);
         }
+
+        if ($this->confirm('Would you like to create a Validator? [y|N]')) {
+            $this->call('make:validator', [
+                'name'    => $this->argument('name'),
+                '--force' => $this->option('force'),
+            ]);
+        }
     }
 
     /**

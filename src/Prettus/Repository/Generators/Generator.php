@@ -185,6 +185,9 @@ abstract class Generator
             case ('transformers' === $class):
                 $path = config('repository.generator.paths.transformers', 'Transformers');
                 break;
+            case ('validators' === $class):
+                $path = config('repository.generator.paths.validators', 'Validators');
+                break;
             default;
                 $path = '';
         }

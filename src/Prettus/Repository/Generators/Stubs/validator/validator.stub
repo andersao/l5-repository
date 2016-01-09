@@ -1,0 +1,56 @@
+<?php
+
+$NAMESPACE$
+
+use Prettus\Validator\LaravelValidator;
+
+class $CLASS$Validator extends LaravelValidator
+{
+    /**
+     * Custom messages
+     *
+     * @var array
+     */
+    protected $messages = [
+        'required'       => 'The :attribute field is required.',
+        'email.required' => 'We need to know your e-mail address!',
+    ];
+
+    /**
+     * Custom name attributes
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'email' => 'E-mail',
+        'obs'   => 'Observation',
+    ];
+
+    /**
+     * Validation Rules
+     *
+     * @var array
+     */
+    protected $rules = [
+        ValidatorInterface::RULE_CREATE => [
+            'title' => 'required',
+            'text'  => 'min:3',
+            'author'=> 'required'
+        ],
+        ValidatorInterface::RULE_UPDATE => [
+            'title' => 'required'
+        ]
+   ];
+
+   /**
+     * Get rule for validation by action ValidatorInterface::RULE_CREATE or ValidatorInterface::RULE_UPDATE
+     *
+     * Default rule: ValidatorInterface::RULE_CREATE
+     *
+     * @param null $action
+     * @return array
+     */
+    // public function getRules($action = null){
+    //     // You also can define advanced rules here
+    // }
+}
