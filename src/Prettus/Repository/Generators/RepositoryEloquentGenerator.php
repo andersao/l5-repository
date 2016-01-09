@@ -64,9 +64,12 @@ class RepositoryEloquentGenerator extends Generator
      */
     public function getReplacements()
     {
+        $repository = parent::getRootNamespace() . parent::getConfigGeneratorClassPath('interfaces') . '\\' . $this->getName() . 'Repository;';
+        $repository = strtr($repository, '/', '\\');
+
         return array_merge(parent::getReplacements(), [
             'fillable' => $this->getFillable(),
-            'repository' => parent::getRootNamespace() . parent::getConfigGeneratorClassPath('interfaces') . '\\' . $this->getName() . 'Repository;',
+            'repository' => $repository,
             'model'    => isset($this->options['model']) ? $this->options['model'] : ''
         ]);
     }
