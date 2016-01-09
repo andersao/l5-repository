@@ -221,7 +221,7 @@ abstract class Generator
         if ($rootNamespace == false)
             return null;
 
-        return rtrim($rootNamespace . '\\'. implode($segments, '\\'), '\\');
+        return strtr(rtrim($rootNamespace . '\\'. implode($segments, '\\'), '\\'), '/', '\\');
     }
 
     /**
