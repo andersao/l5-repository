@@ -244,6 +244,19 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
+     * Retrieve data array for populate field select
+     * 
+     * @param string $column
+     * @param string|null $key
+     *
+     * @return \Illuminate\Support\Collection|array
+     */
+    public function lists($column, $key = null)
+    {
+        return $this->makeModel()->lists($column, $key);
+    }
+
+    /**
      * Retrieve all data of repository
      *
      * @param array $columns
