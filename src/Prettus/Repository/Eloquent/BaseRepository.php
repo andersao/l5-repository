@@ -566,6 +566,17 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
+     * Reset all Criterias
+     *
+     * @return $this
+     */
+    public function resetCriteria()
+    {
+        $this->criteria = new Collection();
+        return $this;
+    }
+
+    /**
      * Apply scope in current Query
      *
      * @return $this
