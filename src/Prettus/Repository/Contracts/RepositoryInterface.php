@@ -9,6 +9,16 @@ interface RepositoryInterface
 {
 
     /**
+     * Retrieve data array for populate field select
+     * 
+     * @param string $column
+     * @param string|null $key
+     *
+     * @return \Illuminate\Support\Collection|array
+     */
+    public function lists($column, $key = null);
+
+    /**
      * Retrieve all data of repository
      *
      * @param array $columns
