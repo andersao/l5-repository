@@ -457,6 +457,18 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
+     * Check if entity has relation
+     *
+     * @param string $relation
+     * @return $this
+     */
+    public function has($relation)
+    {
+        $this->model = $this->model->has($relation);
+        return $this;
+    }
+
+    /**
      * Load relations
      *
      * @param array|string $relations
