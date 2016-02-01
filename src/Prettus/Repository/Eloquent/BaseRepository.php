@@ -245,7 +245,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
     /**
      * Retrieve data array for populate field select
-     * 
+     *
      * @param string $column
      * @param string|null $key
      *
@@ -272,6 +272,25 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         } else {
             $results = $this->model->all($columns);
         }
+
+        $this->resetModel();
+
+        return $this->parserResult($results);
+    }
+
+
+    /**
+     * Retrieve first data of repository
+     *
+     * @param array $columns
+     * @return mixed
+     */
+    public function first($columns = array('*'))
+    {
+        $this->applyCriteria();
+        $this->applyScope();
+
+        $results = $this->model->first($columns);
 
         $this->resetModel();
 
@@ -648,7 +667,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             } elseif ( $result instanceof Presentable ) {
                 $result = $result->setPresenter($this->presenter);
             }
-    
+
             if( !$this->skipPresenter){
                 return $this->presenter->present($result);
             }
