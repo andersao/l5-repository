@@ -530,7 +530,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * @param array $fields
      * @return $this
      */
-    public function visible(array $fields)
+    public function show(array $fields)
     {
         $this->model->setVisible($fields);
         return $this;
