@@ -129,7 +129,7 @@ interface RepositoryInterface
      * @param array $fields
      * @return $this
      */
-    public function visible(array $fields);
+    public function show(array $fields);
 
     /**
      * Query Scope
