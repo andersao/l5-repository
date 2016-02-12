@@ -282,6 +282,22 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
+     * Retrieve all data of repository, simple paginated
+     * @param null $limit
+     * @param array $columns
+     * @return mixed
+     */
+    public function simplePaginate($limit = null, $columns = array('*'))
+    {
+        $this->applyCriteria();
+        $this->applyScope();
+        $limit = is_null($limit) ? config('repository.pagination.limit', 15) : $limit;
+        $results = $this->model->simplePaginate($limit, $columns);
+        $this->resetModel();
+        return $this->parserResult($results);
+    }
+
+    /**
      * Find data by id
      *
      * @param $id
