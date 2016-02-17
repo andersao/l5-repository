@@ -40,6 +40,11 @@ abstract class FractalPresenter implements PresenterInterface
     protected $resource = null;
 
     /**
+     * @var array
+     */
+    protected $meta = null;
+
+    /**
      * @throws Exception
      */
     public function __construct()
@@ -126,12 +131,26 @@ abstract class FractalPresenter implements PresenterInterface
     }
 
     /**
+     * @param array $meta
+     */
+    public function setMeta( Array $meta = null )
+    {
+        $this->meta = $meta;
+    }
+
+    /**
      * @param $data
      * @return Item
      */
     protected function transformItem($data)
     {
-        return new Item($data, $this->getTransformer(), $this->resourceKeyItem);
+        $resource = new Item($data, $this->getTransformer(), $this->resourceKeyItem);
+
+        if($this->meta) {
+            $resource->setMeta($this->meta);
+        }
+
+        return $resource;
     }
 
     /**
@@ -140,7 +159,13 @@ abstract class FractalPresenter implements PresenterInterface
      */
     protected function transformCollection($data)
     {
-        return new Collection($data, $this->getTransformer(), $this->resourceKeyCollection);
+        $resource = new Collection($data, $this->getTransformer(), $this->resourceKeyCollection);
+
+        if($this->meta) {
+            $resource->setMeta($this->meta);
+        }
+
+        return $resource;
     }
 
     /**
@@ -151,6 +176,11 @@ abstract class FractalPresenter implements PresenterInterface
     {
         $collection = $paginator->getCollection();
         $resource = new Collection($collection, $this->getTransformer(), $this->resourceKeyCollection);
+
+        if($this->meta) {
+            $resource->setMeta($this->meta);
+        }
+
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
         return $resource;
     }
