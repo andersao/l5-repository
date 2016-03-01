@@ -1,8 +1,10 @@
 <?php
 
 namespace Prettus\Repository\Generators;
+
 use Prettus\Repository\Generators\Migrations\NameParser;
 use Prettus\Repository\Generators\Migrations\SchemaParser;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 /**
  * Class MigrationGenerator
@@ -10,12 +12,15 @@ use Prettus\Repository\Generators\Migrations\SchemaParser;
  */
 class MigrationGenerator extends Generator
 {
+
     /**
      * Get stub name.
      *
      * @var string
      */
     protected $stub = 'migration/plain';
+
+
     /**
      * Get base path of destination file.
      *
@@ -25,6 +30,8 @@ class MigrationGenerator extends Generator
     {
         return base_path() . '/database/migrations/';
     }
+
+
     /**
      * Get destination path for generated file.
      *
@@ -34,6 +41,8 @@ class MigrationGenerator extends Generator
     {
         return $this->getBasePath() . $this->getFileName() . '.php';
     }
+
+
     /**
      * Get generator path config node.
      *
@@ -43,6 +52,8 @@ class MigrationGenerator extends Generator
     {
         return '';
     }
+
+
     /**
      * Get root namespace.
      *
@@ -52,6 +63,8 @@ class MigrationGenerator extends Generator
     {
         return '';
     }
+
+
     /**
      * Get migration name.
      *
@@ -61,6 +74,8 @@ class MigrationGenerator extends Generator
     {
         return strtolower($this->name);
     }
+
+
     /**
      * Get file name.
      *
@@ -70,6 +85,8 @@ class MigrationGenerator extends Generator
     {
         return date('Y_m_d_His_') . $this->getMigrationName();
     }
+
+
     /**
      * Get schema parser.
      *
@@ -79,6 +96,8 @@ class MigrationGenerator extends Generator
     {
         return new SchemaParser($this->fields);
     }
+
+
     /**
      * Get name parser.
      *
@@ -88,6 +107,8 @@ class MigrationGenerator extends Generator
     {
         return new NameParser($this->name);
     }
+
+
     /**
      * Get stub templates.
      *
@@ -97,11 +118,46 @@ class MigrationGenerator extends Generator
     {
         $parser = $this->getNameParser();
 
-        return Stub::create(__DIR__ . '/Stubs/migration/add.stub', [
-            'class' => $this->getClass(),
-            'table' => $parser->getTable(),
-            'fields_up' => $this->getSchemaParser()->up(),
-            'fields_down' => $this->getSchemaParser()->down()
-        ]);
+        $action = $parser->getAction();
+        switch ($action) {
+            case 'add':
+            case 'append':
+            case 'update':
+            case 'insert':
+                $file         = 'change';
+                $replacements = [
+                    'class'       => $this->getClass(),
+                    'table'       => $parser->getTable(),
+                    'fields_up'   => $this->getSchemaParser()->up(),
+                    'fields_down' => $this->getSchemaParser()->down(),
+                ];
+                break;
+
+            case 'delete':
+            case 'remove':
+            case 'alter':
+                $file         = 'change';
+                $replacements = [
+                    'class'       => $this->getClass(),
+                    'table'       => $parser->getTable(),
+                    'fields_down' => $this->getSchemaParser()->up(),
+                    'fields_up'   => $this->getSchemaParser()->down(),
+                ];
+                break;
+            default:
+                $file         = 'create';
+                $replacements = [
+                    'class'  => $this->getClass(),
+                    'table'  => $parser->getTable(),
+                    'fields' => $this->getSchemaParser()->up(),
+                ];
+                break;
+        }
+
+        if ( ! file_exists(__DIR__ . "/Stubs/migration/{$file}.stub")) {
+            throw new FileNotFoundException(__DIR__ . "/Stubs/migration/{$file}.stub");
+        }
+
+        return Stub::create(__DIR__ . "/Stubs/migration/{$file}.stub", $replacements);
     }
 }
