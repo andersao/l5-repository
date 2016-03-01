@@ -26,11 +26,11 @@ class RepositoryCommand extends Command
      */
     protected $description = 'Create a new repository.';
 
-
     /**
      * @var Collection
      */
-    protected $generators  = null;
+    protected $generators = null;
+
 
     /**
      * Execute the command.
@@ -42,30 +42,30 @@ class RepositoryCommand extends Command
         $this->generators = new Collection();
 
         $modelGenerator = new ModelGenerator([
-            'name'      => $this->argument('name'),
-            'fillable'  => $this->option('fillable'),
-            'force'     => $this->option('force')
+            'name'     => $this->argument('name'),
+            'fillable' => $this->option('fillable'),
+            'force'    => $this->option('force')
         ]);
 
         $this->generators->push($modelGenerator);
 
         $this->generators->push(new RepositoryInterfaceGenerator([
-            'name'      => $this->argument('name'),
-            'force'     => $this->option('force'),
+            'name'  => $this->argument('name'),
+            'force' => $this->option('force'),
         ]));
 
-        $model = $modelGenerator->getRootNamespace().'\\'.$modelGenerator->getName();
-        $model = str_replace(["\\",'/'],'\\', $model);
+        $model = $modelGenerator->getRootNamespace() . '\\' . $modelGenerator->getName();
+        $model = str_replace([ "\\", '/' ], '\\', $model);
 
         $this->generators->push(new RepositoryEloquentGenerator([
-            'name'      => $this->argument('name'),
-            'rules'     => $this->option('rules'),
-            'force'     => $this->option('force'),
-            'model'     => $model
+            'name'  => $this->argument('name'),
+            'rules' => $this->option('rules'),
+            'validator' => $this->option('validator'),
+            'force' => $this->option('force'),
+            'model' => $model
         ]));
 
-
-        foreach ( $this->generators as $generator) {
+        foreach ($this->generators as $generator) {
             $generator->run();
         }
 
@@ -81,9 +81,11 @@ class RepositoryCommand extends Command
     public function getArguments()
     {
         return [
-            ['name', InputArgument::REQUIRED, 'The name of class being generated.', null],
+            [ 'name', InputArgument::REQUIRED, 'The name of class being generated.', null ],
         ];
     }
+
+
     /**
      * The array of command options.
      *
@@ -92,9 +94,10 @@ class RepositoryCommand extends Command
     public function getOptions()
     {
         return [
-            ['fillable', null, InputOption::VALUE_OPTIONAL, 'The fillable attributes.', null],
-            ['rules', null, InputOption::VALUE_OPTIONAL, 'The rules of validation attributes.', null],
-            ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null]
+            [ 'fillable', null, InputOption::VALUE_OPTIONAL, 'The fillable attributes.', null ],
+            [ 'rules', null, InputOption::VALUE_OPTIONAL, 'The rules of validation attributes.', null ],
+            [ 'validator', null, InputOption::VALUE_OPTIONAL, 'Adds validator reference to the repository.', null ],
+            [ 'force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null ]
         ];
     }
 }
