@@ -28,6 +28,7 @@ class EntityCommand extends Command
      */
     protected $generators = null;
 
+
     /**
      * Execute the command.
      *
@@ -35,12 +36,6 @@ class EntityCommand extends Command
      */
     public function fire()
     {
-        $this->call('make:repository', [
-            'name'       => $this->argument('name'),
-            '--fillable' => $this->option('fillable'),
-            '--rules'    => $this->option('rules'),
-            '--force'    => $this->option('force')
-        ]);
 
         if ($this->confirm('Would you like to create a Presenter? [y|N]')) {
             $this->call('make:presenter', [
@@ -48,7 +43,29 @@ class EntityCommand extends Command
                 '--force' => $this->option('force'),
             ]);
         }
+
+        $validator = $this->option('validator');
+        if (is_null($validator) && $this->confirm('Would you like to create a Validator? [y|N]')) {
+            $validator = 'yes';
+        }
+
+        if ($validator == 'yes') {
+            $this->call('make:validator', [
+                'name'    => $this->argument('name'),
+                '--rules' => $this->option('rules'),
+                '--force' => $this->option('force'),
+            ]);
+        }
+
+        $this->call('make:repository', [
+            'name'        => $this->argument('name'),
+            '--fillable'  => $this->option('fillable'),
+            '--rules'     => $this->option('rules'),
+            '--validator' => $validator,
+            '--force'     => $this->option('force')
+        ]);
     }
+
 
     /**
      * The array of command arguments.
@@ -58,9 +75,10 @@ class EntityCommand extends Command
     public function getArguments()
     {
         return [
-            ['name', InputArgument::REQUIRED, 'The name of class being generated.', null],
+            [ 'name', InputArgument::REQUIRED, 'The name of class being generated.', null ],
         ];
     }
+
 
     /**
      * The array of command options.
@@ -70,9 +88,10 @@ class EntityCommand extends Command
     public function getOptions()
     {
         return [
-            ['fillable', null, InputOption::VALUE_OPTIONAL, 'The fillable attributes.', null],
-            ['rules', null, InputOption::VALUE_OPTIONAL, 'The rules of validation attributes.', null],
-            ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null]
+            [ 'fillable', null, InputOption::VALUE_OPTIONAL, 'The fillable attributes.', null ],
+            [ 'rules', null, InputOption::VALUE_OPTIONAL, 'The rules of validation attributes.', null ],
+            [ 'validator', null, InputOption::VALUE_OPTIONAL, 'Adds validator reference to the repository.', null ],
+            [ 'force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null ]
         ];
     }
 }
