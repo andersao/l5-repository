@@ -3,6 +3,7 @@ namespace Prettus\Repository\Generators\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Prettus\Repository\Generators\MigrationGenerator;
 use Prettus\Repository\Generators\ModelGenerator;
 use Prettus\Repository\Generators\RepositoryEloquentGenerator;
 use Prettus\Repository\Generators\RepositoryInterfaceGenerator;
@@ -32,6 +33,7 @@ class RepositoryCommand extends Command
     protected $generators = null;
 
 
+
     /**
      * Execute the command.
      *
@@ -41,6 +43,12 @@ class RepositoryCommand extends Command
     {
         $this->generators = new Collection();
 
+        $this->generators->push(new MigrationGenerator([
+            'name'   => 'create_' . str_plural(strtolower($this->argument('name'))) . '_table',
+            'fields' => $this->option('fillable'),
+            'force'  => $this->option('force'),
+        ]));
+        
         $modelGenerator = new ModelGenerator([
             'name'     => $this->argument('name'),
             'fillable' => $this->option('fillable'),
