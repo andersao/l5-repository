@@ -199,6 +199,9 @@ abstract class Generator
             case ( 'validators' === $class ):
                 $path = config('repository.generator.paths.validators', 'Validators');
                 break;
+            case ( 'controllers' === $class ):
+                $path = config('repository.generator.paths.controllers', 'Http\Controllers');
+                break;
             default:
                 $path = '';
         }

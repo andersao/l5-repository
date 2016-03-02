@@ -227,6 +227,7 @@ return [
             'transformers' => 'Transformers',
             'presenters'   => 'Presenters',
             'validators'   => 'Validators',
+            'controllers'   => 'Http/Controllers',
         ]
     ]
 ];
