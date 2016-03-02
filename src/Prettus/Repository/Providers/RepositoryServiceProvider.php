@@ -9,12 +9,15 @@ use Illuminate\Support\ServiceProvider;
  */
 class RepositoryServiceProvider extends ServiceProvider
 {
+
     /**
      * Indicates if loading of the provider is deferred.
      *
      * @var bool
      */
     protected $defer = false;
+
+
     /**
      *
      * @return void
@@ -25,12 +28,11 @@ class RepositoryServiceProvider extends ServiceProvider
             __DIR__ . '/../../../resources/config/repository.php' => config_path('repository.php')
         ]);
 
-        $this->mergeConfigFrom(
-            __DIR__ . '/../../../resources/config/repository.php', 'repository'
-        );
+        $this->mergeConfigFrom(__DIR__ . '/../../../resources/config/repository.php', 'repository');
 
         $this->loadTranslationsFrom(__DIR__ . '/../../../resources/lang', 'repository');
     }
+
 
     /**
      * Register the service provider.
@@ -44,8 +46,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->commands('Prettus\Repository\Generators\Commands\PresenterCommand');
         $this->commands('Prettus\Repository\Generators\Commands\EntityCommand');
         $this->commands('Prettus\Repository\Generators\Commands\ValidatorCommand');
+        $this->commands('Prettus\Repository\Generators\Commands\ControllerCommand');
         $this->app->register('Prettus\Repository\Providers\EventServiceProvider');
     }
+
 
     /**
      * Get the services provided by the provider.
@@ -54,6 +58,6 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return [];
+        return [ ];
     }
 }
