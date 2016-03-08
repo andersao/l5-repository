@@ -69,8 +69,8 @@ class EntityCommand extends Command
             ]);
             // Generate a controller resource
             $this->call('make:resource', [
-                'name' => $this->argument('name'),
-                '--force'     => $this->option('force')
+                'name'    => $this->argument('name'),
+                '--force' => $this->option('force')
             ]);
         }
 
@@ -79,6 +79,11 @@ class EntityCommand extends Command
             '--fillable'  => $this->option('fillable'),
             '--rules'     => $this->option('rules'),
             '--validator' => $validator,
+            '--force'     => $this->option('force')
+        ]);
+
+        $this->call('make:bindings', [
+            'name'        => $this->argument('name'),
             '--force'     => $this->option('force')
         ]);
     }
