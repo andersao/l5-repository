@@ -118,6 +118,17 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     abstract public function model();
 
     /**
+     * Specify extra meta data to inject into
+     * transformer meta key
+     *
+     * @return array
+     */
+    public function meta()
+    {
+        return null;
+    }
+
+    /**
      * Specify Presenter class name
      *
      * @return string
@@ -193,6 +204,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             if (!$this->presenter instanceof PresenterInterface ) {
                 throw new RepositoryException("Class {$presenter} must be an instance of Prettus\\Repository\\Contracts\\PresenterInterface");
             }
+
+            $this->presenter->setMeta((array) $this->meta());
 
             return $this->presenter;
         }
@@ -506,6 +519,38 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         return $this->parserResult($model);
     }
 
+    /**
+     * Update or Create an entity in repository
+     *
+     * @throws ValidatorException
+     * @param array $attributes
+     * @param $id
+     * @return mixed
+     */
+    public function updateOrCreate(array $attributes, $id)
+    {
+        $this->applyScope();
+    
+        if ( !is_null($this->validator) ) {
+            $this->validator->with($attributes)
+                ->setId($id)
+                ->passesOrFail(ValidatorInterface::RULE_UPDATE);
+        }
+    
+        $_skipPresenter = $this->skipPresenter;
+    
+        $this->skipPresenter(true);
+    
+        $model = $this->model->updateOrCreate(['id' => $id], $attributes);
+    
+        $this->skipPresenter($_skipPresenter);
+        $this->resetModel();
+    
+        event(new RepositoryEntityUpdated($this, $model));
+    
+        return $this->parserResult($model);
+    }
+    
     /**
      * Delete a entity in repository by id
      *
