@@ -168,7 +168,8 @@ return [
         |
         */
         'acceptedConditions' => [
-            '=','like'
+            '=',
+            'like'
         ],
         /*
         |--------------------------------------------------------------------------
@@ -227,6 +228,8 @@ return [
             'transformers' => 'Transformers',
             'presenters'   => 'Presenters',
             'validators'   => 'Validators',
+            'controllers'  => 'Http/Controllers',
+            'provider'     => 'RepositoryServiceProvider',
         ]
     ]
 ];

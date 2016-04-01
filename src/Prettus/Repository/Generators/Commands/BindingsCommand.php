@@ -1,14 +1,15 @@
 <?php
 namespace Prettus\Repository\Generators\Commands;
 
+use File;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Prettus\Repository\Generators\BindingsGenerator;
 use Prettus\Repository\Generators\FileAlreadyExistsException;
-use Prettus\Repository\Generators\ValidatorGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class ValidatorCommand extends Command
+class BindingsCommand extends Command
 {
 
     /**
@@ -16,21 +17,21 @@ class ValidatorCommand extends Command
      *
      * @var string
      */
-    protected $name = 'make:validator';
+    protected $name = 'make:bindings';
 
     /**
      * The description of command.
      *
      * @var string
      */
-    protected $description = 'Create a new validator.';
+    protected $description = 'Add repository bindings to service provider.';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $type = 'Validator';
+    protected $type = 'Bindings';
 
 
     /**
@@ -41,12 +42,24 @@ class ValidatorCommand extends Command
     public function fire()
     {
         try {
-            (new ValidatorGenerator([
+            $bindingGenerator = new BindingsGenerator([
                 'name'  => $this->argument('name'),
-                'rules' => $this->option('rules'),
                 'force' => $this->option('force'),
-            ]))->run();
-            $this->info("Validator created successfully.");
+            ]);
+            // generate repository service provider
+            if ( ! file_exists($bindingGenerator->getPath())) {
+                $this->call('make:provider', [
+                    'name' => $bindingGenerator->getConfigGeneratorClassPath($bindingGenerator->getPathConfigNode()),
+                ]);
+                // placeholder to mark the place in file where to prepend repository bindings
+                $provider = File::get($bindingGenerator->getPath());
+                File::put($bindingGenerator->getPath(), vsprintf(str_replace('//', '%s', $provider), [
+                    '//',
+                    $bindingGenerator->bindPlaceholder
+                ]));
+                $bindingGenerator->run();
+            }
+            $this->info($this->type . ' created successfully.');
         } catch (FileAlreadyExistsException $e) {
             $this->error($this->type . ' already exists!');
 
@@ -63,7 +76,7 @@ class ValidatorCommand extends Command
     public function getArguments()
     {
         return [
-            [ 'name', InputArgument::REQUIRED, 'The name of model for which the validator is being generated.', null ],
+            [ 'name', InputArgument::REQUIRED, 'The name of model for which the controller is being generated.', null ],
         ];
     }
 
@@ -76,7 +89,6 @@ class ValidatorCommand extends Command
     public function getOptions()
     {
         return [
-            [ 'rules', null, InputOption::VALUE_OPTIONAL, 'The rules of validation attributes.', null ],
             [ 'force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null ],
         ];
     }
