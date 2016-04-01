@@ -301,14 +301,15 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * Retrieve all data of repository, paginated
      * @param null $limit
      * @param array $columns
-     * @param string $method
+     * @param boolean $isSimple
      * @return mixed
      */
-    public function paginate($limit = null, $columns = array('*'), $method = "paginate")
+    public function paginate($limit = null, $columns = array('*'), $isSimple = false)
     {
         $this->applyCriteria();
         $this->applyScope();
         $limit = is_null($limit) ? config('repository.pagination.limit', 15) : $limit;
+        $method = $isSimple ? 'simplePaginate' : 'paginate';
         $results = $this->model->{$method}($limit, $columns);
         $this->resetModel();
         return $this->parserResult($results);
@@ -322,7 +323,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function simplePaginate($limit = null, $columns = array('*'))
     {
-        return $this->paginate($limit, $columns, "simplePaginate");
+        return $this->paginate($limit, $columns, true);
     }
 
     /**
