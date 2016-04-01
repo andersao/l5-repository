@@ -473,7 +473,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         return $this->parserResult($model);
     }
-    
+
     /**
      * Update or Create an entity in repository
      *
@@ -638,13 +638,13 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->criteria = new Collection();
         return $this;
     }
-    
+
     /**
      * Reset Query Scope
      *
      * @return $this
      */
-    public function resetCriteria()
+    public function resetScope()
     {
         $this->scopeQuery = null;
         return $this;
