@@ -2,13 +2,13 @@
 namespace Prettus\Repository\Generators\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
+use Prettus\Repository\Generators\ControllerGenerator;
 use Prettus\Repository\Generators\FileAlreadyExistsException;
-use Prettus\Repository\Generators\PresenterGenerator;
-use Prettus\Repository\Generators\TransformerGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class PresenterCommand extends Command
+class ControllerCommand extends Command
 {
 
     /**
@@ -16,21 +16,21 @@ class PresenterCommand extends Command
      *
      * @var string
      */
-    protected $name = 'make:presenter';
+    protected $name = 'make:resource';
 
     /**
      * The description of command.
      *
      * @var string
      */
-    protected $description = 'Create a new presenter.';
+    protected $description = 'Create a new controller.';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $type = 'Presenter';
+    protected $type = 'Controller';
 
 
     /**
@@ -40,23 +40,12 @@ class PresenterCommand extends Command
      */
     public function fire()
     {
-
         try {
-            (new PresenterGenerator([
+            (new ControllerGenerator([
                 'name'  => $this->argument('name'),
                 'force' => $this->option('force'),
             ]))->run();
-            $this->info("Presenter created successfully.");
-
-            if ( ! \File::exists(app_path() . '/Transformers/' . $this->argument('name') . 'Transformer.php')) {
-                if ($this->confirm('Would you like to create a Transformer? [y|N]')) {
-                    (new TransformerGenerator([
-                        'name'  => $this->argument('name'),
-                        'force' => $this->option('force'),
-                    ]))->run();
-                    $this->info("Transformer created successfully.");
-                }
-            }
+            $this->info($this->type . ' created successfully.');
         } catch (FileAlreadyExistsException $e) {
             $this->error($this->type . ' already exists!');
 
@@ -73,7 +62,7 @@ class PresenterCommand extends Command
     public function getArguments()
     {
         return [
-            [ 'name', InputArgument::REQUIRED, 'The name of model for which the presenter is being generated.', null ],
+            [ 'name', InputArgument::REQUIRED, 'The name of model for which the controller is being generated.', null ],
         ];
     }
 
@@ -86,7 +75,7 @@ class PresenterCommand extends Command
     public function getOptions()
     {
         return [
-            [ 'force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null ]
+            [ 'force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null ],
         ];
     }
 }
