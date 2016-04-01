@@ -146,6 +146,13 @@ interface RepositoryInterface
      * @return $this
      */
     public function scopeQuery(\Closure $scope);
+    
+    /**
+     * Reset Query Scope
+     *
+     * @return $this
+     */
+    public function resetScope();
 
     /**
      * Get Searchable Fields
