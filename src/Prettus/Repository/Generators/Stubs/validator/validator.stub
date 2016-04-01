@@ -1,0 +1,15 @@
+<?php
+
+$NAMESPACE$
+
+use \Prettus\Validator\Contracts\ValidatorInterface;
+use \Prettus\Validator\LaravelValidator;
+
+class $CLASS$Validator extends LaravelValidator {
+
+    protected $rules = [
+        ValidatorInterface::RULE_CREATE => $RULES$,
+        ValidatorInterface::RULE_UPDATE => $RULES$,
+   ];
+
+}
