@@ -2,6 +2,7 @@
 namespace Prettus\Repository\Generators\Commands;
 
 use Illuminate\Console\Command;
+use Prettus\Repository\Generators\FileAlreadyExistsException;
 use Prettus\Repository\Generators\PresenterGenerator;
 use Prettus\Repository\Generators\TransformerGenerator;
 use Symfony\Component\Console\Input\InputArgument;
@@ -25,29 +26,44 @@ class PresenterCommand extends Command
     protected $description = 'Create a new presenter.';
 
     /**
+     * The type of class being generated.
+     *
+     * @var string
+     */
+    protected $type = 'Presenter';
+
+
+    /**
      * Execute the command.
      *
      * @return void
      */
     public function fire()
     {
-        (new PresenterGenerator([
-            'name'  => $this->argument('name'),
-            'force' => $this->option('force'),
-        ]))->run();
-        $this->info("Presenter created successfully.");
 
+        try {
+            (new PresenterGenerator([
+                'name'  => $this->argument('name'),
+                'force' => $this->option('force'),
+            ]))->run();
+            $this->info("Presenter created successfully.");
 
-        if (!\File::exists(app_path() . '/Transformers/' . $this->argument('name') . 'Transformer.php')) {
-            if ($this->confirm('Would you like to create a Transformer? [y|N]')) {
-                (new TransformerGenerator([
-                    'name'  => $this->argument('name'),
-                    'force' => $this->option('force'),
-                ]))->run();
-                $this->info("Transformer created successfully.");
+            if ( ! \File::exists(app_path() . '/Transformers/' . $this->argument('name') . 'Transformer.php')) {
+                if ($this->confirm('Would you like to create a Transformer? [y|N]')) {
+                    (new TransformerGenerator([
+                        'name'  => $this->argument('name'),
+                        'force' => $this->option('force'),
+                    ]))->run();
+                    $this->info("Transformer created successfully.");
+                }
             }
+        } catch (FileAlreadyExistsException $e) {
+            $this->error($this->type . ' already exists!');
+
+            return false;
         }
     }
+
 
     /**
      * The array of command arguments.
@@ -57,9 +73,10 @@ class PresenterCommand extends Command
     public function getArguments()
     {
         return [
-            ['name', InputArgument::REQUIRED, 'The name of model for which the presenter is being generated.', null],
+            [ 'name', InputArgument::REQUIRED, 'The name of model for which the presenter is being generated.', null ],
         ];
     }
+
 
     /**
      * The array of command options.
@@ -69,7 +86,7 @@ class PresenterCommand extends Command
     public function getOptions()
     {
         return [
-            ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null]
+            [ 'force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null ]
         ];
     }
 }
