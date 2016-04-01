@@ -43,6 +43,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->commands('Prettus\Repository\Generators\Commands\TransformerCommand');
         $this->commands('Prettus\Repository\Generators\Commands\PresenterCommand');
         $this->commands('Prettus\Repository\Generators\Commands\EntityCommand');
+        $this->commands('Prettus\Repository\Generators\Commands\ValidatorCommand');
         $this->app->register('Prettus\Repository\Providers\EventServiceProvider');
     }
 

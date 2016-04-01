@@ -9,6 +9,16 @@ interface RepositoryInterface
 {
 
     /**
+     * Retrieve data array for populate field select
+     * 
+     * @param string $column
+     * @param string|null $key
+     *
+     * @return \Illuminate\Support\Collection|array
+     */
+    public function lists($column, $key = null);
+
+    /**
      * Retrieve all data of repository
      *
      * @param array $columns
@@ -23,6 +33,14 @@ interface RepositoryInterface
      * @return mixed
      */
     public function paginate($limit = null, $columns = array('*'));
+
+    /**
+     * Retrieve all data of repository, simple paginated
+     * @param null $limit
+     * @param array $columns
+     * @return mixed
+     */
+    public function simplePaginate($limit = null, $columns = array('*'));
 
     /**
      * Find data by id

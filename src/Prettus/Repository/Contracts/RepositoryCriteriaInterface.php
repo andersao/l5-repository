@@ -42,4 +42,10 @@ interface RepositoryCriteriaInterface
      */
     public function skipCriteria($status = true);
 
+    /**
+     * Reset all Criterias
+     *
+     * @return $this
+     */
+    public function resetCriteria();
 }
