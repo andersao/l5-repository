@@ -129,7 +129,7 @@ interface RepositoryInterface
      * @param array $fields
      * @return $this
      */
-    public function hidden(array $fields);
+    public function hide(array $fields);
 
     /**
      * Set visible fields
@@ -137,7 +137,7 @@ interface RepositoryInterface
      * @param array $fields
      * @return $this
      */
-    public function visible(array $fields);
+    public function show(array $fields);
 
     /**
      * Query Scope
