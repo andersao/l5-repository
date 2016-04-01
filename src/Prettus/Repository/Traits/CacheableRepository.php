@@ -110,15 +110,21 @@ trait CacheableRepository {
      */
     public function getCacheKey($method, $args = null){
 
-        $request = app('Illuminate\Http\Request');
-        $args    = serialize($args);
+        $this->applyCriteria();
+        $this->applyScope();
+        $query = $this->model->newQuery()->getQuery();
+        $args  = serialize($args) . serialize($query->getBindings()) . $query->toSql();
+        if ($method == 'paginate') {
+            $args .= 'page=' . app('Illuminate\Http\Request')->input('page', 1);
+        }
         $key     = sprintf('%s@%s-%s',
             get_called_class(),
             $method,
-            md5($args.$request->fullUrl())
+            md5($args)
         );
 
         CacheKeys::putKey(get_called_class(), $key);
+        $this->resetModel();
 
         return $key;
 
