@@ -456,7 +456,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * @param $id
      * @return mixed
      */
-    public function update(array $attributes, $id)
+    public function update(array $attributes, $values)
     {
         $this->applyScope();
 
@@ -469,7 +469,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
                 ->toArray();
 
             $this->validator->with($attributes)
-                ->setId($id)
                 ->passesOrFail( ValidatorInterface::RULE_UPDATE );
         }
 
@@ -477,7 +476,16 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         $this->skipPresenter(true);
 
-        $model = $this->model->findOrFail($id);
+        if(is_array($values)){
+            $query = $this->model->query();
+            foreach($values as $field => $value){
+                $query = $query->where($field,$value);
+            }
+            $model = $query->firstOrFail();
+        }else{
+            $model = $this->model->findOrFail($id);
+        }
+        
         $model->fill($attributes);
         $model->save();
 
