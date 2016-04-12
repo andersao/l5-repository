@@ -244,6 +244,19 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
+     * Retrieve data array for populate field select
+     *
+     * @param string $column
+     * @param string|null $key
+     *
+     * @return \Illuminate\Support\Collection|array
+     */
+    public function lists($column, $key = null)
+    {
+        return $this->makeModel()->lists($column, $key);
+    }
+
+    /**
      * Retrieve all data of repository
      *
      * @param array $columns
@@ -265,20 +278,52 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         return $this->parserResult($results);
     }
 
+
+    /**
+     * Retrieve first data of repository
+     *
+     * @param array $columns
+     * @return mixed
+     */
+    public function first($columns = array('*'))
+    {
+        $this->applyCriteria();
+        $this->applyScope();
+
+        $results = $this->model->first($columns);
+
+        $this->resetModel();
+
+        return $this->parserResult($results);
+    }
+
     /**
      * Retrieve all data of repository, paginated
      * @param null $limit
      * @param array $columns
+     * @param string $method
      * @return mixed
      */
-    public function paginate($limit = null, $columns = array('*'))
+    public function paginate($limit = null, $columns = array('*'), $method = "paginate")
     {
         $this->applyCriteria();
         $this->applyScope();
-        $limit = is_null($limit) ? config('repository.pagination.limit', 15) : $limit;
-        $results = $this->model->paginate($limit, $columns);
+        $limit = request()->get('perPage', is_null($limit) ? config('repository.pagination.limit', 15) : $limit);
+        $results = $this->model->{$method}($limit, $columns);
+        $results->appends(request()->query());
         $this->resetModel();
         return $this->parserResult($results);
+    }
+
+    /**
+     * Retrieve all data of repository, simple paginated
+     * @param null $limit
+     * @param array $columns
+     * @return mixed
+     */
+    public function simplePaginate($limit = null, $columns = array('*'))
+    {
+        return $this->paginate($limit, $columns, "simplePaginate");
     }
 
     /**
@@ -383,6 +428,13 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function create(array $attributes)
     {
         if ( !is_null($this->validator) ) {
+            // we should pass data that has been casts by the model
+            // to make sure data type are same because validator may need to use
+            // this data to compare with data that fetch from database.
+            $attributes = $this->model->newInstance()
+                ->forceFill($attributes)
+                ->toArray();
+
             $this->validator->with($attributes)
                 ->passesOrFail( ValidatorInterface::RULE_CREATE );
         }
@@ -409,6 +461,13 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->applyScope();
 
         if ( !is_null($this->validator) ) {
+            // we should pass data that has been casts by the model
+            // to make sure data type are same because validator may need to use
+            // this data to compare with data that fetch from database.
+            $attributes = $this->model->newInstance()
+                ->forceFill($attributes)
+                ->toArray();
+
             $this->validator->with($attributes)
                 ->setId($id)
                 ->passesOrFail( ValidatorInterface::RULE_UPDATE );
@@ -421,6 +480,38 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $model = $this->model->findOrFail($id);
         $model->fill($attributes);
         $model->save();
+
+        $this->skipPresenter($_skipPresenter);
+        $this->resetModel();
+
+        event(new RepositoryEntityUpdated($this, $model));
+
+        return $this->parserResult($model);
+    }
+
+    /**
+     * Update or Create an entity in repository
+     *
+     * @throws ValidatorException
+     * @param array $attributes
+     * @param $id
+     * @return mixed
+     */
+    public function updateOrCreate(array $attributes, $id)
+    {
+        $this->applyScope();
+
+        if ( !is_null($this->validator) ) {
+            $this->validator->with($attributes)
+                ->setId($id)
+                ->passesOrFail(ValidatorInterface::RULE_UPDATE);
+        }
+
+        $_skipPresenter = $this->skipPresenter;
+
+        $this->skipPresenter(true);
+
+        $model = $this->model->updateOrCreate(['id' => $id], $attributes);
 
         $this->skipPresenter($_skipPresenter);
         $this->resetModel();
@@ -454,6 +545,18 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         event(new RepositoryEntityDeleted($this, $originalModel));
 
         return $deleted;
+    }
+
+    /**
+     * Check if entity has relation
+     *
+     * @param string $relation
+     * @return $this
+     */
+    public function has($relation)
+    {
+        $this->model = $this->model->has($relation);
+        return $this;
     }
 
     /**
@@ -541,6 +644,28 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
+     * Reset all Criterias
+     *
+     * @return $this
+     */
+    public function resetCriteria()
+    {
+        $this->criteria = new Collection();
+        return $this;
+    }
+
+    /**
+     * Reset Query Scope
+     *
+     * @return $this
+     */
+    public function resetScope()
+    {
+        $this->scopeQuery = null;
+        return $this;
+    }
+
+    /**
      * Apply scope in current Query
      *
      * @return $this
@@ -612,7 +737,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             } elseif ( $result instanceof Presentable ) {
                 $result = $result->setPresenter($this->presenter);
             }
-    
+
             if( !$this->skipPresenter){
                 return $this->presenter->present($result);
             }

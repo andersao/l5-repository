@@ -2,13 +2,13 @@
 namespace Prettus\Repository\Generators\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Prettus\Repository\Generators\FileAlreadyExistsException;
-use Prettus\Repository\Generators\PresenterGenerator;
-use Prettus\Repository\Generators\TransformerGenerator;
+use Prettus\Repository\Generators\ValidatorGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class PresenterCommand extends Command
+class ValidatorCommand extends Command
 {
 
     /**
@@ -16,21 +16,21 @@ class PresenterCommand extends Command
      *
      * @var string
      */
-    protected $name = 'make:presenter';
+    protected $name = 'make:validator';
 
     /**
      * The description of command.
      *
      * @var string
      */
-    protected $description = 'Create a new presenter.';
+    protected $description = 'Create a new validator.';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $type = 'Presenter';
+    protected $type = 'Validator';
 
 
     /**
@@ -40,23 +40,13 @@ class PresenterCommand extends Command
      */
     public function fire()
     {
-
         try {
-            (new PresenterGenerator([
+            (new ValidatorGenerator([
                 'name'  => $this->argument('name'),
+                'rules' => $this->option('rules'),
                 'force' => $this->option('force'),
             ]))->run();
-            $this->info("Presenter created successfully.");
-
-            if ( ! \File::exists(app_path() . '/Transformers/' . $this->argument('name') . 'Transformer.php')) {
-                if ($this->confirm('Would you like to create a Transformer? [y|N]')) {
-                    (new TransformerGenerator([
-                        'name'  => $this->argument('name'),
-                        'force' => $this->option('force'),
-                    ]))->run();
-                    $this->info("Transformer created successfully.");
-                }
-            }
+            $this->info("Validator created successfully.");
         } catch (FileAlreadyExistsException $e) {
             $this->error($this->type . ' already exists!');
 
@@ -73,7 +63,7 @@ class PresenterCommand extends Command
     public function getArguments()
     {
         return [
-            [ 'name', InputArgument::REQUIRED, 'The name of model for which the presenter is being generated.', null ],
+            [ 'name', InputArgument::REQUIRED, 'The name of model for which the validator is being generated.', null ],
         ];
     }
 
@@ -86,7 +76,8 @@ class PresenterCommand extends Command
     public function getOptions()
     {
         return [
-            [ 'force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null ]
+            [ 'rules', null, InputOption::VALUE_OPTIONAL, 'The rules of validation attributes.', null ],
+            [ 'force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null ],
         ];
     }
 }

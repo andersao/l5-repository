@@ -3,6 +3,7 @@ namespace Prettus\Repository\Generators\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Prettus\Repository\Generators\FileAlreadyExistsException;
 use Prettus\Repository\Generators\TransformerGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -25,17 +26,30 @@ class TransformerCommand extends Command
     protected $description = 'Create a new transformer.';
 
     /**
+     * The type of class being generated.
+     *
+     * @var string
+     */
+    protected $type = 'Transformer';
+
+    /**
      * Execute the command.
      *
      * @return void
      */
     public function fire()
     {
-        (new TransformerGenerator([
-            'name'  => $this->argument('name'),
-            'force' => $this->option('force'),
-        ]))->run();
-        $this->info("Transformer created successfully.");
+        try {
+            (new TransformerGenerator([
+                'name'  => $this->argument('name'),
+                'force' => $this->option('force'),
+            ]))->run();
+            $this->info("Transformer created successfully.");
+        } catch (FileAlreadyExistsException $e) {
+            $this->error($this->type . ' already exists!');
+
+            return false;
+        }
     }
 
 
