@@ -494,16 +494,15 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      *
      * @throws ValidatorException
      * @param array $attributes
-     * @param $id
+     * @param array $values
      * @return mixed
      */
-    public function updateOrCreate(array $attributes, $id)
+    public function updateOrCreate(array $attributes, array $values = [])
     {
         $this->applyScope();
 
         if ( !is_null($this->validator) ) {
             $this->validator->with($attributes)
-                ->setId($id)
                 ->passesOrFail(ValidatorInterface::RULE_UPDATE);
         }
 
@@ -511,7 +510,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         $this->skipPresenter(true);
 
-        $model = $this->model->updateOrCreate(['id' => $id], $attributes);
+        $model = $this->model->updateOrCreate($attributes, $values);
 
         $this->skipPresenter($_skipPresenter);
         $this->resetModel();
