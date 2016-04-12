@@ -37,7 +37,7 @@ class ControllerGenerator extends Generator
      */
     public function getRootNamespace()
     {
-        return parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode());
+        return str_replace('/', '\\', parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode()));
     }
 
 
@@ -74,10 +74,11 @@ class ControllerGenerator extends Generator
 
         return array_merge(parent::getReplacements(), [
             'controller' => $this->getControllerName(),
-            'plural'     => $this->getPluralName(),
-            'singular'   => $this->getSingularName(),
+            'plural' => $this->getPluralName(),
+            'singular' => $this->getSingularName(),
             'validator' => $this->getValidator(),
-            'repository'  => $this->getRepository(),
+            'repository' => $this->getRepository(),
+            'appname' => $this->getAppNamespace(),
         ]);
     }
 
@@ -129,7 +130,7 @@ class ControllerGenerator extends Generator
 
         $validator = $validatorGenerator->getRootNamespace() . '\\' . $validatorGenerator->getName();
 
-        return 'use ' . str_replace([ "\\", '/' ], '\\', $validator) . 'Validator;';
+        return 'use ' . str_replace(["\\", '/'], '\\', $validator) . 'Validator;';
     }
 
 
@@ -146,6 +147,6 @@ class ControllerGenerator extends Generator
 
         $repository = $repositoryGenerator->getRootNamespace() . '\\' . $repositoryGenerator->getName();
 
-        return 'use ' . str_replace([ "\\", '/' ], '\\', $repository) . 'Repository;';
+        return 'use ' . str_replace(["\\", '/'], '\\', $repository) . 'Repository;';
     }
 }
