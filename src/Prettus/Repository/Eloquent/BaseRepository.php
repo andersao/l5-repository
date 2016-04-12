@@ -118,6 +118,17 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     abstract public function model();
 
     /**
+     * Specify extra meta data to inject into
+     * transformer meta key
+     *
+     * @return array
+     */
+    public function meta()
+    {
+        return null;
+    }
+
+    /**
      * Specify Presenter class name
      *
      * @return string
@@ -193,6 +204,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             if (!$this->presenter instanceof PresenterInterface ) {
                 throw new RepositoryException("Class {$presenter} must be an instance of Prettus\\Repository\\Contracts\\PresenterInterface");
             }
+
+            $this->presenter->setMeta((array) $this->meta());
 
             return $this->presenter;
         }
@@ -488,7 +501,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         return $this->parserResult($model);
     }
-
+    
     /**
      * Update or Create an entity in repository
      *
