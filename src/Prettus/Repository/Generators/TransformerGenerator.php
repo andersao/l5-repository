@@ -62,9 +62,14 @@ class TransformerGenerator extends Generator
      */
     public function getReplacements()
     {
-        $modelGenerator = new ModelGenerator();
+        $modelGenerator = new ModelGenerator([
+            'name' => $this->name
+        ]);
+        $model = $modelGenerator->getRootNamespace().'\\'.$modelGenerator->getName();
+        $model = str_replace(["\\",'/'],'\\', $model);
+
         return array_merge(parent::getReplacements(),[
-            'model_namespace' => $modelGenerator->getRootNamespace()
+            'model' => $model
         ]);
     }
 }

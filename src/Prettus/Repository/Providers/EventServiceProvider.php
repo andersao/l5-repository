@@ -1,8 +1,7 @@
 <?php
 namespace Prettus\Repository\Providers;
 
-use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
-use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Support\ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider {
 
@@ -22,4 +21,38 @@ class EventServiceProvider extends ServiceProvider {
             'Prettus\Repository\Listeners\CleanCacheRepository'
         ]
     ];
+
+    /**
+     * Register the application's event listeners.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $events = app('events');
+
+        foreach ($this->listen as $event => $listeners) {
+            foreach ($listeners as $listener) {
+                $events->listen($event, $listener);
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function register()
+    {
+        //
+    }
+
+    /**
+     * Get the events and handlers.
+     *
+     * @return array
+     */
+    public function listens()
+    {
+        return $this->listen;
+    }
 }

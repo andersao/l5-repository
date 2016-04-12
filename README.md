@@ -6,7 +6,7 @@ Laravel 5 Repositories is used to abstract the data layer, making our applicatio
 [![Analytics](https://ga-beacon.appspot.com/UA-61050740-1/l5-repository/readme)](https://packagist.org/packages/prettus/l5-repository)
 
 #### See versions: [1.0.*](https://github.com/andersao/l5-repository/tree/1.0.4) / [2.0.*](https://github.com/andersao/l5-repository/tree/2.0.14)
-#### Migrate to: [2.0](migration-to-2.0.md) / [2.1](migration-to-2.1.md) 
+#### Migrate to: [2.0](migration-to-2.0.md) / [2.1](migration-to-2.1.md)
 
 You want to know a little more about the Repository pattern? [Read this great article](http://bit.ly/1IdmRNS).
 
@@ -50,7 +50,7 @@ You want to know a little more about the Repository pattern? [Read this great ar
 Execute the following command to get the latest version of the package:
 
 ```terminal
-	composer require prettus/l5-repository
+composer require prettus/l5-repository
 ```
 
 ### Laravel
@@ -81,6 +81,7 @@ php artisan vendor:publish
 ### Prettus\Repository\Contracts\RepositoryInterface
 
 - all($columns = array('*'))
+- first($columns = array('*'))
 - paginate($limit = null, $columns = ['*'])
 - find($id, $columns = ['*'])
 - findByField($field, $value, $columns = ['*'])
@@ -162,7 +163,7 @@ namespace App;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 class PostRepository extends BaseRepository {
-    
+
     /**
      * Specify Model class name
      *
@@ -189,11 +190,14 @@ You must first configure the storage location of the repository files. By defaul
         'basePath'=>app_path(),
         'rootNamespace'=>'App\\',
         'paths'=>[
-            'models'=>'Entities',
-            'repositories'=>'Repositories',
-            'interfaces'=>'Repositories',
-            'transformers'=>'Transformers',
-            'presenters'=>'Presenters'
+            'models'       => 'Entities',
+            'repositories' => 'Repositories',
+            'interfaces'   => 'Repositories',
+            'transformers' => 'Transformers',
+            'presenters'   => 'Presenters',
+            'validators'   => 'Validators',
+            'controllers'  => 'Http/Controllers',
+            'provider'     => 'RepositoryServiceProvider',
         ]
     ]
 ```
@@ -220,6 +224,9 @@ Additionally, you may wish to customize where your generated classes end up bein
             'interfaces'=>'Contracts\\Repositories',
             'transformers'=>'Transformers',
             'presenters'=>'Presenters'
+            'validators'   => 'Validators',
+            'controllers'  => 'Http/Controllers',
+            'provider'     => 'RepositoryServiceProvider',
         ]
     ]
 ```
@@ -232,7 +239,15 @@ To generate everything you need for your Model, run this command:
 php artisan make:entity Post
 ```
 
-This will create the Model, the Repository, the Presenter and the Transformer classes. You can also pass the options from the ```repository``` command, since this command is just a wrapper.
+This will create the Controller, the Validator, the Model, the Repository, the Presenter and the Transformer classes.
+It will also create a new service provider that will be used to bind the Eloquent Repository with its corresponding Repository Interface.
+To load it, just add this to your AppServiceProvider@register method:
+
+```php
+    $this->app->register(RepositoryServiceProvider::class);
+```
+
+You can also pass the options from the ```repository``` command, since this command is just a wrapper.
 
 To generate a repository for your Post model, use the following command
 
@@ -252,7 +267,19 @@ Added fields that are fillable
 php artisan make:repository "Blog\Post" --fillable="title,content"
 ```
 
-When running commado, you will be creating the "Entities" folder and "Repositories" inside the folder that you set as the default.
+To add validations rules directly with your command you need to pass the `--rules` option and create migrations as well:
+
+```terminal
+php artisan make:entity Cat --fillable="title:string,content:text" --rules="title=>required|min:2, content=>sometimes|min:10"
+```
+
+The command will also create your basic RESTfull controller so just add this line into your `routes.php` file and you will have a basic CRUD:
+ 
+ ```php
+ Route::resource('cats', CatsController::class);
+ ```
+
+When running the command, you will be creating the "Entities" folder and "Repositories" inside the folder that you set as the default.
 
 Done, done that just now you do bind its interface for your real repository, for example in your own Repositories Service Provider.
 
@@ -285,7 +312,7 @@ class PostsController extends BaseController {
     public function __construct(PostRepository $repository){
         $this->repository = $repository;
     }
-    
+
     ....
 }
 ```
@@ -336,7 +363,7 @@ Find by result by multiple fields
 
 ```php
 $posts = $this->repository->findWhere([
-    //Default Condition = 
+    //Default Condition =
     'state_id'=>'10',
     'country_id'=>'15',
     //Custom Condition
@@ -388,7 +415,7 @@ Criteria are a way to change the repository of the query by applying specific co
 
 ```php
 
-use Prettus\Repository\Contracts\RepositoryInterface; 
+use Prettus\Repository\Contracts\RepositoryInterface;
 use Prettus\Repository\Contracts\CriteriaInterface;
 
 class MyCriteria implements CriteriaInterface {
@@ -443,13 +470,13 @@ Setting the default Criteria in Repository
 use Prettus\Repository\Eloquent\BaseRepository;
 
 class PostRepository extends BaseRepository {
-   
+
     public function boot(){
         $this->pushCriteria(new MyCriteria());
         $this->pushCriteria(new AnotherCriteria());
         ...
     }
-    
+
     function model(){
        return "App\\Post";
     }
@@ -494,7 +521,7 @@ class PostRepository extends BaseRepository {
         $this->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         ...
     }
-    
+
     function model(){
        return "App\\Post";
     }
@@ -663,9 +690,9 @@ use Prettus\Repository\Contracts\CacheableInterface;
 use Prettus\Repository\Traits\CacheableRepository;
 
 class PostRepository extends BaseRepository implements CacheableInterface {
-    
+
     use CacheableRepository;
-    
+
     ...
 }
 ```
@@ -682,25 +709,25 @@ You can change the cache settings in the file *config/repository.php* and also d
 'cache'=>[
     //Enable or disable cache repositories
     'enabled'   => true,
-    
+
     //Lifetime of cache
     'minutes'   => 30,
-    
+
     //Repository Cache, implementation Illuminate\Contracts\Cache\Repository
     'repository'=> 'cache',
-    
+
     //Sets clearing the cache
     'clean'     => [
         //Enable, disable clearing the cache on changes
         'enabled' => true,
-        
+
         'on' => [
             //Enable, disable clearing the cache when you create an item
             'create'=>true,
-            
+
             //Enable, disable clearing the cache when upgrading an item
             'update'=>true,
-            
+
             //Enable, disable clearing the cache when you delete an item
             'delete'=>true,
         ]
@@ -712,7 +739,7 @@ You can change the cache settings in the file *config/repository.php* and also d
     'allowed'=>[
         //Allow caching only for some methods
         'only'  =>null,
-        
+
         //Allow caching for all available methods, except
         'except'=>null
     ],
@@ -727,16 +754,16 @@ use Prettus\Repository\Contracts\CacheableInterface;
 use Prettus\Repository\Traits\CacheableRepository;
 
 class PostRepository extends BaseRepository implements CacheableInterface {
-    
+
     // Setting the lifetime of the cache to a repository specifically
     protected $cacheMinutes = 90;
-    
+
     protected $cacheOnly = ['all', ...];
     //or
     protected $cacheExcept = ['find', ...];
-    
+
     use CacheableRepository;
-    
+
     ...
 }
 ```
@@ -776,7 +803,7 @@ To define specific rules, proceed as shown below:
 ```php
 use \Prettus\Validator\Contracts\ValidatorInterface;
 use \Prettus\Validator\LaravelValidator;
-    
+
 class PostValidator extends LaravelValidator {
 
     protected $rules = [
@@ -809,7 +836,7 @@ class PostRepository extends BaseRepository {
     function model(){
        return "App\\Post";
     }
-    
+
     /**
      * Specify Validator class name
      *
@@ -856,7 +883,7 @@ class PostRepository extends BaseRepository {
     function model(){
        return "App\\Post";
     }
-    
+
 }
 ```
 
@@ -934,9 +961,9 @@ class PostPresenter extends FractalPresenter {
 use Prettus\Repository\Eloquent\BaseRepository;
 
 class PostRepository extends BaseRepository {
-    
+
     ...
-    
+
     public function presenter()
     {
         return "App\\Presenter\\PostPresenter";
@@ -944,7 +971,7 @@ class PostRepository extends BaseRepository {
 }
 ```
 
-Or enable it in your controller with 
+Or enable it in your controller with
 
 ```php
 $this->repository->setPresenter("App\\Presenter\\PostPresenter");
@@ -952,7 +979,7 @@ $this->repository->setPresenter("App\\Presenter\\PostPresenter");
 
 ###### Using the presenter after from the Model
 
-If you recorded a presenter and sometime used the `skipPresenter()` method or simply you do not want your result is not changed automatically by the presenter. 
+If you recorded a presenter and sometime used the `skipPresenter()` method or simply you do not want your result is not changed automatically by the presenter.
 You can implement Presentable interface on your model so you will be able to present your model at any time. See below:
 
 In your model, implement the interface `Prettus\Repository\Contracts\Presentable` and `Prettus\Repository\Traits\PresentableTrait`
@@ -963,7 +990,7 @@ namespace App;
 use Prettus\Repository\Contracts\Presentable;
 use Prettus\Repository\Traits\PresentableTrait;
 
-class Post extends Eloquent implements Presentable { 
+class Post extends Eloquent implements Presentable {
 
     use PresentableTrait;
 
@@ -1004,12 +1031,12 @@ You can skip the presenter at every visit and use it on demand directly into the
 use Prettus\Repository\Eloquent\BaseRepository;
 
 class PostRepository extends BaseRepository {
-    
+
     /**
     * @var bool
     */
     protected $skipPresenter = true;
-    
+
     public function presenter()
     {
         return "App\\Presenter\\PostPresenter";
@@ -1044,15 +1071,15 @@ class Post extends Eloquent implements Transformable {
 
 ###### Enabling in your Repository
 
-`Prettus\Repository\Presenter\ModelFractalPresenter` is a Presenter default for Models implementing Transformable 
+`Prettus\Repository\Presenter\ModelFractalPresenter` is a Presenter default for Models implementing Transformable
 
 ```php
 use Prettus\Repository\Eloquent\BaseRepository;
 
 class PostRepository extends BaseRepository {
-    
+
     ...
-    
+
     public function presenter()
     {
         return "Prettus\\Repository\\Presenter\\ModelFractalPresenter";
@@ -1060,7 +1087,7 @@ class PostRepository extends BaseRepository {
 }
 ```
 
-Or enable it in your controller with 
+Or enable it in your controller with
 
 ```php
 $this->repository->setPresenter("Prettus\\Repository\\Presenter\\ModelFractalPresenter");
@@ -1074,7 +1101,7 @@ Use *skipPresenter* before any other chaining method
 $posts = $this->repository->skipPresenter()->all();
 ```
 
-or 
+or
 
 ```php
 $this->repository->skipPresenter();
