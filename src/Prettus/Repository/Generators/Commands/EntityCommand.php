@@ -59,14 +59,6 @@ class EntityCommand extends Command
 
         if ($this->confirm('Would you like to create a Controller? [y|N]')) {
 
-            // Generate create request for controller
-            $this->call('make:request', [
-                'name' => $this->argument('name') . 'CreateRequest'
-            ]);
-            // Generate update request for controller
-            $this->call('make:request', [
-                'name' => $this->argument('name') . 'UpdateRequest'
-            ]);
             // Generate a controller resource
             $this->call('make:resource', [
                 'name'    => $this->argument('name'),

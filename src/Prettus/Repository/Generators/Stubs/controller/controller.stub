@@ -4,11 +4,11 @@ $NAMESPACE$
 
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
+use $APPNAME$Http\Requests;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
-use App\Http\Requests\$CLASS$CreateRequest;
-use App\Http\Requests\$CLASS$UpdateRequest;
+use $APPNAME$Http\Requests\$CLASS$CreateRequest;
+use $APPNAME$Http\Requests\$CLASS$UpdateRequest;
 $REPOSITORY$
 $VALIDATOR$
 
