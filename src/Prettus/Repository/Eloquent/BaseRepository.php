@@ -453,7 +453,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      *
      * @throws ValidatorException
      * @param array $attributes
-     * @param $id
+     * @param $values
      * @return mixed
      */
     public function update(array $attributes, $values)
@@ -477,23 +477,23 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->skipPresenter(true);
 
         if(is_array($values)){
-            $query = $this->model->query();
+            $model = $this->model->query();
             foreach($values as $field => $value){
-                $query = $query->where($field,$value);
+                $model = $model->where($field,$value);
             }
-            $model = $query->firstOrFail();
+            $model->update($attributes);
+            $model = $model->get();
+            foreach ($model as $m)
+                event(new RepositoryEntityUpdated($this, $m));
         }else{
-            $model = $this->model->findOrFail($id);
+            $model = $this->model->findOrFail($values);
+            $model->update($attributes);
+            event(new RepositoryEntityUpdated($this, $model));
         }
         
-        $model->fill($attributes);
-        $model->save();
-
         $this->skipPresenter($_skipPresenter);
         $this->resetModel();
-
-        event(new RepositoryEntityUpdated($this, $model));
-
+        
         return $this->parserResult($model);
     }
 
