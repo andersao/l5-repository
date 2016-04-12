@@ -639,7 +639,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             $criteria = new $criteria;
         }
         if (!$criteria instanceof CriteriaInterface) {
-            throw new RepositoryException("Class {$criteria} must be an instance of Prettus\\Repository\\Contracts\\CriteriaInterface");
+            throw new RepositoryException("Class ".get_class($criteria)." must be an instance of Prettus\\Repository\\Contracts\\CriteriaInterface");
         }
         $this->criteria->push($criteria);
 
