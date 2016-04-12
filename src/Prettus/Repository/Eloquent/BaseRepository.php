@@ -283,6 +283,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         }
 
         $this->resetModel();
+        $this->resetScope();
 
         return $this->parserResult($results);
     }
