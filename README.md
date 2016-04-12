@@ -102,7 +102,8 @@ php artisan vendor:publish
 
 ### Prettus\Repository\Contracts\RepositoryCriteriaInterface
 
-- pushCriteria(CriteriaInterface $criteria)
+- pushCriteria($criteria)
+- popCriteria($criteria)
 - getCriteria()
 - getByCriteria(CriteriaInterface $criteria)
 - skipCriteria($status = true)
@@ -274,7 +275,7 @@ php artisan make:entity Cat --fillable="title:string,content:text" --rules="titl
 ```
 
 The command will also create your basic RESTfull controller so just add this line into your `routes.php` file and you will have a basic CRUD:
- 
+
  ```php
  Route::resource('cats', CatsController::class);
  ```
@@ -450,7 +451,8 @@ class PostsController extends BaseController {
 
     public function index()
     {
-        $this->repository->pushCriteria(new MyCriteria());
+        $this->repository->pushCriteria(new MyCriteria1());
+        $this->repository->pushCriteria(MyCriteria2::class);
         $posts = $this->repository->all();
 		...
     }
@@ -473,7 +475,8 @@ class PostRepository extends BaseRepository {
 
     public function boot(){
         $this->pushCriteria(new MyCriteria());
-        $this->pushCriteria(new AnotherCriteria());
+        // or
+        $this->pushCriteria(AnotherCriteria::class);
         ...
     }
 
@@ -489,6 +492,16 @@ Use `skipCriteria` before any other chaining method
 
 ```php
 $posts = $this->repository->skipCriteria()->all();
+```
+
+### Popping criteria
+
+Use `popCriteria` to remove a criteria
+
+```php
+$this->repository->popCriteria(new Criteria1());
+// or
+$this->repository->popCriteria(Criteria1::class);
 ```
 
 

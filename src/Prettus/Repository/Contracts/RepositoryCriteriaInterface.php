@@ -14,10 +14,20 @@ interface RepositoryCriteriaInterface
     /**
      * Push Criteria for filter the query
      *
-     * @param CriteriaInterface $criteria
+     * @param $criteria
+     *
      * @return $this
      */
-    public function pushCriteria(CriteriaInterface $criteria);
+    public function pushCriteria($criteria);
+
+    /**
+     * Pop Criteria
+     *
+     * @param $criteria
+     *
+     * @return $this
+     */
+    public function popCriteria($criteria);
 
     /**
      * Get Collection of Criteria
