@@ -612,6 +612,13 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         return $this;
     }
 
+    public function orderBy($column, $direction = 'asc')
+    {
+        $this->model = $this->model->query()->orderBy($column, $direction);
+
+        return $this;
+    }
+
     /**
      * Set visible fields
      *
@@ -640,7 +647,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             $criteria = new $criteria;
         }
         if (!$criteria instanceof CriteriaInterface) {
-            throw new RepositoryException("Class ".get_class($criteria)." must be an instance of Prettus\\Repository\\Contracts\\CriteriaInterface");
+            throw new RepositoryException("Class " . get_class($criteria) . " must be an instance of Prettus\\Repository\\Contracts\\CriteriaInterface");
         }
         $this->criteria->push($criteria);
 

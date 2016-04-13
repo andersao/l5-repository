@@ -92,6 +92,7 @@ php artisan vendor:publish
 - create(array $attributes)
 - update(array $attributes, $id)
 - delete($id)
+- orderBy($column, $direction = 'asc');
 - with(array $relations);
 - hidden(array $fields);
 - visible(array $fields);

@@ -10,7 +10,7 @@ interface RepositoryInterface
 
     /**
      * Retrieve data array for populate field select
-     * 
+     *
      * @param string $column
      * @param string|null $key
      *
@@ -116,6 +116,16 @@ interface RepositoryInterface
     public function delete($id);
 
     /**
+     * Order collection by a given column
+     *
+     * @param string $column
+     * @param string $direction
+     *
+     * @return $this
+     */
+    public function orderBy($column, $direction = 'asc');
+
+    /**
      * Load relations
      *
      * @param $relations
@@ -146,7 +156,7 @@ interface RepositoryInterface
      * @return $this
      */
     public function scopeQuery(\Closure $scope);
-    
+
     /**
      * Reset Query Scope
      *
