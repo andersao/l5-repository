@@ -91,6 +91,7 @@ php artisan vendor:publish
 - findWhereNotIn($field, array $where, $columns = [*])
 - create(array $attributes)
 - update(array $attributes, $id)
+- updateOrCreate(array $attributes, array $values = [])
 - delete($id)
 - orderBy($column, $direction = 'asc');
 - with(array $relations);

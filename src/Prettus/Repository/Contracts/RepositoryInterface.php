@@ -108,6 +108,18 @@ interface RepositoryInterface
     public function update(array $attributes, $id);
 
     /**
+     * Update or Create an entity in repository
+     *
+     * @throws ValidatorException
+     *
+     * @param array $attributes
+     * @param array $values
+     *
+     * @return mixed
+     */
+    public function updateOrCreate(array $attributes, array $values = []);
+
+    /**
      * Delete a entity in repository by id
      *
      * @param $id
