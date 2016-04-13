@@ -4,7 +4,8 @@
  * Class TransformableTrait
  * @package Prettus\Repository\Traits
  */
-trait TransformableTrait {
+trait TransformableTrait
+{
 
     /**
      * @return array
@@ -13,5 +14,4 @@ trait TransformableTrait {
     {
         return $this->toArray();
     }
-
 }

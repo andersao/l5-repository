@@ -5,6 +5,7 @@ use Closure;
 use Exception;
 use Illuminate\Container\Container as Application;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Prettus\Repository\Contracts\CriteriaInterface;
@@ -276,7 +277,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->applyCriteria();
         $this->applyScope();
 
-        if ($this->model instanceof \Illuminate\Database\Eloquent\Builder) {
+        if ($this->model instanceof Builder) {
             $results = $this->model->get($columns);
         } else {
             $results = $this->model->all($columns);
@@ -495,7 +496,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             $this->validator->with($attributes)->setId($id)->passesOrFail(ValidatorInterface::RULE_UPDATE);
         }
 
-        $_skipPresenter = $this->skipPresenter;
+        $temporarySkipPresenter = $this->skipPresenter;
 
         $this->skipPresenter(true);
 
@@ -503,7 +504,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $model->fill($attributes);
         $model->save();
 
-        $this->skipPresenter($_skipPresenter);
+        $this->skipPresenter($temporarySkipPresenter);
         $this->resetModel();
 
         event(new RepositoryEntityUpdated($this, $model));
@@ -529,13 +530,13 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             $this->validator->with($attributes)->passesOrFail(ValidatorInterface::RULE_UPDATE);
         }
 
-        $_skipPresenter = $this->skipPresenter;
+        $temporarySkipPresenter = $this->skipPresenter;
 
         $this->skipPresenter(true);
 
         $model = $this->model->updateOrCreate($attributes, $values);
 
-        $this->skipPresenter($_skipPresenter);
+        $this->skipPresenter($temporarySkipPresenter);
         $this->resetModel();
 
         event(new RepositoryEntityUpdated($this, $model));
@@ -554,13 +555,13 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         $this->applyScope();
 
-        $_skipPresenter = $this->skipPresenter;
+        $temporarySkipPresenter = $this->skipPresenter;
         $this->skipPresenter(true);
 
         $model = $this->find($id);
         $originalModel = clone $model;
 
-        $this->skipPresenter($_skipPresenter);
+        $this->skipPresenter($temporarySkipPresenter);
         $this->resetModel();
 
         $deleted = $model->delete();

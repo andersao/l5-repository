@@ -28,6 +28,15 @@ class RulesParser implements Arrayable
         $this->rules = $rules;
     }
 
+    /**
+     * Convert string migration to array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->parse($this->rules);
+    }
 
     /**
      * Parse a string to array of formatted rules.
@@ -39,16 +48,15 @@ class RulesParser implements Arrayable
     public function parse($rules)
     {
         $this->rules = $rules;
-        $parsed       = [ ];
+        $parsed = [];
         foreach ($this->getRules() as $rulesArray) {
-            $column          = $this->getColumn($rulesArray);
-            $attributes      = $this->getAttributes($column, $rulesArray);
+            $column = $this->getColumn($rulesArray);
+            $attributes = $this->getAttributes($column, $rulesArray);
             $parsed[$column] = $attributes;
         }
 
         return $parsed;
     }
-
 
     /**
      * Get array of rules.
@@ -58,23 +66,11 @@ class RulesParser implements Arrayable
     public function getRules()
     {
         if (is_null($this->rules)) {
-            return [ ];
+            return [];
         }
 
         return explode(',', str_replace(' ', '', $this->rules));
     }
-
-
-    /**
-     * Convert string migration to array.
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return $this->parse($this->rules);
-    }
-
 
     /**
      * Get column name from rules.

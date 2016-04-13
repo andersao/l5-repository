@@ -9,6 +9,7 @@ interface Presentable
 {
     /**
      * @param PresenterInterface $presenter
+     *
      * @return mixed
      */
     public function setPresenter(PresenterInterface $presenter);

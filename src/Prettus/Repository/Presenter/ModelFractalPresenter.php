@@ -8,7 +8,8 @@ use Prettus\Repository\Transformer\ModelTransformer;
  * Class ModelFractalPresenter
  * @package Prettus\Repository\Presenter
  */
-class ModelFractalPresenter extends FractalPresenter {
+class ModelFractalPresenter extends FractalPresenter
+{
 
     /**
      * Transformer
@@ -18,7 +19,7 @@ class ModelFractalPresenter extends FractalPresenter {
      */
     public function getTransformer()
     {
-        if ( !class_exists('League\Fractal\Manager') ){
+        if (!class_exists('League\Fractal\Manager')) {
             throw new Exception("Package required. Please install: 'composer require league/fractal' (0.12.*)");
         }
 

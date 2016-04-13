@@ -75,8 +75,8 @@ class EntityCommand extends Command
         ]);
 
         $this->call('make:bindings', [
-            'name'        => $this->argument('name'),
-            '--force'     => $this->option('force')
+            'name'    => $this->argument('name'),
+            '--force' => $this->option('force')
         ]);
     }
 
@@ -89,7 +89,12 @@ class EntityCommand extends Command
     public function getArguments()
     {
         return [
-            [ 'name', InputArgument::REQUIRED, 'The name of class being generated.', null ],
+            [
+                'name',
+                InputArgument::REQUIRED,
+                'The name of class being generated.',
+                null
+            ],
         ];
     }
 
@@ -102,10 +107,34 @@ class EntityCommand extends Command
     public function getOptions()
     {
         return [
-            [ 'fillable', null, InputOption::VALUE_OPTIONAL, 'The fillable attributes.', null ],
-            [ 'rules', null, InputOption::VALUE_OPTIONAL, 'The rules of validation attributes.', null ],
-            [ 'validator', null, InputOption::VALUE_OPTIONAL, 'Adds validator reference to the repository.', null ],
-            [ 'force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null ]
+            [
+                'fillable',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'The fillable attributes.',
+                null
+            ],
+            [
+                'rules',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'The rules of validation attributes.',
+                null
+            ],
+            [
+                'validator',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Adds validator reference to the repository.',
+                null
+            ],
+            [
+                'force',
+                'f',
+                InputOption::VALUE_NONE,
+                'Force the creation if file already exists.',
+                null
+            ]
         ];
     }
 }

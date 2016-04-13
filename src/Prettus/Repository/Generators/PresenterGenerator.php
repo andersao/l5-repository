@@ -16,23 +16,13 @@ class PresenterGenerator extends Generator
     protected $stub = 'presenter/presenter';
 
     /**
-     * Get base path of destination file.
-     *
-     * @return string
-     */
-    public function getBasePath()
-    {
-        return config('repository.generator.basePath', app_path());
-    }
-
-    /**
      * Get root namespace.
      *
      * @return string
      */
     public function getRootNamespace()
     {
-        return parent::getRootNamespace().parent::getConfigGeneratorClassPath($this->getPathConfigNode());
+        return parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode());
     }
 
     /**
@@ -55,8 +45,11 @@ class PresenterGenerator extends Generator
         $transformerGenerator = new TransformerGenerator([
             'name' => $this->name
         ]);
-        $transformer = $transformerGenerator->getRootNamespace().'\\'.$transformerGenerator->getName() . 'Transformer';
-        $transformer = str_replace(["\\",'/'],'\\', $transformer);
+        $transformer = $transformerGenerator->getRootNamespace() . '\\' . $transformerGenerator->getName() . 'Transformer';
+        $transformer = str_replace([
+            "\\",
+            '/'
+        ], '\\', $transformer);
         echo $transformer;
 
         return array_merge(parent::getReplacements(), [
@@ -71,6 +64,16 @@ class PresenterGenerator extends Generator
      */
     public function getPath()
     {
-        return $this->getBasePath() . '/'.parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) .'/' . $this->getName() . 'Presenter.php';
+        return $this->getBasePath() . '/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) . '/' . $this->getName() . 'Presenter.php';
+    }
+
+    /**
+     * Get base path of destination file.
+     *
+     * @return string
+     */
+    public function getBasePath()
+    {
+        return config('repository.generator.basePath', app_path());
     }
 }

@@ -3,7 +3,8 @@ namespace Prettus\Repository\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-class EventServiceProvider extends ServiceProvider {
+class EventServiceProvider extends ServiceProvider
+{
 
     /**
      * The event handler mappings for the application.

@@ -43,11 +43,11 @@ class BindingsCommand extends Command
     {
         try {
             $bindingGenerator = new BindingsGenerator([
-                'name'  => $this->argument('name'),
+                'name' => $this->argument('name'),
                 'force' => $this->option('force'),
             ]);
             // generate repository service provider
-            if ( ! file_exists($bindingGenerator->getPath())) {
+            if (!file_exists($bindingGenerator->getPath())) {
                 $this->call('make:provider', [
                     'name' => $bindingGenerator->getConfigGeneratorClassPath($bindingGenerator->getPathConfigNode()),
                 ]);
@@ -76,7 +76,12 @@ class BindingsCommand extends Command
     public function getArguments()
     {
         return [
-            [ 'name', InputArgument::REQUIRED, 'The name of model for which the controller is being generated.', null ],
+            [
+                'name',
+                InputArgument::REQUIRED,
+                'The name of model for which the controller is being generated.',
+                null
+            ],
         ];
     }
 
@@ -89,7 +94,13 @@ class BindingsCommand extends Command
     public function getOptions()
     {
         return [
-            [ 'force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null ],
+            [
+                'force',
+                'f',
+                InputOption::VALUE_NONE,
+                'Force the creation if file already exists.',
+                null
+            ],
         ];
     }
 }

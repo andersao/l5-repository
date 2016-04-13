@@ -38,10 +38,10 @@ abstract class Generator
      *
      * @param array $options
      */
-    public function __construct(array $options = [ ])
+    public function __construct(array $options = [])
     {
         $this->filesystem = new Filesystem;
-        $this->options    = $options;
+        $this->options = $options;
     }
 
 
@@ -181,28 +181,28 @@ abstract class Generator
     public function getConfigGeneratorClassPath($class, $directoryPath = false)
     {
         switch ($class) {
-            case ( 'models' === $class ):
+            case ('models' === $class):
                 $path = config('repository.generator.paths.models', 'Entities');
                 break;
-            case ( 'repositories' === $class ):
+            case ('repositories' === $class):
                 $path = config('repository.generator.paths.repositories', 'Repositories');
                 break;
-            case ( 'interfaces' === $class ):
+            case ('interfaces' === $class):
                 $path = config('repository.generator.paths.interfaces', 'Repositories');
                 break;
-            case ( 'presenters' === $class ):
+            case ('presenters' === $class):
                 $path = config('repository.generator.paths.presenters', 'Presenters');
                 break;
-            case ( 'transformers' === $class ):
+            case ('transformers' === $class):
                 $path = config('repository.generator.paths.transformers', 'Transformers');
                 break;
-            case ( 'validators' === $class ):
+            case ('validators' === $class):
                 $path = config('repository.generator.paths.validators', 'Validators');
                 break;
-            case ( 'controllers' === $class ):
+            case ('controllers' === $class):
                 $path = config('repository.generator.paths.controllers', 'Http\Controllers');
                 break;
-            case ( 'provider' === $class ):
+            case ('provider' === $class):
                 $path = config('repository.generator.paths.provider', 'RepositoryServiceProvider');
                 break;
             default:
@@ -258,10 +258,10 @@ abstract class Generator
     public function run()
     {
         $this->setUp();
-        if ($this->filesystem->exists($path = $this->getPath()) && ! $this->force) {
+        if ($this->filesystem->exists($path = $this->getPath()) && !$this->force) {
             throw new FileAlreadyExistsException($path);
         }
-        if ( ! $this->filesystem->isDirectory($dir = dirname($path))) {
+        if (!$this->filesystem->isDirectory($dir = dirname($path))) {
             $this->filesystem->makeDirectory($dir, 0777, true, true);
         }
 
@@ -303,7 +303,7 @@ abstract class Generator
      */
     public function getOption($key, $default = null)
     {
-        if ( ! $this->hasOption($key)) {
+        if (!$this->hasOption($key)) {
             return $default;
         }
 

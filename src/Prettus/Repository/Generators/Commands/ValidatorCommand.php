@@ -42,7 +42,7 @@ class ValidatorCommand extends Command
     {
         try {
             (new ValidatorGenerator([
-                'name'  => $this->argument('name'),
+                'name' => $this->argument('name'),
                 'rules' => $this->option('rules'),
                 'force' => $this->option('force'),
             ]))->run();
@@ -63,7 +63,12 @@ class ValidatorCommand extends Command
     public function getArguments()
     {
         return [
-            [ 'name', InputArgument::REQUIRED, 'The name of model for which the validator is being generated.', null ],
+            [
+                'name',
+                InputArgument::REQUIRED,
+                'The name of model for which the validator is being generated.',
+                null
+            ],
         ];
     }
 
@@ -76,8 +81,20 @@ class ValidatorCommand extends Command
     public function getOptions()
     {
         return [
-            [ 'rules', null, InputOption::VALUE_OPTIONAL, 'The rules of validation attributes.', null ],
-            [ 'force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null ],
+            [
+                'rules',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'The rules of validation attributes.',
+                null
+            ],
+            [
+                'force',
+                'f',
+                InputOption::VALUE_NONE,
+                'Force the creation if file already exists.',
+                null
+            ],
         ];
     }
 }

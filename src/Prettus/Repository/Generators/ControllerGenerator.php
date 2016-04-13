@@ -1,9 +1,6 @@
 <?php
 namespace Prettus\Repository\Generators;
 
-use Prettus\Repository\Generators\Migrations\RulesParser;
-use Prettus\Repository\Generators\Migrations\SchemaParser;
-
 /**
  * Class ControllerGenerator
  * @package Prettus\Repository\Generators
@@ -18,18 +15,6 @@ class ControllerGenerator extends Generator
      */
     protected $stub = 'controller/controller';
 
-
-    /**
-     * Get base path of destination file.
-     *
-     * @return string
-     */
-    public function getBasePath()
-    {
-        return config('repository.generator.basePath', app_path());
-    }
-
-
     /**
      * Get root namespace.
      *
@@ -39,7 +24,6 @@ class ControllerGenerator extends Generator
     {
         return str_replace('/', '\\', parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode()));
     }
-
 
     /**
      * Get generator path config node.
@@ -51,7 +35,6 @@ class ControllerGenerator extends Generator
         return 'controllers';
     }
 
-
     /**
      * Get destination path for generated file.
      *
@@ -59,29 +42,18 @@ class ControllerGenerator extends Generator
      */
     public function getPath()
     {
-        return $this->getBasePath() . '/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(),
-            true) . '/' . $this->getControllerName() . 'Controller.php';
+        return $this->getBasePath() . '/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) . '/' . $this->getControllerName() . 'Controller.php';
     }
-
 
     /**
-     * Get array replacements.
+     * Get base path of destination file.
      *
-     * @return array
+     * @return string
      */
-    public function getReplacements()
+    public function getBasePath()
     {
-
-        return array_merge(parent::getReplacements(), [
-            'controller' => $this->getControllerName(),
-            'plural' => $this->getPluralName(),
-            'singular' => $this->getSingularName(),
-            'validator' => $this->getValidator(),
-            'repository' => $this->getRepository(),
-            'appname' => $this->getAppNamespace(),
-        ]);
+        return config('repository.generator.basePath', app_path());
     }
-
 
     /**
      * Gets controller name based on model
@@ -94,7 +66,6 @@ class ControllerGenerator extends Generator
         return ucfirst($this->getPluralName());
     }
 
-
     /**
      * Gets plural name based on model
      *
@@ -104,6 +75,24 @@ class ControllerGenerator extends Generator
     {
 
         return str_plural(lcfirst(ucwords($this->getClass())));
+    }
+
+    /**
+     * Get array replacements.
+     *
+     * @return array
+     */
+    public function getReplacements()
+    {
+
+        return array_merge(parent::getReplacements(), [
+            'controller' => $this->getControllerName(),
+            'plural'     => $this->getPluralName(),
+            'singular'   => $this->getSingularName(),
+            'validator'  => $this->getValidator(),
+            'repository' => $this->getRepository(),
+            'appname'    => $this->getAppNamespace(),
+        ]);
     }
 
     /**
@@ -130,7 +119,10 @@ class ControllerGenerator extends Generator
 
         $validator = $validatorGenerator->getRootNamespace() . '\\' . $validatorGenerator->getName();
 
-        return 'use ' . str_replace(["\\", '/'], '\\', $validator) . 'Validator;';
+        return 'use ' . str_replace([
+            "\\",
+            '/'
+        ], '\\', $validator) . 'Validator;';
     }
 
 
@@ -147,6 +139,9 @@ class ControllerGenerator extends Generator
 
         $repository = $repositoryGenerator->getRootNamespace() . '\\' . $repositoryGenerator->getName();
 
-        return 'use ' . str_replace(["\\", '/'], '\\', $repository) . 'Repository;';
+        return 'use ' . str_replace([
+            "\\",
+            '/'
+        ], '\\', $repository) . 'Repository;';
     }
 }

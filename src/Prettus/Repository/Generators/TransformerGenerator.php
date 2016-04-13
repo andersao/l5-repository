@@ -16,16 +16,6 @@ class TransformerGenerator extends Generator
     protected $stub = 'transformer/transformer';
 
     /**
-     * Get base path of destination file.
-     *
-     * @return string
-     */
-    public function getBasePath()
-    {
-        return config('repository.generator.basePath', app_path());
-    }
-
-    /**
      * Get root namespace.
      *
      * @return string
@@ -56,6 +46,16 @@ class TransformerGenerator extends Generator
     }
 
     /**
+     * Get base path of destination file.
+     *
+     * @return string
+     */
+    public function getBasePath()
+    {
+        return config('repository.generator.basePath', app_path());
+    }
+
+    /**
      * Get array replacements.
      *
      * @return array
@@ -65,10 +65,13 @@ class TransformerGenerator extends Generator
         $modelGenerator = new ModelGenerator([
             'name' => $this->name
         ]);
-        $model = $modelGenerator->getRootNamespace().'\\'.$modelGenerator->getName();
-        $model = str_replace(["\\",'/'],'\\', $model);
+        $model = $modelGenerator->getRootNamespace() . '\\' . $modelGenerator->getName();
+        $model = str_replace([
+            "\\",
+            '/'
+        ], '\\', $model);
 
-        return array_merge(parent::getReplacements(),[
+        return array_merge(parent::getReplacements(), [
             'model' => $model
         ]);
     }
