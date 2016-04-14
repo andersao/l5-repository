@@ -75,14 +75,32 @@ class RequestCriteria implements CriteriaInterface
                         }
                     }
 
-                    if ($isFirstField || $modelForceAndWhere) {
+                    $relation = null;
+                    if(stripos($field, '.')) {
+                        $explode = explode('.', $field);
+                        $field = array_pop($explode);
+                        $relation = implode('.', $explode);
+                    }
+                    if ( $isFirstField || $modelForceAndWhere ) {
                         if (!is_null($value)) {
-                            $query->where($field, $condition, $value);
+                            if(!is_null($relation)) {
+                                $query->whereHas($relation, function($query) use($field,$condition,$value) {
+                                    $query->where($field,$condition,$value);
+                                });
+                            } else {
+                                $query->where($field,$condition,$value);
+                            }
                             $isFirstField = false;
                         }
                     } else {
                         if (!is_null($value)) {
-                            $query->orWhere($field, $condition, $value);
+                            if(!is_null($relation)) {
+                                $query->orWhereHas($relation, function($query) use($field,$condition,$value) {
+                                    $query->where($field,$condition,$value);
+                                });
+                            } else {
+                                $query->orWhere($field, $condition, $value);
+                            }
                         }
                     }
                 }
