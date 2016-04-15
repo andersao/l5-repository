@@ -546,12 +546,13 @@ class PostRepository extends BaseRepository {
 
 Remember, you need to define which fields from the model can be searchable.
 
-In your repository set **$fieldSearchable** with the name of the fields to be searchable.
+In your repository set **$fieldSearchable** with the name of the fields to be searchable or a relation to fields.
 
 ```php
 protected $fieldSearchable = [
 	'name',
-	'email'
+	'email',
+	'product.name'
 ];
 ```
 
@@ -564,6 +565,7 @@ protected $fieldSearchable = [
 	'your_field'=>'condition'
 ];
 ```
+
 
 ####Enabling in your Controller
 
