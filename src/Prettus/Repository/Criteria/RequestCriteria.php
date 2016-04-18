@@ -110,6 +110,13 @@ class RequestCriteria implements CriteriaInterface
         if (isset($orderBy) && !empty($orderBy)) {
             $split = explode('|', $orderBy);
             if(count($split) > 1) {
+                /*
+                 * ex.
+                 * products|description -> join products on current_table.product_id = products.id order by description
+                 * 
+                 * products:custom_id|products.description -> join products on current_table.custom_id = products.id order
+                 * by products.description (in case both tables have same column name)
+                 */
                 $table = $model->getModel()->getTable();
                 $sortTable = $split[0];
                 $sortColumn = $split[1];
@@ -119,6 +126,13 @@ class RequestCriteria implements CriteriaInterface
                     $sortTable = $split[0];
                     $keyName = $table.'.'.$split[1];
                 } else {
+                    /*
+                     * If you do not define which column to use as a joining column on current table, it will
+                     * use a singular of a join table appended with _id
+                     *
+                     * ex.
+                     * products -> product_id
+                     */
                     $prefix = rtrim($sortTable, 's');
                     $keyName = $table.'.'.$prefix.'_id';
                 }
