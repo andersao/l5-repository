@@ -108,7 +108,28 @@ class RequestCriteria implements CriteriaInterface
         }
 
         if (isset($orderBy) && !empty($orderBy)) {
-            $model = $model->orderBy($orderBy, $sortedBy);
+            $split = explode('|', $orderBy);
+            if(count($split) > 1) {
+                $table = $model->getModel()->getTable();
+                $sortTable = $split[0];
+                $sortColumn = $split[1];
+
+                $split = explode(':', $sortTable);
+                if(count($split) > 1) {
+                    $sortTable = $split[0];
+                    $keyName = $table.'.'.$split[1];
+                } else {
+                    $prefix = rtrim($sortTable, 's');
+                    $keyName = $table.'.'.$prefix.'_id';
+                }
+
+                $model = $model
+                    ->join($sortTable, $keyName, '=', $sortTable.'.id')
+                    ->orderBy($sortColumn, $sortedBy)
+                    ->addSelect($table.'.*');
+            } else {
+                $model = $model->orderBy($orderBy, $sortedBy);
+            }
         }
 
         if (isset($filter) && !empty($filter)) {
