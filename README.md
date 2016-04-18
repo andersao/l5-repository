@@ -684,6 +684,33 @@ Sorting the results
 ]
 ```
 
+Sorting through related tables
+
+`http://prettus.local/users?orderBy=posts|title&sortedBy=desc`
+
+Query will have something like this
+
+```sql
+...
+INNER JOIN posts ON users.post_id = posts.id
+...
+ORDER BY title
+...
+```
+
+`http://prettus.local/users?orderBy=posts:custom_id|posts.title&sortedBy=desc`
+
+Query will have something like this
+
+```sql
+...
+INNER JOIN posts ON users.custom_id = posts.id
+...
+ORDER BY posts.title
+...
+```
+
+
 Add relationship
 
 `http://prettus.local/users?with=groups`
