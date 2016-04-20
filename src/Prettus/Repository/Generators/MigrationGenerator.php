@@ -124,7 +124,7 @@ class MigrationGenerator extends Generator
             case 'append':
             case 'update':
             case 'insert':
-                $file         = 'change';
+                $file = 'change';
                 $replacements = [
                     'class'       => $this->getClass(),
                     'table'       => $parser->getTable(),
@@ -136,7 +136,7 @@ class MigrationGenerator extends Generator
             case 'delete':
             case 'remove':
             case 'alter':
-                $file         = 'change';
+                $file = 'change';
                 $replacements = [
                     'class'       => $this->getClass(),
                     'table'       => $parser->getTable(),
@@ -145,7 +145,7 @@ class MigrationGenerator extends Generator
                 ];
                 break;
             default:
-                $file         = 'create';
+                $file = 'create';
                 $replacements = [
                     'class'  => $this->getClass(),
                     'table'  => $parser->getTable(),
@@ -154,7 +154,7 @@ class MigrationGenerator extends Generator
                 break;
         }
 
-        if ( ! file_exists(__DIR__ . "/Stubs/migration/{$file}.stub")) {
+        if (!file_exists(__DIR__ . "/Stubs/migration/{$file}.stub")) {
             throw new FileNotFoundException(__DIR__ . "/Stubs/migration/{$file}.stub");
         }
 

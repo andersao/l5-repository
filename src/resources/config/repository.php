@@ -109,7 +109,7 @@ return [
             ]
         ],
 
-        'params'  => [
+        'params'     => [
             /*
             |--------------------------------------------------------------------------
             | Skip Cache Params
@@ -137,7 +137,7 @@ return [
        |
        | 'except'  =>['find'],
        */
-        'allowed' => [
+        'allowed'    => [
             'only'   => null,
             'except' => null
         ]

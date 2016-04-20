@@ -14,10 +14,20 @@ interface RepositoryCriteriaInterface
     /**
      * Push Criteria for filter the query
      *
-     * @param CriteriaInterface $criteria
+     * @param $criteria
+     *
      * @return $this
      */
-    public function pushCriteria(CriteriaInterface $criteria);
+    public function pushCriteria($criteria);
+
+    /**
+     * Pop Criteria
+     *
+     * @param $criteria
+     *
+     * @return $this
+     */
+    public function popCriteria($criteria);
 
     /**
      * Get Collection of Criteria
@@ -30,6 +40,7 @@ interface RepositoryCriteriaInterface
      * Find data by Criteria
      *
      * @param CriteriaInterface $criteria
+     *
      * @return mixed
      */
     public function getByCriteria(CriteriaInterface $criteria);
@@ -38,6 +49,7 @@ interface RepositoryCriteriaInterface
      * Skip Criteria
      *
      * @param bool $status
+     *
      * @return $this
      */
     public function skipCriteria($status = true);

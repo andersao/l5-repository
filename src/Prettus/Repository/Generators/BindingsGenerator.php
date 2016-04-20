@@ -9,33 +9,38 @@ class BindingsGenerator extends Generator
 {
 
     /**
+     * The placeholder for repository bindings
+     *
+     * @var string
+     */
+    public $bindPlaceholder = '//:end-bindings:';
+    /**
      * Get stub name.
      *
      * @var string
      */
     protected $stub = 'bindings/bindings';
 
-    /**
-     * The placeholder for repository bindings
-     *
-     * @var string
-     */
-    public $bindPlaceholder = '//:end-bindings:';
-
-
     public function run()
     {
 
 
         // Add entity repository binding to the repository service provider
-        $provider            = \File::get($this->getPath());
+        $provider = \File::get($this->getPath());
         $repositoryInterface = '\\' . $this->getRepository() . "::class";
-        $repositoryEloquent  = '\\' . $this->getEloquentRepository() . "::class";
-        \File::put($this->getPath(), str_replace($this->bindPlaceholder,
-            "\$this->app->bind({$repositoryInterface}, $repositoryEloquent);" . PHP_EOL . '        ' . $this->bindPlaceholder,
-            $provider));
+        $repositoryEloquent = '\\' . $this->getEloquentRepository() . "::class";
+        \File::put($this->getPath(), str_replace($this->bindPlaceholder, "\$this->app->bind({$repositoryInterface}, $repositoryEloquent);" . PHP_EOL . '        ' . $this->bindPlaceholder, $provider));
     }
 
+    /**
+     * Get destination path for generated file.
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->getBasePath() . '/Providers/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) . '.php';
+    }
 
     /**
      * Get base path of destination file.
@@ -47,18 +52,6 @@ class BindingsGenerator extends Generator
         return config('repository.generator.basePath', app_path());
     }
 
-
-    /**
-     * Get root namespace.
-     *
-     * @return string
-     */
-    public function getRootNamespace()
-    {
-        return parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode());
-    }
-
-
     /**
      * Get generator path config node.
      *
@@ -68,35 +61,6 @@ class BindingsGenerator extends Generator
     {
         return 'provider';
     }
-
-
-    /**
-     * Get destination path for generated file.
-     *
-     * @return string
-     */
-    public function getPath()
-    {
-        return $this->getBasePath() . '/Providers/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(),
-            true) . '.php';
-    }
-
-
-    /**
-     * Get array replacements.
-     *
-     * @return array
-     */
-    public function getReplacements()
-    {
-
-        return array_merge(parent::getReplacements(), [
-            'repository'  => $this->getRepository(),
-            'eloquent'    => $this->getEloquentRepository(),
-            'placeholder' => $this->bindPlaceholder,
-        ]);
-    }
-
 
     /**
      * Gets repository full class name
@@ -111,9 +75,11 @@ class BindingsGenerator extends Generator
 
         $repository = $repositoryGenerator->getRootNamespace() . '\\' . $repositoryGenerator->getName();
 
-        return str_replace([ "\\", '/' ], '\\', $repository) . 'Repository';
+        return str_replace([
+            "\\",
+            '/'
+        ], '\\', $repository) . 'Repository';
     }
-
 
     /**
      * Gets eloquent repository full class name
@@ -128,6 +94,34 @@ class BindingsGenerator extends Generator
 
         $repository = $repositoryGenerator->getRootNamespace() . '\\' . $repositoryGenerator->getName();
 
-        return str_replace([ "\\", '/' ], '\\', $repository) . 'RepositoryEloquent';
+        return str_replace([
+            "\\",
+            '/'
+        ], '\\', $repository) . 'RepositoryEloquent';
+    }
+
+    /**
+     * Get root namespace.
+     *
+     * @return string
+     */
+    public function getRootNamespace()
+    {
+        return parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode());
+    }
+
+    /**
+     * Get array replacements.
+     *
+     * @return array
+     */
+    public function getReplacements()
+    {
+
+        return array_merge(parent::getReplacements(), [
+            'repository' => $this->getRepository(),
+            'eloquent' => $this->getEloquentRepository(),
+            'placeholder' => $this->bindPlaceholder,
+        ]);
     }
 }

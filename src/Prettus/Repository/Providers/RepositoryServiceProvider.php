@@ -59,6 +59,6 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return [ ];
+        return [];
     }
 }

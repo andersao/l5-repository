@@ -33,17 +33,18 @@ class NameParser
             'delete',
             'remove'
         ],
-        'add' => [
+        'add'    => [
             'add',
             'update',
             'append',
             'insert'
         ],
-        'drop' => [
+        'drop'   => [
             'destroy',
             'drop'
         ]
     ];
+
     /**
      * The constructor.
      *
@@ -54,6 +55,17 @@ class NameParser
         $this->name = $name;
         $this->data = $this->fetchData();
     }
+
+    /**
+     * Fetch the migration name to an array data.
+     *
+     * @return array
+     */
+    protected function fetchData()
+    {
+        return explode('_', $this->name);
+    }
+
     /**
      * Get original migration name.
      *
@@ -63,15 +75,7 @@ class NameParser
     {
         return $this->name;
     }
-    /**
-     * Get schema type or action.
-     *
-     * @return string
-     */
-    public function getAction()
-    {
-        return head($this->data);
-    }
+
     /**
      * Get table name.
      *
@@ -81,6 +85,7 @@ class NameParser
     {
         return $this->getTableName();
     }
+
     /**
      * Get the table will be used.
      *
@@ -89,8 +94,10 @@ class NameParser
     public function getTableName()
     {
         $matches = array_reverse($this->getMatches());
+
         return array_shift($matches);
     }
+
     /**
      * Get matches data from regex.
      *
@@ -102,6 +109,7 @@ class NameParser
 
         return $matches;
     }
+
     /**
      * Get name pattern.
      *
@@ -127,15 +135,17 @@ class NameParser
                 break;
         }
     }
+
     /**
-     * Fetch the migration name to an array data.
+     * Get schema type or action.
      *
-     * @return array
+     * @return string
      */
-    protected function fetchData()
+    public function getAction()
     {
-        return explode('_', $this->name);
+        return head($this->data);
     }
+
     /**
      * Get the array data.
      *
@@ -145,16 +155,19 @@ class NameParser
     {
         return $this->data;
     }
+
     /**
      * Determine whether the given type is same with the current schema action or type.
      *
      * @param $type
+     *
      * @return bool
      */
     public function is($type)
     {
         return $type == $this->getAction();
     }
+
     /**
      * Determine whether the current schema action is a adding action.
      *
@@ -164,6 +177,7 @@ class NameParser
     {
         return in_array($this->getAction(), $this->actions['add']);
     }
+
     /**
      * Determine whether the current schema action is a deleting action.
      *
@@ -173,6 +187,7 @@ class NameParser
     {
         return in_array($this->getAction(), $this->actions['delete']);
     }
+
     /**
      * Determine whether the current schema action is a creating action.
      *
@@ -182,6 +197,7 @@ class NameParser
     {
         return in_array($this->getAction(), $this->actions['create']);
     }
+
     /**
      * Determine whether the current schema action is a dropping action.
      *

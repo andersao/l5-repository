@@ -13,6 +13,7 @@ interface CacheableInterface
      * Set Cache Repository
      *
      * @param CacheRepository $repository
+     *
      * @return $this
      */
     public function setCacheRepository(CacheRepository $repository);
@@ -29,6 +30,7 @@ interface CacheableInterface
      *
      * @param $method
      * @param $args
+     *
      * @return string
      */
     public function getCacheKey($method, $args = null);
@@ -45,8 +47,8 @@ interface CacheableInterface
      * Skip Cache
      *
      * @param bool $status
+     *
      * @return $this
      */
     public function skipCache($status = true);
-
 }

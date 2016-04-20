@@ -18,18 +18,6 @@ class ValidatorGenerator extends Generator
      */
     protected $stub = 'validator/validator';
 
-
-    /**
-     * Get base path of destination file.
-     *
-     * @return string
-     */
-    public function getBasePath()
-    {
-        return config('repository.generator.basePath', app_path());
-    }
-
-
     /**
      * Get root namespace.
      *
@@ -39,7 +27,6 @@ class ValidatorGenerator extends Generator
     {
         return parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode());
     }
-
 
     /**
      * Get generator path config node.
@@ -51,7 +38,6 @@ class ValidatorGenerator extends Generator
         return 'validators';
     }
 
-
     /**
      * Get destination path for generated file.
      *
@@ -59,10 +45,18 @@ class ValidatorGenerator extends Generator
      */
     public function getPath()
     {
-        return $this->getBasePath() . '/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(),
-            true) . '/' . $this->getName() . 'Validator.php';
+        return $this->getBasePath() . '/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) . '/' . $this->getName() . 'Validator.php';
     }
 
+    /**
+     * Get base path of destination file.
+     *
+     * @return string
+     */
+    public function getBasePath()
+    {
+        return config('repository.generator.basePath', app_path());
+    }
 
     /**
      * Get array replacements.
@@ -77,18 +71,6 @@ class ValidatorGenerator extends Generator
         ]);
     }
 
-
-    /**
-     * Get schema parser.
-     *
-     * @return SchemaParser
-     */
-    public function getSchemaParser()
-    {
-        return new RulesParser($this->rules);
-    }
-
-
     /**
      * Get the rules.
      *
@@ -96,7 +78,7 @@ class ValidatorGenerator extends Generator
      */
     public function getRules()
     {
-        if ( ! $this->rules) {
+        if (!$this->rules) {
             return '[]';
         }
         $results = '[' . PHP_EOL;
@@ -106,5 +88,15 @@ class ValidatorGenerator extends Generator
         }
 
         return $results . "\t" . ']';
+    }
+
+    /**
+     * Get schema parser.
+     *
+     * @return SchemaParser
+     */
+    public function getSchemaParser()
+    {
+        return new RulesParser($this->rules);
     }
 }

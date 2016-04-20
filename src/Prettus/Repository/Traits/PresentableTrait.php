@@ -9,7 +9,8 @@ use Prettus\Repository\Contracts\PresenterInterface;
  * Class PresentableTrait
  * @package Prettus\Repository\Traits
  */
-trait PresentableTrait {
+trait PresentableTrait
+{
 
     /**
      * @var PresenterInterface
@@ -18,36 +19,27 @@ trait PresentableTrait {
 
     /**
      * @param \Prettus\Repository\Contracts\PresenterInterface $presenter
+     *
      * @return $this
      */
-    public function setPresenter(PresenterInterface $presenter){
-        $this->presenter = $presenter;
-        return $this;
-    }
-
-    /**
-     * @return $this|mixed
-     */
-    public function presenter()
+    public function setPresenter(PresenterInterface $presenter)
     {
-        if( $this->hasPresenter() )
-        {
-            return $this->presenter->present($this);
-        }
+        $this->presenter = $presenter;
 
         return $this;
     }
 
     /**
-     * @param $key
+     * @param      $key
      * @param null $default
+     *
      * @return mixed|null
      */
     public function present($key, $default = null)
     {
-        if ( $this->hasPresenter() )
-        {
+        if ($this->hasPresenter()) {
             $data = $this->presenter()['data'];
+
             return Arr::get($data, $key, $default);
         }
 
@@ -60,5 +52,17 @@ trait PresentableTrait {
     protected function hasPresenter()
     {
         return isset($this->presenter) && $this->presenter instanceof PresenterInterface;
+    }
+
+    /**
+     * @return $this|mixed
+     */
+    public function presenter()
+    {
+        if ($this->hasPresenter()) {
+            return $this->presenter->present($this);
+        }
+
+        return $this;
     }
 }
