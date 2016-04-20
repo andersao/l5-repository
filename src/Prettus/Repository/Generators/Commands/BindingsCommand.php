@@ -57,8 +57,8 @@ class BindingsCommand extends Command
                     '//',
                     $bindingGenerator->bindPlaceholder
                 ]));
-                $bindingGenerator->run();
             }
+            $bindingGenerator->run();
             $this->info($this->type . ' created successfully.');
         } catch (FileAlreadyExistsException $e) {
             $this->error($this->type . ' already exists!');
