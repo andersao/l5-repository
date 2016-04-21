@@ -5,6 +5,8 @@ namespace Prettus\Repository\Traits;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Helpers\CacheKeys;
+use ReflectionObject;
+use Exception;
 
 /**
  * Class CacheableRepository
@@ -120,12 +122,59 @@ trait CacheableRepository
 
         $request = app('Illuminate\Http\Request');
         $args = serialize($args);
-        $key = sprintf('%s@%s-%s', get_called_class(), $method, md5($args . $request->fullUrl()));
+        $criteria = $this->serializeCriteria();
+        $key = sprintf('%s@%s-%s', get_called_class(), $method, md5($args . $criteria . $request->fullUrl()));
 
         CacheKeys::putKey(get_called_class(), $key);
 
         return $key;
 
+    }
+
+    /**
+     * Serialize the criteria making sure the Closures are taken care of.
+     *
+     * @return string
+     */
+    protected function serializeCriteria()
+    {
+        try {
+            return serialize($this->getCriteria());
+        } catch (Exception $e) {
+            return serialize($this->getCriteria()->map(function ($criterion) {
+                return $this->serializeCriterion($criterion);
+            }));
+        }
+    }
+
+    /**
+     * Serialize single criterion with customized serialization of Closures.
+     *
+     * @param  \Prettus\Repository\Contracts\CriteriaInterface $criterion
+     * @return \Prettus\Repository\Contracts\CriteriaInterface|array
+     *
+     * @throws \Exception
+     */
+    protected function serializeCriterion($criterion)
+    {
+        try {
+            serialize($criterion);
+
+            return $criterion;
+        } catch (Exception $e) {
+            // We want to take care of the closure serialization errors,
+            // other than that we will simply re-throw the exception.
+            if ($e->getMessage() !== "Serialization of 'Closure' is not allowed") {
+                throw $e;
+            }
+
+            $r = new ReflectionObject($criterion);
+
+            return [
+                'hash' => md5((string) $r),
+                'properties' => $r->getProperties(),
+            ];
+        }
     }
 
     /**
