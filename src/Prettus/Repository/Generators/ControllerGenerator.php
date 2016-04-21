@@ -133,7 +133,7 @@ class ControllerGenerator extends Generator
      */
     public function getRepository()
     {
-        $repositoryGenerator = new RepositoryEloquentGenerator([
+        $repositoryGenerator = new RepositoryInterfaceGenerator([
             'name' => $this->name,
         ]);
 
