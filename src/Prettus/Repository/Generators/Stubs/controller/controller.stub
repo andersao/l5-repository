@@ -99,7 +99,7 @@ class $CONTROLLER$Controller extends Controller
             if ($request->wantsJson()) {
                 return response()->json([
                     'error'   => true,
-                    'message' => $e->getMessage()
+                    'message' => $e->getMessageBag()
                 ]);
             }
 
@@ -180,7 +180,7 @@ class $CONTROLLER$Controller extends Controller
 
                 return response()->json([
                     'error'   => true,
-                    'message' => $e->getMessage()
+                    'message' => $e->getMessageBag()
                 ]);
             }
 
