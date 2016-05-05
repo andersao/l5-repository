@@ -615,7 +615,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
     public function orderBy($column, $direction = 'asc')
     {
-        $this->model = $this->model->query()->orderBy($column, $direction);
+        $this->model = $this->model->orderBy($column, $direction);
 
         return $this;
     }
