@@ -81,6 +81,7 @@ class RequestCriteria implements CriteriaInterface
                         $field = array_pop($explode);
                         $relation = implode('.', $explode);
                     }
+                    $modelTableName = $query->getModel()->getTable();
                     if ( $isFirstField || $modelForceAndWhere ) {
                         if (!is_null($value)) {
                             if(!is_null($relation)) {
@@ -88,7 +89,7 @@ class RequestCriteria implements CriteriaInterface
                                     $query->where($field,$condition,$value);
                                 });
                             } else {
-                                $query->where($field,$condition,$value);
+                                $query->where($modelTableName.'.'.$field,$condition,$value);
                             }
                             $isFirstField = false;
                         }
@@ -99,7 +100,7 @@ class RequestCriteria implements CriteriaInterface
                                     $query->where($field,$condition,$value);
                                 });
                             } else {
-                                $query->orWhere($field, $condition, $value);
+                                $query->orWhere($modelTableName.'.'.$field, $condition, $value);
                             }
                         }
                     }
