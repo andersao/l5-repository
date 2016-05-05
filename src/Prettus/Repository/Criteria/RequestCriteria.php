@@ -138,7 +138,7 @@ class RequestCriteria implements CriteriaInterface
                 }
 
                 $model = $model
-                    ->join($sortTable, $keyName, '=', $sortTable.'.id')
+                    ->leftJoin($sortTable, $keyName, '=', $sortTable.'.id')
                     ->orderBy($sortColumn, $sortedBy)
                     ->addSelect($table.'.*');
             } else {
