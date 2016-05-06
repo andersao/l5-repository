@@ -186,7 +186,7 @@ Create your repositories easily through the generator.
 
 #### Config
 
-You must first configure the storage location of the repository files. By default is the "app" folder and the namespace "App".
+You must first configure the storage location of the repository files. By default is the "app" folder and the namespace "App". Please note that, values in the `paths` array are acutally used as both *namespace* and file paths. Relax though, both foreward and backward slashes are taken care of during generation.
 
 ```php
     ...
