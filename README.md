@@ -95,6 +95,8 @@ php artisan vendor:publish
 - delete($id)
 - orderBy($column, $direction = 'asc');
 - with(array $relations);
+- has(string $relation);
+- whereHas($relation, $closure);
 - hidden(array $fields);
 - visible(array $fields);
 - scopeQuery(Closure $scope);
