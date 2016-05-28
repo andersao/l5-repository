@@ -1,0 +1,78 @@
+<?php
+
+$NAMESPACE$
+
+use Illuminate\Http\Request;
+
+use $APPNAME$Http\Requests;
+use Prettus\Validator\Contracts\ValidatorInterface;
+use Prettus\Validator\Exceptions\ValidatorException;
+$REPOSITORY$
+$VALIDATOR$
+
+
+class $CLASS$Manager
+{
+
+    /**
+     * @var $CLASS$Repository
+     */
+    protected $repository;
+
+    /**
+     * @var $CLASS$Validator
+     */
+    protected $validator;
+
+
+    public function __construct($CLASS$Repository $repository, $CLASS$Validator $validator)
+    {
+        $this->repository = $repository;
+        $this->validator  = $validator;
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  array             $data
+     *
+     * @return mixed
+     */
+    public function create(array $data)
+    {
+        $$SINGULAR$ = $this->repository->create($data);
+
+        return $$SINGULAR$;
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int               $id
+     * @param  array             $data
+     *
+     * @return mixed
+     */
+    public function update($id, $data)
+    {
+
+        $$SINGULAR$ = $this->repository->update($data, $id);
+        return $$SINGULAR$;
+    }
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     *
+     * @return mixed
+     */
+    public function destroy($id)
+    {
+        $deleted = $this->repository->delete($id);
+
+        return $deleted;
+    }
+}

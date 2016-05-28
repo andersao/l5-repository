@@ -1,19 +1,19 @@
 <?php
+
 namespace Prettus\Repository\Generators;
 
 /**
- * Class ControllerGenerator
+ * Class ManagerGenerator
  * @package Prettus\Repository\Generators
  */
-class ControllerGenerator extends Generator
+class ManagerGenerator extends Generator
 {
-
     /**
      * Get stub name.
      *
      * @var string
      */
-    protected $stub = 'controller/controller';
+    protected $stub = 'manager/manager';
 
     /**
      * Get root namespace.
@@ -22,7 +22,7 @@ class ControllerGenerator extends Generator
      */
     public function getRootNamespace()
     {
-        return str_replace('/', '\\', parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode()));
+        return parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode());
     }
 
     /**
@@ -32,7 +32,7 @@ class ControllerGenerator extends Generator
      */
     public function getPathConfigNode()
     {
-        return 'controllers';
+        return 'managers';
     }
 
     /**
@@ -42,7 +42,7 @@ class ControllerGenerator extends Generator
      */
     public function getPath()
     {
-        return $this->getBasePath() . '/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) . '/' . $this->getControllerName() . 'Controller.php';
+        return $this->getBasePath() . '/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) . '/' . $this->getName() . '.php';
     }
 
     /**
@@ -56,74 +56,18 @@ class ControllerGenerator extends Generator
     }
 
     /**
-     * Gets controller name based on model
-     *
-     * @return string
-     */
-    public function getControllerName()
-    {
-
-        return ucfirst($this->getPluralName());
-    }
-
-    /**
-     * Gets plural name based on model
-     *
-     * @return string
-     */
-    public function getPluralName()
-    {
-
-        return str_plural(lcfirst(ucwords($this->getClass())));
-    }
-
-    /**
      * Get array replacements.
      *
      * @return array
      */
     public function getReplacements()
     {
-
         return array_merge(parent::getReplacements(), [
-            'controller' => $this->getControllerName(),
-            'plural'     => $this->getPluralName(),
-            'singular'   => $this->getSingularName(),
             'validator'  => $this->getValidator(),
             'repository' => $this->getRepository(),
-            'manager'    => $this->getManager(),
-            'appname'    => $this->getAppNamespace(),
         ]);
     }
 
-    /**
-     * Gets singular name based on model
-     *
-     * @return string
-     */
-    public function getSingularName()
-    {
-        return str_singular(lcfirst(ucwords($this->getClass())));
-    }
-
-    /**
-     * Gets manager full class name
-     *
-     * @return string
-     */
-    public function getManager()
-    {
-        $managerGenerator = new ManagerGenerator([
-            'name' => $this->name,
-        ]);
-
-        $manager = $managerGenerator->getRootNamespace() . '\\' . $managerGenerator->getName();
-
-        return 'use ' . str_replace([
-            "\\",
-            '/'
-        ], '\\', $manager) . 'Manager;';
-    }
     /**
      * Gets validator full class name
      *
@@ -162,4 +106,5 @@ class ControllerGenerator extends Generator
             '/'
         ], '\\', $repository) . 'Repository;';
     }
+
 }
