@@ -11,7 +11,7 @@ $REPOSITORY$
 $VALIDATOR$
 
 
-class $CLASS$Manager
+class $MANAGERNAME$Manager
 {
 
     /**
@@ -38,41 +38,8 @@ class $CLASS$Manager
      *
      * @return mixed
      */
-    public function create(array $data)
+    public function fire()
     {
-        $$SINGULAR$ = $this->repository->create($data);
-
-        return $$SINGULAR$;
-    }
-
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  int               $id
-     * @param  array             $data
-     *
-     * @return mixed
-     */
-    public function update($id, $data)
-    {
-
-        $$SINGULAR$ = $this->repository->update($data, $id);
-        return $$SINGULAR$;
-    }
-
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     *
-     * @return mixed
-     */
-    public function destroy($id)
-    {
-        $deleted = $this->repository->delete($id);
-
-        return $deleted;
+        // implement your business logic
     }
 }

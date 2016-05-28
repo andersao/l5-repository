@@ -57,6 +57,20 @@ class EntityCommand extends Command
             ]);
         }
 
+        if ($this->confirm('Would you like to create a Manager? [y|N]')) {
+            $this->call('make:manager', [
+                'name'    => $this->argument('name'),
+                '--action' => $this->option('update'),
+            ]);
+            $this->call('make:manager', [
+                'name'    => $this->argument('name'),
+                '--action' => $this->option('delete'),
+            ]);
+            $this->call('make:manager', [
+                'name'    => $this->argument('name'),
+                '--action' => $this->option('create'),
+            ]);
+        }
         if ($this->confirm('Would you like to create a Controller? [y|N]')) {
 
             // Generate a controller resource

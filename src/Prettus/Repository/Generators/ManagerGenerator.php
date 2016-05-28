@@ -42,7 +42,29 @@ class ManagerGenerator extends Generator
      */
     public function getPath()
     {
-        return $this->getBasePath() . '/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) . '/' . $this->getName() . '.php';
+
+        return $this->getBasePath() . DIRECTORY_SEPARATOR . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true). DIRECTORY_SEPARATOR .$this->getName() . DIRECTORY_SEPARATOR . $this->getManagerName() . '.php';
+    }
+
+
+    /**
+     * Gets controller name based on model;
+     *
+     * @return string
+     */
+    public function getManagerName()
+    {
+
+        return ucfirst($this->option('action'));
+    }
+    /**
+     * Gets plural name based on model
+     *
+     * @return string
+     */
+    public function getPluralName()
+    {
+        return str_plural(lcfirst(ucwords($this->getClass())));
     }
 
     /**
@@ -55,6 +77,7 @@ class ManagerGenerator extends Generator
         return config('repository.generator.basePath', app_path());
     }
 
+
     /**
      * Get array replacements.
      *
@@ -62,9 +85,13 @@ class ManagerGenerator extends Generator
      */
     public function getReplacements()
     {
+
         return array_merge(parent::getReplacements(), [
             'validator'  => $this->getValidator(),
             'repository' => $this->getRepository(),
+            'namespace'      => 'namespace '. $this->getRootNamespace().'\\'.$this->getName().';',
+            'appname'    => $this->getAppNamespace(),
+            'managername'      => $this->getManagerName(),
         ]);
     }
 
