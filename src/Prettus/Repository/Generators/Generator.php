@@ -211,7 +211,10 @@ abstract class Generator
 
         if ($directoryPath) {
             $path = str_replace('\\', '/', $path);
+        } else {
+            $path = str_replace('/', '\\', $path);
         }
+        
 
         return $path;
     }
