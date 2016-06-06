@@ -230,6 +230,8 @@ return [
             'validators'   => 'Validators',
             'controllers'  => 'Http/Controllers',
             'provider'     => 'RepositoryServiceProvider',
-        ]
+            'managers'      => 'Services',
+        ],
+        'stubsOverridePath' => app_path(),
     ]
 ];

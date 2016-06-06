@@ -1,0 +1,45 @@
+<?php
+
+$NAMESPACE$
+
+use Illuminate\Http\Request;
+
+use $APPNAME$Http\Requests;
+use Prettus\Validator\Contracts\ValidatorInterface;
+use Prettus\Validator\Exceptions\ValidatorException;
+$REPOSITORY$
+$VALIDATOR$
+
+
+class $MANAGERNAME$Manager
+{
+
+    /**
+     * @var $CLASS$Repository
+     */
+    protected $repository;
+
+    /**
+     * @var $CLASS$Validator
+     */
+    protected $validator;
+
+
+    public function __construct($CLASS$Repository $repository, $CLASS$Validator $validator)
+    {
+        $this->repository = $repository;
+        $this->validator  = $validator;
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  array             $data
+     *
+     * @return mixed
+     */
+    public function fire()
+    {
+        // implement your business logic
+    }
+}
