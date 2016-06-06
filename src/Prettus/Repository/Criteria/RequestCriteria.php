@@ -68,10 +68,10 @@ class RequestCriteria implements CriteriaInterface
                     $condition = trim(strtolower($condition));
 
                     if (isset($searchData[$field])) {
-                        $value = $condition == "like" ? "%{$searchData[$field]}%" : $searchData[$field];
+                        $value = ($condition == "like" || $condition == "ilike") ? "%{$searchData[$field]}%" : $searchData[$field];
                     } else {
                         if (!is_null($search)) {
-                            $value = $condition == "like" ? "%{$search}%" : $search;
+                            $value = ($condition == "like" || $condition == "ilike") ? "%{$search}%" : $search;
                         }
                     }
 
