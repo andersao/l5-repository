@@ -1,15 +1,21 @@
 {
-  "name": "filipnikolovski/l5-repository",
+  "name": "prettus/l5-repository",
   "description": "Laravel 5 - Repositories to  the database layer",
   "keywords": ["laravel", "repository", "eloquent", "model", "cache"],
   "license": "MIT",
   "authors": [
     {
-      "name": "Filip Nikolovski",
-      "email": "filip.nikol92@gmail.com",
+      "name": "Anderson Andrade",
+      "email": "contato@andersonandra.de",
       "role": "Developer"
     }
   ],
+  "support": {
+    "email": "contato@andersonandra.de",
+    "issues": "https://github.com/andersao/l5-repository/issues",
+    "wiki": "https://github.com/andersao/l5-repository",
+    "source": "https://github.com/andersao/l5-repository"
+  },
   "require": {
     "illuminate/http": "~5.0",
     "illuminate/config": "~5.0",
