@@ -255,7 +255,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Retrieve data array for populate field select
      *
-     * @param string      $column
+     * @param string $column
      * @param string|null $key
      *
      * @return \Illuminate\Support\Collection|array
@@ -312,8 +312,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Retrieve all data of repository, paginated
      *
-     * @param null   $limit
-     * @param array  $columns
+     * @param null $limit
+     * @param array $columns
      * @param string $method
      *
      * @return mixed
@@ -333,7 +333,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Retrieve all data of repository, simple paginated
      *
-     * @param null  $limit
+     * @param null $limit
      * @param array $columns
      *
      * @return mixed
@@ -393,14 +393,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->applyCriteria();
         $this->applyScope();
 
-        foreach ($where as $field => $value) {
-            if (is_array($value)) {
-                list($field, $condition, $val) = $value;
-                $this->model = $this->model->where($field, $condition, $val);
-            } else {
-                $this->model = $this->model->where($field, '=', $value);
-            }
-        }
+        $this->applyConditions($where);
 
         $model = $this->model->get($columns);
         $this->resetModel();
@@ -567,6 +560,32 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $deleted = $model->delete();
 
         event(new RepositoryEntityDeleted($this, $originalModel));
+
+        return $deleted;
+    }
+
+    /**
+     * Delete multiple entities by given criteria.
+     *
+     * @param array $where
+     *
+     * @return int
+     */
+    public function deleteWhere(array $where)
+    {
+        $this->applyScope();
+
+        $temporarySkipPresenter = $this->skipPresenter;
+        $this->skipPresenter(true);
+
+        $this->applyConditions($where);
+
+        $deleted = $this->model->delete();
+
+        event(new RepositoryEntityDeleted($this, $this->model));
+
+        $this->skipPresenter($temporarySkipPresenter);
+        $this->resetModel();
 
         return $deleted;
     }
@@ -781,6 +800,24 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         }
 
         return $this;
+    }
+
+    /**
+     * Applies the given where conditions to the model.
+     *
+     * @param array $where
+     * @return void
+     */
+    protected function applyConditions(array $where)
+    {
+        foreach ($where as $field => $value) {
+            if (is_array($value)) {
+                list($field, $condition, $val) = $value;
+                $this->model = $this->model->where($field, $condition, $val);
+            } else {
+                $this->model = $this->model->where($field, '=', $value);
+            }
+        }
     }
 
     /**
