@@ -12,9 +12,9 @@
   ],
   "support": {
     "email": "contato@andersonandra.de",
-    "issues": "https://github.com/andersao/l5-repository/issues",
-    "wiki": "https://github.com/andersao/l5-repository",
-    "source": "https://github.com/andersao/l5-repository"
+    "issues":"https://github.com/andersao/l5-repository/issues",
+    "wiki":"https://github.com/andersao/l5-repository",
+    "source":"https://github.com/andersao/l5-repository"
   },
   "require": {
     "illuminate/http": "~5.0",
