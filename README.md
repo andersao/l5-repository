@@ -301,6 +301,12 @@ public function __construct({YOUR_NAMESPACE}Repositories\PostRepository $reposit
 }
 ```
 
+Alternatively, you could use the artisan command to do the binding for you.
+
+```php
+php artisan make:bindings Cats
+```
+
 ### Use methods
 
 ```php
