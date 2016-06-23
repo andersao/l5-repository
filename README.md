@@ -95,6 +95,8 @@ php artisan vendor:publish
 - delete($id)
 - orderBy($column, $direction = 'asc');
 - with(array $relations);
+- has(string $relation);
+- whereHas(string $relation, closure $closure);
 - hidden(array $fields);
 - visible(array $fields);
 - scopeQuery(Closure $scope);
@@ -186,7 +188,7 @@ Create your repositories easily through the generator.
 
 #### Config
 
-You must first configure the storage location of the repository files. By default is the "app" folder and the namespace "App".
+You must first configure the storage location of the repository files. By default is the "app" folder and the namespace "App". Please note that, values in the `paths` array are acutally used as both *namespace* and file paths. Relax though, both foreward and backward slashes are taken care of during generation.
 
 ```php
     ...
@@ -202,6 +204,7 @@ You must first configure the storage location of the repository files. By defaul
             'validators'   => 'Validators',
             'controllers'  => 'Http/Controllers',
             'provider'     => 'RepositoryServiceProvider',
+            'criteria'     => 'Criteria',
         ]
     ]
 ```
@@ -231,6 +234,7 @@ Additionally, you may wish to customize where your generated classes end up bein
             'validators'   => 'Validators',
             'controllers'  => 'Http/Controllers',
             'provider'     => 'RepositoryServiceProvider',
+            'criteria'     => 'Criteria',
         ]
     ]
 ```
@@ -297,6 +301,12 @@ And use
 public function __construct({YOUR_NAMESPACE}Repositories\PostRepository $repository){
     $this->repository = $repository;
 }
+```
+
+Alternatively, you could use the artisan command to do the binding for you.
+
+```php
+php artisan make:bindings Cats
 ```
 
 ### Use methods
@@ -414,6 +424,12 @@ $this->repository->delete($id)
 ```
 
 ### Create a Criteria
+
+#### Using the command
+
+```terminal
+php artisan make:criteria My
+```
 
 Criteria are a way to change the repository of the query by applying specific conditions according to your needs. You can add multiple Criteria in your repository.
 
