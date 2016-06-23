@@ -1,5 +1,5 @@
 {
-  "name": "mammutgroup/l5-repository",
+  "name": "prettus/l5-repository",
   "description": "Laravel 5 - Repositories to  the database layer",
   "keywords": ["laravel", "repository", "eloquent", "model", "cache"],
   "license": "MIT",
@@ -8,18 +8,13 @@
       "name": "Anderson Andrade",
       "email": "contato@andersonandra.de",
       "role": "Developer"
-    },
-    {
-      "name": "MohammadReza Honarkhah",
-      "email": "m.honar@gmail.com",
-      "role": "Developer"
     }
   ],
   "support": {
-    "email": "m.honar@gmail.com",
-    "issues":"https://github.com/mammutgroup/l5-repository/issues",
-    "wiki":"https://github.com/mammutgroup/l5-repository",
-    "source":"https://github.com/mammutgroup/l5-repository"
+    "email": "contato@andersonandra.de",
+    "issues":"https://github.com/andersao/l5-repository/issues",
+    "wiki":"https://github.com/andersao/l5-repository",
+    "source":"https://github.com/andersao/l5-repository"
   },
   "require": {
     "illuminate/http": "~5.0",
