@@ -324,7 +324,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         $this->applyCriteria();
         $this->applyScope();
-        $limit = request()->get('perPage', is_null($limit) ? config('repository.pagination.limit', 15) : $limit);
+        $limit = is_null($limit) ? config('repository.pagination.limit', 15) : $limit;
         $results = $this->model->{$method}($limit, $columns);
         $results->appends(request()->query());
         $this->resetModel();
