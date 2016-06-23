@@ -262,7 +262,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function lists($column, $key = null)
     {
-        return $this->makeModel()->lists($column, $key);
+        $this->applyCriteria();
+        
+        return $this->model->lists($column, $key);
     }
 
     /**
@@ -393,14 +395,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->applyCriteria();
         $this->applyScope();
 
-        foreach ($where as $field => $value) {
-            if (is_array($value)) {
-                list($field, $condition, $val) = $value;
-                $this->model = $this->model->where($field, $condition, $val);
-            } else {
-                $this->model = $this->model->where($field, '=', $value);
-            }
-        }
+        $this->applyConditions($where);
 
         $model = $this->model->get($columns);
         $this->resetModel();
@@ -572,6 +567,32 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
+     * Delete multiple entities by given criteria.
+     *
+     * @param array $where
+     *
+     * @return int
+     */
+    public function deleteWhere(array $where)
+    {
+        $this->applyScope();
+
+        $temporarySkipPresenter = $this->skipPresenter;
+        $this->skipPresenter(true);
+
+        $this->applyConditions($where);
+
+        $deleted = $this->model->delete();
+
+        event(new RepositoryEntityDeleted($this, $this->model));
+
+        $this->skipPresenter($temporarySkipPresenter);
+        $this->resetModel();
+
+        return $deleted;
+    }
+
+    /**
      * Check if entity has relation
      *
      * @param string $relation
@@ -595,6 +616,21 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function with($relations)
     {
         $this->model = $this->model->with($relations);
+
+        return $this;
+    }
+    
+    /**
+     * Load relation with closure
+     *
+     * @param string $relation
+     * @param closure $closure
+     *
+     * @return $this
+     */
+    function whereHas($relation, $closure)
+    {
+        $this->model = $this->model->whereHas($relation, $closure);
 
         return $this;
     }
@@ -781,6 +817,24 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         }
 
         return $this;
+    }
+
+    /**
+     * Applies the given where conditions to the model.
+     *
+     * @param array $where
+     * @return void
+     */
+    protected function applyConditions(array $where)
+    {
+        foreach ($where as $field => $value) {
+            if (is_array($value)) {
+                list($field, $condition, $val) = $value;
+                $this->model = $this->model->where($field, $condition, $val);
+            } else {
+                $this->model = $this->model->where($field, '=', $value);
+            }
+        }
     }
 
     /**

@@ -91,6 +91,7 @@ class ControllerGenerator extends Generator
             'singular'   => $this->getSingularName(),
             'validator'  => $this->getValidator(),
             'repository' => $this->getRepository(),
+            'manager'    => $this->getManager(),
             'appname'    => $this->getAppNamespace(),
         ]);
     }
@@ -105,7 +106,24 @@ class ControllerGenerator extends Generator
         return str_singular(lcfirst(ucwords($this->getClass())));
     }
 
+    /**
+     * Gets manager full class name
+     *
+     * @return string
+     */
+    public function getManager()
+    {
+        $managerGenerator = new ManagerGenerator([
+            'name' => $this->name,
+        ]);
 
+        $manager = $managerGenerator->getRootNamespace() . '\\' . $managerGenerator->getName();
+
+        return 'use ' . str_replace([
+            "\\",
+            '/'
+        ], '\\', $manager) . 'Manager;';
+    }
     /**
      * Gets validator full class name
      *

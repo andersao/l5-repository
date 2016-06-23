@@ -95,6 +95,8 @@ php artisan vendor:publish
 - delete($id)
 - orderBy($column, $direction = 'asc');
 - with(array $relations);
+- has(string $relation);
+- whereHas(string $relation, closure $closure);
 - hidden(array $fields);
 - visible(array $fields);
 - scopeQuery(Closure $scope);
@@ -299,6 +301,12 @@ And use
 public function __construct({YOUR_NAMESPACE}Repositories\PostRepository $repository){
     $this->repository = $repository;
 }
+```
+
+Alternatively, you could use the artisan command to do the binding for you.
+
+```php
+php artisan make:bindings Cats
 ```
 
 ### Use methods
