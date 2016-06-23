@@ -262,7 +262,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function lists($column, $key = null)
     {
-        return $this->makeModel()->lists($column, $key);
+        $this->applyCriteria();
+        
+        return $this->model->lists($column, $key);
     }
 
     /**
@@ -617,6 +619,21 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         return $this;
     }
+    
+    /**
+     * Load relation with closure
+     *
+     * @param string $relation
+     * @param closure $closure
+     *
+     * @return $this
+     */
+    function whereHas($relation, $closure)
+    {
+        $this->model = $this->model->whereHas($relation, $closure);
+
+        return $this;
+    }
 
     /**
      * Set hidden fields
@@ -634,7 +651,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
     public function orderBy($column, $direction = 'asc')
     {
-        $this->model = $this->model->query()->orderBy($column, $direction);
+        $this->model = $this->model->orderBy($column, $direction);
 
         return $this;
     }

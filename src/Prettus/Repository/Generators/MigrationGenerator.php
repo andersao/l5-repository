@@ -153,11 +153,16 @@ class MigrationGenerator extends Generator
                 ];
                 break;
         }
+        $path = config('repository.generator.stubsOverridePath', __DIR__);
 
-        if (!file_exists(__DIR__ . "/Stubs/migration/{$file}.stub")) {
-            throw new FileNotFoundException(__DIR__ . "/Stubs/migration/{$file}.stub");
+        if (!file_exists($path . "/Stubs/migration/{$file}.stub")) {
+            $path = __DIR__;
         }
 
-        return Stub::create(__DIR__ . "/Stubs/migration/{$file}.stub", $replacements);
+        if (!file_exists($path . "/Stubs/migration/{$file}.stub")) {
+            throw new FileNotFoundException($path . "/Stubs/migration/{$file}.stub");
+        }
+
+        return Stub::create($path . "/Stubs/migration/{$file}.stub", $replacements);
     }
 }

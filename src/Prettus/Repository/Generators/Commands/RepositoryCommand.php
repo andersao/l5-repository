@@ -51,7 +51,7 @@ class RepositoryCommand extends Command
         $this->generators = new Collection();
 
         $this->generators->push(new MigrationGenerator([
-            'name'   => 'create_' . str_plural(strtolower($this->argument('name'))) . '_table',
+            'name'   => 'create_' . snake_case(str_plural($this->argument('name'))) . '_table',
             'fields' => $this->option('fillable'),
             'force'  => $this->option('force'),
         ]));
