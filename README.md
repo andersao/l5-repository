@@ -202,6 +202,7 @@ You must first configure the storage location of the repository files. By defaul
             'validators'   => 'Validators',
             'controllers'  => 'Http/Controllers',
             'provider'     => 'RepositoryServiceProvider',
+            'criteria'     => 'Criteria',
         ]
     ]
 ```
@@ -231,6 +232,7 @@ Additionally, you may wish to customize where your generated classes end up bein
             'validators'   => 'Validators',
             'controllers'  => 'Http/Controllers',
             'provider'     => 'RepositoryServiceProvider',
+            'criteria'     => 'Criteria',
         ]
     ]
 ```
@@ -414,6 +416,12 @@ $this->repository->delete($id)
 ```
 
 ### Create a Criteria
+
+#### Using the command
+
+```terminal
+php artisan make:criteria My
+```
 
 Criteria are a way to change the repository of the query by applying specific conditions according to your needs. You can add multiple Criteria in your repository.
 
