@@ -9,10 +9,8 @@ use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
 use $APPNAME$Http\Requests\$CLASS$CreateRequest;
 use $APPNAME$Http\Requests\$CLASS$UpdateRequest;
-use $APPNAME$Http\Requests\$CLASS$UpdateRequest;
 $REPOSITORY$
 $VALIDATOR$
-$MANAGER$
 
 
 class $CONTROLLER$Controller extends Controller
@@ -27,16 +25,11 @@ class $CONTROLLER$Controller extends Controller
      * @var $CLASS$Validator
      */
     protected $validator;
-    /**
-     * @var $CLASS$Manager
-     */
-    protected $manager;
 
-    public function __construct($CLASS$Repository $repository, $CLASS$Validator $validatorm, $CLASS$Manager)
+    public function __construct($CLASS$Repository $repository, $CLASS$Validator $validatorm)
     {
         $this->repository = $repository;
         $this->validator  = $validator;
-        $this->manager  = $manager;
     }
 
 
@@ -74,7 +67,7 @@ class $CONTROLLER$Controller extends Controller
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
 
-            $$SINGULAR$ = $this->manager->create($request->all());
+            $$SINGULAR$ = $this->repository->create($request->all());
 
             $response = [
                 'message' => '$CLASS$ created.',
@@ -153,7 +146,7 @@ class $CONTROLLER$Controller extends Controller
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
 
-            $$SINGULAR$ = $this->manager->update($id, $request->all());
+            $$SINGULAR$ = $this->repository->update($id, $request->all());
 
             $response = [
                 'message' => '$CLASS$ updated.',
@@ -190,7 +183,7 @@ class $CONTROLLER$Controller extends Controller
      */
     public function destroy($id)
     {
-        $deleted = $this->manager->delete($id);
+        $deleted = $this->repository->delete($id);
 
         if (request()->wantsJson()) {
 
