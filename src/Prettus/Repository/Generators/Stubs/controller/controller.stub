@@ -26,7 +26,7 @@ class $CONTROLLER$Controller extends Controller
      */
     protected $validator;
 
-    public function __construct($CLASS$Repository $repository, $CLASS$Validator $validatorm)
+    public function __construct($CLASS$Repository $repository, $CLASS$Validator $validator)
     {
         $this->repository = $repository;
         $this->validator  = $validator;
