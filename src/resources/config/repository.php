@@ -219,7 +219,7 @@ return [
     |
     */
     'generator'  => [
-        'basePath'      => app_path(),
+        'basePath'      => app()->path(),
         'rootNamespace' => 'App\\',
         'paths'         => [
             'models'       => 'Entities',
@@ -231,7 +231,7 @@ return [
             'controllers'  => 'Http/Controllers',
             'provider'     => 'RepositoryServiceProvider',
             'criteria'     => 'Criteria',
-            'stubsOverridePath' => app_path()
+            'stubsOverridePath' => app()->path()
         ]
     ]
 ];
