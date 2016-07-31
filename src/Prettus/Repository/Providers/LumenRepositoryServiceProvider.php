@@ -36,6 +36,8 @@ class LumenRepositoryServiceProvider extends ServiceProvider
         $this->commands(ValidatorCommand::class);
         $this->commands(ControllerCommand::class);
         $this->app->register(EventServiceProvider::class);
+
+        $this->app->configure('repository');
     }
 
     /**
