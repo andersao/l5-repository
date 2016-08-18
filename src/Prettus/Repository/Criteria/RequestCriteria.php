@@ -51,9 +51,8 @@ class RequestCriteria implements CriteriaInterface
             $isFirstField = true;
             $searchData = $this->parserSearchData($search);
             $search = $this->parserSearchValue($search);
-            $modelForceAndWhere = false;
 
-            $model = $model->where(function ($query) use ($fields, $search, $searchData, $isFirstField, $modelForceAndWhere) {
+            $model = $model->where(function ($query) use ($fields, $search, $searchData, $isFirstField) {
                 /** @var Builder $query */
 
                 foreach ($fields as $field => $condition) {
@@ -66,9 +65,10 @@ class RequestCriteria implements CriteriaInterface
                     $value = null;
 
                     $condition = trim(strtolower($condition));
+                    $isAndOperator = isset($searchData[$field]['operator']) && $searchData[$field]['operator'] === strtolower("and");
 
-                    if (isset($searchData[$field])) {
-                        $value = ($condition == "like" || $condition == "ilike") ? "%{$searchData[$field]}%" : $searchData[$field];
+                    if (isset($searchData[$field]['value'])) {
+                        $value = ($condition == "like" || $condition == "ilike") ? "%{$searchData[$field]['value']}%" : $searchData[$field]['value'];
                     } else {
                         if (!is_null($search)) {
                             $value = ($condition == "like" || $condition == "ilike") ? "%{$search}%" : $search;
@@ -82,7 +82,7 @@ class RequestCriteria implements CriteriaInterface
                         $relation = implode('.', $explode);
                     }
                     $modelTableName = $query->getModel()->getTable();
-                    if ( $isFirstField || $modelForceAndWhere ) {
+                    if ( $isFirstField || $isAndOperator ) {
                         if (!is_null($value)) {
                             if(!is_null($relation)) {
                                 $query->whereHas($relation, function($query) use($field,$condition,$value) {
@@ -114,7 +114,7 @@ class RequestCriteria implements CriteriaInterface
                 /*
                  * ex.
                  * products|description -> join products on current_table.product_id = products.id order by description
-                 * 
+                 *
                  * products:custom_id|products.description -> join products on current_table.custom_id = products.id order
                  * by products.description (in case both tables have same column name)
                  */
@@ -178,7 +178,12 @@ class RequestCriteria implements CriteriaInterface
             foreach ($fields as $row) {
                 try {
                     list($field, $value) = explode(':', $row);
-                    $searchData[$field] = $value;
+                    $operator = "or";
+                    if (stripos($field, '|')) {
+                        list($operator, $field) = explode('|', $field);
+                    }
+                    $searchData[$field]['value'] = $value;
+                    $searchData[$field]['operator'] = $operator;
                 } catch (\Exception $e) {
                     //Surround offset error
                 }
