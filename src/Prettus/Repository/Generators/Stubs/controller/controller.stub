@@ -146,7 +146,7 @@ class $CONTROLLER$Controller extends Controller
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
 
-            $$SINGULAR$ = $this->repository->update($id, $request->all());
+            $$SINGULAR$ = $this->repository->update($request->all(), $id);
 
             $response = [
                 'message' => '$CLASS$ updated.',
