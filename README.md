@@ -192,7 +192,7 @@ You must first configure the storage location of the repository files. By defaul
 ```php
     ...
     'generator'=>[
-        'basePath'=>app_path(),
+        'basePath'=>app()->path(),
         'rootNamespace'=>'App\\',
         'paths'=>[
             'models'       => 'Entities',
@@ -222,7 +222,7 @@ Additionally, you may wish to customize where your generated classes end up bein
 
 ```php
     'generator'=>[
-        'basePath'=>app_path(),
+        'basePath'=>app()->path(),
         'rootNamespace'=>'App\\',
         'paths'=>[
             'models'=>'Models',
