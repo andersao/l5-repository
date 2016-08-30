@@ -259,12 +259,26 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * @param string|null $key
      *
      * @return \Illuminate\Support\Collection|array
+     * @deprecated since version laravel 5.2. Use the "pluck" method directly.
      */
     public function lists($column, $key = null)
     {
-        $this->applyCriteria();
+        return $this->pluck($column, $key);
+    }
 
-        return $this->model->lists($column, $key);
+    /**
+     * Retrieve data array for populate field select
+     *
+     * @param string      $column
+     * @param string|null $key
+     *
+     * @return \Illuminate\Support\Collection|array
+     */
+    public function pluck($column, $key = null)
+    {
+        $this->applyCriteria();
+        
+        return $this->model->pluck($column, $key);
     }
 
     /**
