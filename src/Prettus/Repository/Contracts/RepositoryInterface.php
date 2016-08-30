@@ -141,6 +141,15 @@ interface RepositoryInterface
     public function delete($id);
 
     /**
+     * Delete multiple entities by given criteria.
+     *
+     * @param array $where
+     *
+     * @return int
+     */
+    public function deleteWhere(array $where);
+    
+    /**
      * Order collection by a given column
      *
      * @param string $column
