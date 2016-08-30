@@ -85,7 +85,7 @@ trait CacheableRepository
      */
     protected function allowedCache($method)
     {
-        $cacheEnabled = config('repository.cache.enabled', true);
+        $cacheEnabled = isset($this->cacheEnabled) ? $this->cacheEnabled : config('repository.cache.enabled', true);
 
         if (!$cacheEnabled) {
             return false;
