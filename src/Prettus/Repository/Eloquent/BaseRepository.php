@@ -263,7 +263,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function lists($column, $key = null)
     {
         $this->applyCriteria();
-        
+
         return $this->model->lists($column, $key);
     }
 
@@ -584,7 +584,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         $deleted = $this->model->delete();
 
-        event(new RepositoryEntityDeleted($this, $this->model));
+        event(new RepositoryEntityDeleted($this, $this->model->getModel()));
 
         $this->skipPresenter($temporarySkipPresenter);
         $this->resetModel();
@@ -619,7 +619,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         return $this;
     }
-    
+
     /**
      * Load relation with closure
      *
