@@ -83,7 +83,7 @@ php artisan vendor:publish
 
 - all($columns = array('*'))
 - first($columns = array('*'))
-- paginate($limit = null, $columns = ['*'])
+- paginate($limit = null, $columns = ['*'], $pageName = 'page')
 - find($id, $columns = ['*'])
 - findByField($field, $value, $columns = ['*'])
 - findWhere(array $where, $columns = ['*'])
@@ -340,7 +340,7 @@ $posts = $this->repository->all();
 Find all results in Repository with pagination
 
 ```php
-$posts = $this->repository->paginate($limit = null, $columns = ['*']);
+$posts = $this->repository->paginate($limit = null, $columns = ['*'], $pageName = 'page');
 ```
 
 Find by result by id
