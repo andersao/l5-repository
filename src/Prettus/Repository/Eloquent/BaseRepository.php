@@ -415,6 +415,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function findWhereIn($field, array $values, $columns = ['*'])
     {
         $this->applyCriteria();
+        $this->applyScope();
+
         $model = $this->model->whereIn($field, $values)->get($columns);
         $this->resetModel();
 
@@ -433,6 +435,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function findWhereNotIn($field, array $values, $columns = ['*'])
     {
         $this->applyCriteria();
+        $this->applyScope();
+        
         $model = $this->model->whereNotIn($field, $values)->get($columns);
         $this->resetModel();
 
