@@ -4,7 +4,6 @@ namespace Prettus\Repository\Eloquent;
 use Closure;
 use Exception;
 use Illuminate\Container\Container as Application;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -20,6 +19,7 @@ use Prettus\Repository\Events\RepositoryEntityUpdated;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
+use Illuminate\Contracts\Pagination\Paginator;
 
 /**
  * Class BaseRepository
@@ -862,7 +862,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         if ($this->presenter instanceof PresenterInterface) {
 
-            if ($result instanceof Collection || $result instanceof LengthAwarePaginator) {
+            if ($result instanceof Collection || $result instanceof Paginator) {
                 $result->each(function ($model) {
                     if ($model instanceof Presentable) {
                         $model->setPresenter($this->presenter);
