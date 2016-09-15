@@ -663,6 +663,52 @@ or
 ]
 ```
 
+Using AND when searching
+
+`http://prettus.local/users?search=name:o;email:com&searchFields=name:like;email:like&searchUseAnd=1`
+
+```json
+[
+    {
+        "id": 1,
+        "name": "John Doe",
+        "email": "john@gmail.com",
+        "created_at": "-0001-11-30 00:00:00",
+        "updated_at": "-0001-11-30 00:00:00"
+    },
+    {
+        "id": 2,
+        "name": "Lorem Ipsum",
+        "email": "lorem@ipsum.com",
+        "created_at": "-0001-11-30 00:00:00",
+        "updated_at": "-0001-11-30 00:00:00"
+    }
+]
+```
+
+Using AND when searching
+
+`http://prettus.local/users?search=name:o;email:com&searchFields=name:like;email:like&searchUseAnd=1`
+
+```json
+[
+    {
+        "id": 1,
+        "name": "John Doe",
+        "email": "john@gmail.com",
+        "created_at": "-0001-11-30 00:00:00",
+        "updated_at": "-0001-11-30 00:00:00"
+    },
+    {
+        "id": 2,
+        "name": "Lorem Ipsum",
+        "email": "lorem@ipsum.com",
+        "created_at": "-0001-11-30 00:00:00",
+        "updated_at": "-0001-11-30 00:00:00"
+    }
+]
+```
+
 Filtering fields
 
 `http://prettus.local/users?filter=id;name`
