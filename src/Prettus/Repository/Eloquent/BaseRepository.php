@@ -310,6 +310,31 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         return $this->parserResult($results);
     }
+    
+    /**
+     * Retrieve first data of repository, or return new Model
+     *
+     * @throws ValidatorException
+     *
+     * @param array $attributes
+     * @param array $values
+     *
+     * @return mixed
+     */
+    public function firstOrNew(array $attributes = [], array $values = [])
+    {
+        $this->applyScope();
+
+        $temporarySkipPresenter = $this->skipPresenter;
+
+        $this->skipPresenter(true);
+
+        $model = $this->model->firstOrNew($attributes, $values);
+
+        $this->skipPresenter($temporarySkipPresenter);
+        $this->resetModel();
+
+      
 
     /**
      * Retrieve all data of repository, paginated
