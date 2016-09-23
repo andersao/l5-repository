@@ -311,10 +311,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         return $this->parserResult($results);
     }
     
-    /**
-     * Retrieve first data of repository, or return new Model
-     *
-     * @throws ValidatorException
+   /**
+     * Retrieve first data of repository, or return new Entity
      *
      * @param array $attributes
      * @param array $values
@@ -323,6 +321,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function firstOrNew(array $attributes = [], array $values = [])
     {
+        $this->applyCriteria();
+
         $this->applyScope();
 
         $temporarySkipPresenter = $this->skipPresenter;
@@ -333,6 +333,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         $this->skipPresenter($temporarySkipPresenter);
         $this->resetModel();
+
+        return $this->parserResult($model);
+    }
 
       
 
