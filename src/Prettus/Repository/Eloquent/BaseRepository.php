@@ -315,11 +315,10 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * Retrieve first data of repository, or return new Entity
      *
      * @param array $attributes
-     * @param array $values
      *
      * @return mixed
      */
-    public function firstOrNew(array $attributes = [], array $values = [])
+    public function firstOrNew(array $attributes = [])
     {
         $this->applyCriteria();
 
@@ -329,7 +328,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         $this->skipPresenter(true);
 
-        $model = $this->model->firstOrNew($attributes, $values);
+        $model = $this->model->firstOrNew($attributes);
 
         $this->skipPresenter($temporarySkipPresenter);
         $this->resetModel();
