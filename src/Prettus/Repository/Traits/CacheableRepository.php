@@ -85,7 +85,7 @@ trait CacheableRepository
      */
     protected function allowedCache($method)
     {
-        $cacheEnabled = config('repository.cache.enabled', true);
+        $cacheEnabled = isset($this->cacheEnabled) ? $this->cacheEnabled : config('repository.cache.enabled', true);
 
         if (!$cacheEnabled) {
             return false;
@@ -216,20 +216,21 @@ trait CacheableRepository
      *
      * @param null  $limit
      * @param array $columns
+     * @param string $method
      *
      * @return mixed
      */
-    public function paginate($limit = null, $columns = ['*'])
+    public function paginate($limit = null, $columns = ['*'], $method = "paginate")
     {
         if (!$this->allowedCache('paginate') || $this->isSkippedCache()) {
-            return parent::paginate($limit, $columns);
+            return parent::paginate($limit, $columns, $method);
         }
 
         $key = $this->getCacheKey('paginate', func_get_args());
 
         $minutes = $this->getCacheMinutes();
-        $value = $this->getCacheRepository()->remember($key, $minutes, function () use ($limit, $columns) {
-            return parent::paginate($limit, $columns);
+        $value = $this->getCacheRepository()->remember($key, $minutes, function () use ($limit, $columns, $method) {
+            return parent::paginate($limit, $columns, $method);
         });
 
         return $value;

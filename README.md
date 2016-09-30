@@ -83,7 +83,7 @@ php artisan vendor:publish
 
 - all($columns = array('*'))
 - first($columns = array('*'))
-- paginate($limit = null, $columns = ['*'])
+- paginate($limit = null, $columns = ['*'], $pageName = 'page')
 - find($id, $columns = ['*'])
 - findByField($field, $value, $columns = ['*'])
 - findWhere(array $where, $columns = ['*'])
@@ -93,16 +93,15 @@ php artisan vendor:publish
 - update(array $attributes, $id)
 - updateOrCreate(array $attributes, array $values = [])
 - delete($id)
-- orderBy($column, $direction = 'asc');
-- with(array $relations);
-- has(string $relation);
-- whereHas(string $relation, closure $closure);
-- hidden(array $fields);
-- visible(array $fields);
-- scopeQuery(Closure $scope);
-- getFieldsSearchable();
-- setPresenter($presenter);
-- skipPresenter($status = true);
+- deleteWhere(array $where)
+- orderBy($column, $direction = 'asc')
+- with(array $relations)
+- hidden(array $fields)
+- visible(array $fields)
+- scopeQuery(Closure $scope)
+- getFieldsSearchable()
+- setPresenter($presenter)
+- skipPresenter($status = true)
 
 
 ### Prettus\Repository\Contracts\RepositoryCriteriaInterface
@@ -193,7 +192,7 @@ You must first configure the storage location of the repository files. By defaul
 ```php
     ...
     'generator'=>[
-        'basePath'=>app_path(),
+        'basePath'=>app()->path(),
         'rootNamespace'=>'App\\',
         'paths'=>[
             'models'       => 'Entities',
@@ -223,7 +222,7 @@ Additionally, you may wish to customize where your generated classes end up bein
 
 ```php
     'generator'=>[
-        'basePath'=>app_path(),
+        'basePath'=>app()->path(),
         'rootNamespace'=>'App\\',
         'paths'=>[
             'models'=>'Models',
@@ -340,7 +339,7 @@ $posts = $this->repository->all();
 Find all results in Repository with pagination
 
 ```php
-$posts = $this->repository->paginate($limit = null, $columns = ['*']);
+$posts = $this->repository->paginate($limit = null, $columns = ['*'], $pageName = 'page');
 ```
 
 Find by result by id
@@ -421,6 +420,12 @@ Delete entry in Repository
 
 ```php
 $this->repository->delete($id)
+```
+
+Delete multiple entries in Repository
+
+```php
+$this->repository->deleteWhere($where)
 ```
 
 ### Create a Criteria
