@@ -117,15 +117,24 @@ class RequestCriteria implements CriteriaInterface
                  * 
                  * products:custom_id|products.description -> join products on current_table.custom_id = products.id order
                  * by products.description (in case both tables have same column name)
+                 *
+                 * products:belongsTo:custom_id|products.description -> join products on products.custom_id = current_table.id order
+                 * by products.description (in case both tables have same column name)
                  */
                 $table = $model->getModel()->getTable();
                 $sortTable = $split[0];
+                $joinTable = $split[0];
                 $sortColumn = $split[1];
 
                 $split = explode(':', $sortTable);
-                if(count($split) > 1) {
+                if(count($split) == 2) {
                     $sortTable = $split[0];
                     $keyName = $table.'.'.$split[1];
+                }
+                elseif(count($split) == 3) {
+                    $sortTable = $split[0];
+                    $joinTable = $table;
+                    $keyName = $sortTable.'.'.$split[2];
                 } else {
                     /*
                      * If you do not define which column to use as a joining column on current table, it will
@@ -139,7 +148,7 @@ class RequestCriteria implements CriteriaInterface
                 }
 
                 $model = $model
-                    ->leftJoin($sortTable, $keyName, '=', $sortTable.'.id')
+                    ->leftJoin($sortTable, $keyName, '=', $joinTable.'.id')
                     ->orderBy($sortColumn, $sortedBy)
                     ->addSelect($table.'.*');
             } else {

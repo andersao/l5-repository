@@ -731,6 +731,20 @@ ORDER BY posts.title
 ...
 ```
 
+Sorted through hasOne related table
+
+`http://prettus.local/users?orderBy=posts:belongsTo:custom_id|posts.title&sortedBy=desc`
+
+Query will have something like this
+
+```sql
+...
+INNER JOIN posts ON posts.custom_id = users.id
+...
+ORDER BY posts.title
+...
+```
+
 
 Add relationship
 
