@@ -538,6 +538,20 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         return $this->parserResult($model);
     }
+    
+    public function updateWhere(array $values, array $where = [])
+    {
+        $this->applyCriteria();
+        $this->applyScope();
+        
+        if( count($where) > 0 )
+            $this->applyConditions($where);
+
+        $model = $this->model->update($values);
+        $this->resetModel();
+
+        return $this->parserResult($model);
+    }
 
     /**
      * Delete a entity in repository by id
