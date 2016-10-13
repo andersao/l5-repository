@@ -266,6 +266,21 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         
         return $this->model->lists($column, $key);
     }
+    
+     /**
+     * Retrieve data array for populate field select
+     *
+     * @param string      $column
+     * @param string|null $key
+     *
+     * @return \Illuminate\Support\Collection|array
+     */
+    public function pluck($column, $key = null)
+    {
+        $this->applyCriteria();
+        
+        return $this->model->pluck($column, $key);
+    }
 
     /**
      * Retrieve all data of repository
@@ -434,6 +449,24 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         $this->applyCriteria();
         $model = $this->model->whereNotIn($field, $values)->get($columns);
+        $this->resetModel();
+
+        return $this->parserResult($model);
+    }
+    /**
+     * Find data between dates
+     *
+     * @param       $field
+     * @param array $values
+     * @param array $columns
+     *
+     * @return mixed
+     */
+
+    public function findWhereBetween($field, array $values, $columns = ['*'])
+    {
+        $this->applyCriteria();
+        $model = $this->model->whereBetween($field, $values)->get($columns);
         $this->resetModel();
 
         return $this->parserResult($model);
