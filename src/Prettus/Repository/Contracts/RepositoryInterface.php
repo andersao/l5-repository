@@ -17,6 +17,16 @@ interface RepositoryInterface
      * @return \Illuminate\Support\Collection|array
      */
     public function lists($column, $key = null);
+    
+     /**
+     * Retrieve data array for populate field select
+     *
+     * @param string      $column
+     * @param string|null $key
+     *
+     * @return \Illuminate\Support\Collection|array
+     */
+    public function pluck($column, $key = null);
 
     /**
      * Retrieve all data of repository
@@ -99,7 +109,19 @@ interface RepositoryInterface
      * @return mixed
      */
     public function findWhereNotIn($field, array $values, $columns = ['*']);
+    
+    /**
+     * Find data between dates
+     *
+     * @param       $field
+     * @param array $values
+     * @param array $columns
+     *
+     * @return mixed
+     */
 
+    public function findWhereBetween($field, array $values, $columns = ['*']);
+    
     /**
      * Save a new entity in repository
      *
