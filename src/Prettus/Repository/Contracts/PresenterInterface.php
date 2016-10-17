@@ -3,6 +3,7 @@ namespace Prettus\Repository\Contracts;
 
 /**
  * Interface PresenterInterface
+ *
  * @package Prettus\Repository\Contracts
  */
 interface PresenterInterface

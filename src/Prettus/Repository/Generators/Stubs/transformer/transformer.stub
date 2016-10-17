@@ -7,6 +7,7 @@ use $MODEL$;
 
 /**
  * Class $CLASS$Transformer
+ *
  * @package $NAMESPACE$
  */
 class $CLASS$Transformer extends TransformerAbstract

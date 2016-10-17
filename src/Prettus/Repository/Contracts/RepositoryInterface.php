@@ -3,6 +3,7 @@ namespace Prettus\Repository\Contracts;
 
 /**
  * Interface RepositoryInterface
+ *
  * @package Prettus\Repository\Contracts
  */
 interface RepositoryInterface
@@ -148,7 +149,7 @@ interface RepositoryInterface
      * @return int
      */
     public function deleteWhere(array $where);
-    
+
     /**
      * Order collection by a given column
      *

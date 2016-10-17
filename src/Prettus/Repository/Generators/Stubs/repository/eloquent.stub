@@ -10,6 +10,7 @@ $USE_VALIDATOR$
 
 /**
  * Class $CLASS$RepositoryEloquent
+ *
  * @package $NAMESPACE$
  */
 class $CLASS$RepositoryEloquent extends BaseRepository implements $CLASS$Repository

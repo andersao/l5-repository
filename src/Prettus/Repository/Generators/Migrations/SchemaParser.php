@@ -5,6 +5,7 @@ use Illuminate\Contracts\Support\Arrayable;
 
 /**
  * Class SchemaParser
+ *
  * @package Prettus\Repository\Generators\Migrations
  */
 class SchemaParser implements Arrayable

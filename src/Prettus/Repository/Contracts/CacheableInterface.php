@@ -5,6 +5,7 @@ use Illuminate\Contracts\Cache\Repository as CacheRepository;
 
 /**
  * Interface CacheableInterface
+ *
  * @package Prettus\Repository\Contracts
  */
 interface CacheableInterface

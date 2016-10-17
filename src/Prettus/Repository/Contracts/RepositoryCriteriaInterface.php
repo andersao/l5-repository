@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 
 /**
  * Interface RepositoryCriteriaInterface
+ *
  * @package Prettus\Repository\Contracts
  */
 interface RepositoryCriteriaInterface

@@ -3,6 +3,7 @@ namespace Prettus\Repository\Generators\Migrations;
 
 /**
  * Class NameParser
+ *
  * @package Prettus\Repository\Generators\Migrations
  */
 class NameParser

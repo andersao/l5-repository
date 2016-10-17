@@ -5,6 +5,7 @@ use Prettus\Repository\Contracts\Transformable;
 
 /**
  * Class ModelTransformer
+ *
  * @package Prettus\Repository\Transformer
  */
 class ModelTransformer extends TransformerAbstract

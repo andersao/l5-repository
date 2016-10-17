@@ -3,6 +3,7 @@ namespace Prettus\Repository\Contracts;
 
 /**
  * Interface CriteriaInterface
+ *
  * @package Prettus\Repository\Contracts
  */
 interface CriteriaInterface

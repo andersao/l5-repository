@@ -10,6 +10,7 @@ use Exception;
 
 /**
  * Class CacheableRepository
+ *
  * @package Prettus\Repository\Traits
  */
 trait CacheableRepository

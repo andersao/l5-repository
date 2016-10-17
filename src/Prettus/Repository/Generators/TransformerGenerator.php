@@ -3,6 +3,7 @@ namespace Prettus\Repository\Generators;
 
 /**
  * Class TransformerGenerator
+ *
  * @package Prettus\Repository\Generators
  */
 

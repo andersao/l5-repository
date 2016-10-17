@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 /**
  * Class MigrationGenerator
+ *
  * @package Prettus\Repository\Generators
  */
 class MigrationGenerator extends Generator

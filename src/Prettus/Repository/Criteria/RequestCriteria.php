@@ -9,6 +9,7 @@ use Prettus\Repository\Contracts\RepositoryInterface;
 
 /**
  * Class RequestCriteria
+ *
  * @package Prettus\Repository\Criteria
  */
 class RequestCriteria implements CriteriaInterface
@@ -114,7 +115,7 @@ class RequestCriteria implements CriteriaInterface
                 /*
                  * ex.
                  * products|description -> join products on current_table.product_id = products.id order by description
-                 * 
+                 *
                  * products:custom_id|products.description -> join products on current_table.custom_id = products.id order
                  * by products.description (in case both tables have same column name)
                  */

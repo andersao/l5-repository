@@ -12,6 +12,7 @@ use Prettus\Repository\Helpers\CacheKeys;
 
 /**
  * Class CleanCacheRepository
+ *
  * @package Prettus\Repository\Listeners
  */
 class CleanCacheRepository

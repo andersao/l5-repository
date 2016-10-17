@@ -2,6 +2,7 @@
 
 /**
  * Class TransformableTrait
+ *
  * @package Prettus\Repository\Traits
  */
 trait TransformableTrait

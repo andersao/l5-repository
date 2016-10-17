@@ -3,6 +3,7 @@ namespace Prettus\Repository\Generators;
 
 /**
  * Class ControllerGenerator
+ *
  * @package Prettus\Repository\Generators
  */
 class ControllerGenerator extends Generator

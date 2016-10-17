@@ -23,6 +23,7 @@ use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
  * Class BaseRepository
+ *
  * @package Prettus\Repository\Eloquent
  */
 abstract class BaseRepository implements RepositoryInterface, RepositoryCriteriaInterface
@@ -277,7 +278,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function pluck($column, $key = null)
     {
         $this->applyCriteria();
-        
+
         return $this->model->pluck($column, $key);
     }
 
