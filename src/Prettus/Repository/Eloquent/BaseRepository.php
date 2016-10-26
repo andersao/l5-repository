@@ -78,6 +78,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     protected $skipPresenter = false;
 
     /**
+     * @var bool
+     */
+    protected $skipValidator = false;
+
+    /**
      * @var \Closure
      */
     protected $scopeQuery = null;
@@ -465,7 +470,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function create(array $attributes)
     {
-        if (!is_null($this->validator)) {
+        if (!$this->skipValidator && !is_null($this->validator)) {
             // we should pass data that has been casts by the model
             // to make sure data type are same because validator may need to use
             // this data to compare with data that fetch from database.
@@ -500,7 +505,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         $this->applyScope();
 
-        if (!is_null($this->validator)) {
+        if (!$this->skipValidator && !is_null($this->validator)) {
             // we should pass data that has been casts by the model
             // to make sure data type are same because validator may need to use
             // this data to compare with data that fetch from database.
@@ -542,7 +547,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         $this->applyScope();
 
-        if (!is_null($this->validator)) {
+        if (!$this->skipValidator && !is_null($this->validator)) {
             $this->validator->with($attributes)->passesOrFail(ValidatorInterface::RULE_UPDATE);
         }
 
@@ -868,6 +873,20 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function skipPresenter($status = true)
     {
         $this->skipPresenter = $status;
+
+        return $this;
+    }
+
+    /**
+     * Skip Validator
+     *
+     * @param bool $status
+     *
+     * @return $this
+     */
+    public function skipValidator($status = true)
+    {
+        $this->skipValidator = $status;
 
         return $this;
     }

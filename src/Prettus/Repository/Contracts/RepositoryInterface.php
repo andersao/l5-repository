@@ -226,4 +226,13 @@ interface RepositoryInterface
      * @return $this
      */
     public function skipPresenter($status = true);
+
+    /**
+     * Skip Validator
+     *
+     * @param bool $status
+     *
+     * @return $this
+     */
+    public function skipValidator($status = true);
 }
