@@ -17,6 +17,10 @@ class RequestCriteria implements CriteriaInterface
      * @var \Illuminate\Http\Request
      */
     protected $request;
+    /**
+     * @var string
+     */
+    protected $valueDelimiter;
 
     public function __construct(Request $request)
     {
@@ -36,6 +40,7 @@ class RequestCriteria implements CriteriaInterface
     public function apply($model, RepositoryInterface $repository)
     {
         $fieldsSearchable = $repository->getFieldsSearchable();
+        $this->valueDelimiter = config('repository.criteria.params.delimiter', ';');
         $search = $this->request->get(config('repository.criteria.params.search', 'search'), null);
         $searchFields = $this->request->get(config('repository.criteria.params.searchFields', 'searchFields'), null);
         $filter = $this->request->get(config('repository.criteria.params.filter', 'filter'), null);
@@ -46,7 +51,7 @@ class RequestCriteria implements CriteriaInterface
 
         if ($search && is_array($fieldsSearchable) && count($fieldsSearchable)) {
 
-            $searchFields = is_array($searchFields) || is_null($searchFields) ? $searchFields : explode(';', $searchFields);
+            $searchFields = is_array($searchFields) || is_null($searchFields) ? $searchFields : explode($this->valueDelimiter, $searchFields);
             $fields = $this->parserFieldsSearch($fieldsSearchable, $searchFields);
             $isFirstField = true;
             $searchData = $this->parserSearchData($search);
@@ -149,14 +154,14 @@ class RequestCriteria implements CriteriaInterface
 
         if (isset($filter) && !empty($filter)) {
             if (is_string($filter)) {
-                $filter = explode(';', $filter);
+                $filter = explode($this->valueDelimiter, $filter);
             }
 
             $model = $model->select($filter);
         }
 
         if ($with) {
-            $with = explode(';', $with);
+            $with = explode($this->valueDelimiter, $with);
             $model = $model->with($with);
         }
 
@@ -173,7 +178,7 @@ class RequestCriteria implements CriteriaInterface
         $searchData = [];
 
         if (stripos($search, ':')) {
-            $fields = explode(';', $search);
+            $fields = explode($this->valueDelimiter, $search);
 
             foreach ($fields as $row) {
                 try {
@@ -196,8 +201,8 @@ class RequestCriteria implements CriteriaInterface
     protected function parserSearchValue($search)
     {
 
-        if (stripos($search, ';') || stripos($search, ':')) {
-            $values = explode(';', $search);
+        if (stripos($search, $this->valueDelimiter) || stripos($search, ':')) {
+            $values = explode($this->valueDelimiter, $search);
             foreach ($values as $value) {
                 $s = explode(':', $value);
                 if (count($s) == 1) {
