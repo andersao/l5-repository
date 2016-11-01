@@ -167,7 +167,7 @@ interface RepositoryInterface
      *
      * @return $this
      */
-    function whereHas($relation, $closure);
+    public function whereHas($relation, $closure);
     
     /**
      * Set hidden fields
