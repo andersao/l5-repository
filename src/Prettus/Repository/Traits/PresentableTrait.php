@@ -49,7 +49,7 @@ trait PresentableTrait
     /**
      * @return bool
      */
-    protected function hasPresenter()
+    public function hasPresenter()
     {
         return isset($this->presenter) && $this->presenter instanceof PresenterInterface;
     }
