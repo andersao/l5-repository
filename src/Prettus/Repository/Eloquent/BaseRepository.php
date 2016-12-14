@@ -266,8 +266,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         
         return $this->model->lists($column, $key);
     }
-    
-     /**
+
+    /**
      * Retrieve data array for populate field select
      *
      * @param string      $column
@@ -278,7 +278,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function pluck($column, $key = null)
     {
         $this->applyCriteria();
-        
         return $this->model->pluck($column, $key);
     }
 
@@ -453,6 +452,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         return $this->parserResult($model);
     }
+
     /**
      * Find data between dates
      *
@@ -467,6 +467,23 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         $this->applyCriteria();
         $model = $this->model->whereBetween($field, $values)->get($columns);
+        $this->resetModel();
+
+        return $this->parserResult($model);
+    }
+
+
+    /**
+     * Find or create new register
+     * @param array $attributes
+     * @param array $columns
+     * @return mixed
+     */
+    public function firstOrCreate($attributes, $columns = ['*'])
+    {
+        $this->applyCriteria();
+
+        $model = $this->model->firstOrCreate($attributes);
         $this->resetModel();
 
         return $this->parserResult($model);
@@ -650,6 +667,20 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         $this->model = $this->model->with($relations);
 
+        return $this;
+    }
+
+    /**
+     * Sync relations
+     *
+     * @param $id
+     * @param array $relation
+     * @param array $attributes
+     * @return $this
+     */
+    public function sync($id, $relation, $attributes)
+    {
+        $this->model = $this->model->find($id)->with($relation)->getRelation($relation)->sync($attributes);
         return $this;
     }
     
