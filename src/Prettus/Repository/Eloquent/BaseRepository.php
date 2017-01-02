@@ -683,6 +683,20 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->model = $this->model->find($id)->with($relation)->getRelation($relation)->sync($attributes);
         return $this;
     }
+
+    /**
+     * Detach relations
+     *
+     * @param $id
+     * @param $relation
+     * @param $attributes
+     * @return $this
+     */
+    public function detach($id, $relation, $attributes)
+    {
+        $this->model = $this->model->find($id)->with($relation)->getRelation($relation)->detach($attributes);
+        return $this;
+    }
     
     /**
      * Load relation with closure

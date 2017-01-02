@@ -201,6 +201,16 @@ interface RepositoryInterface
     public function sync($id, $relation, $attributes);
 
     /**
+     * Detach relations
+     *
+     * @param $id
+     * @param $relation
+     * @param $attributes
+     * @return $this
+     */
+    public function detach($id, $relation, $attributes);
+
+    /**
      * Set hidden fields
      *
      * @param array $fields
