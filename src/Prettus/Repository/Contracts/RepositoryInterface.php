@@ -203,12 +203,12 @@ interface RepositoryInterface
     /**
      * Detach relations
      *
-     * @param $id
-     * @param $relation
-     * @param $attributes
+     * @param $table
+     * @param $paramsWhere
+     * @param $type
      * @return $this
      */
-    public function detach($id, $relation, $attributes);
+    public function detach($table, $paramsWhere, $type = 'AND');
 
     /**
      * Set hidden fields

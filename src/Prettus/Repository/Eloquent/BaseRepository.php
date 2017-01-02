@@ -8,6 +8,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\Presentable;
 use Prettus\Repository\Contracts\PresentableInterface;
@@ -687,14 +688,24 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Detach relations
      *
-     * @param $id
-     * @param $relation
-     * @param $attributes
+     * @param $table
+     * @param $paramsWhere
+     * @param $type
      * @return $this
      */
-    public function detach($id, $relation, $attributes)
+    public function detach($table, $paramsWhere, $type = 'and')
     {
-        $this->model = $this->model->find($id)->with($relation)->getRelation($relation)->detach($attributes);
+        $result = \DB::table($table);
+
+        for ($x = 0; $x < count($paramsWhere); $x++)
+        {
+            if($type == 'and')
+                $result = $result->where($paramsWhere[$x]);
+            else
+                $result = $result->orWhere($paramsWhere[$x]);
+        }
+
+        $result->delete();
         return $this;
     }
     
