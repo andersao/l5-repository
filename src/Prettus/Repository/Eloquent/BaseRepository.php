@@ -264,7 +264,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         $this->applyCriteria();
         
-        return $this->model->lists($column, $key);
+        if(method_exists($this->model, "lists"))
+            return $this->model->lists($column, $key);
+        
+        if(method_exists($this->model, "pluck"))
+            return $this->model->pluck($column, $key);
     }
 
     /**
