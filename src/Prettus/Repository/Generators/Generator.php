@@ -2,14 +2,11 @@
 
 namespace Prettus\Repository\Generators;
 
-use Illuminate\Console\DetectsApplicationNamespace;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 
 abstract class Generator
 {
-
-    use DetectsApplicationNamespace;
 
     /**
      * The filesystem instance.
@@ -173,7 +170,7 @@ abstract class Generator
      */
     public function getRootNamespace()
     {
-        return config('repository.generator.rootNamespace', $this->getAppNamespace());
+        return config('repository.generator.rootNamespace', \Illuminate\Container\Container::getInstance()->getNamespace());
     }
 
 
