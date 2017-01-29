@@ -139,8 +139,19 @@ abstract class Generator
 
         return Str::studly(str_replace(' ', '/', ucwords(str_replace('/', ' ', $name))));
     }
+    
+    
+   /**
+     * Get application namespace
+     * 
+     * @return string
+     */
+    public function getAppNamespace()
+    {
+        return \Illuminate\Container\Container::getInstance()->getNamespace();
+    }
 
-
+    
     /**
      * Get class name.
      *
@@ -170,7 +181,7 @@ abstract class Generator
      */
     public function getRootNamespace()
     {
-        return config('repository.generator.rootNamespace', \Illuminate\Container\Container::getInstance()->getNamespace());
+        return config('repository.generator.rootNamespace', $this->getAppNamespace());
     }
 
 
