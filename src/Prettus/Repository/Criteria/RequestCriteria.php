@@ -42,6 +42,7 @@ class RequestCriteria implements CriteriaInterface
         $orderBy = $this->request->get(config('repository.criteria.params.orderBy', 'orderBy'), null);
         $sortedBy = $this->request->get(config('repository.criteria.params.sortedBy', 'sortedBy'), 'asc');
         $with = $this->request->get(config('repository.criteria.params.with', 'with'), null);
+        $searchJoin = $this->request->get(config('repository.criteria.params.searchJoin', 'searchJoin'), null);
         $sortedBy = !empty($sortedBy) ? $sortedBy : 'asc';
 
         if ($search && is_array($fieldsSearchable) && count($fieldsSearchable)) {
@@ -51,7 +52,7 @@ class RequestCriteria implements CriteriaInterface
             $isFirstField = true;
             $searchData = $this->parserSearchData($search);
             $search = $this->parserSearchValue($search);
-            $modelForceAndWhere = false;
+            $modelForceAndWhere = strtolower($searchJoin) === 'and';
 
             $model = $model->where(function ($query) use ($fields, $search, $searchData, $isFirstField, $modelForceAndWhere) {
                 /** @var Builder $query */
@@ -114,7 +115,7 @@ class RequestCriteria implements CriteriaInterface
                 /*
                  * ex.
                  * products|description -> join products on current_table.product_id = products.id order by description
-                 * 
+                 *
                  * products:custom_id|products.description -> join products on current_table.custom_id = products.id order
                  * by products.description (in case both tables have same column name)
                  */
