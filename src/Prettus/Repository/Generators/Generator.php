@@ -2,14 +2,22 @@
 
 namespace Prettus\Repository\Generators;
 
-use Illuminate\Console\AppNamespaceDetectorTrait;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Container\Container;
 use Illuminate\Support\Str;
 
 abstract class Generator
 {
 
-    use AppNamespaceDetectorTrait;
+    /**
+     * Get the application namespace.
+     *
+     * @return string
+     */
+    protected function getAppNamespace()
+    {
+        return Container::getInstance()->getNamespace();
+    }
 
     /**
      * The filesystem instance.
@@ -223,7 +231,7 @@ abstract class Generator
         } else {
             $path = str_replace('/', '\\', $path);
         }
-        
+
 
         return $path;
     }
