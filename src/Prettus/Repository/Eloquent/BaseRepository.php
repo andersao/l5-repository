@@ -268,6 +268,21 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
+     * Retrieve data array for populate field select
+     * Compatible with Laravel 5.3
+     * @param string      $column
+     * @param string|null $key
+     *
+     * @return \Illuminate\Support\Collection|array
+     */
+    public function pluck($column, $key = null)
+    {
+        $this->applyCriteria();
+
+        return $this->model->pluck($column, $key);
+    }
+
+    /**
      * Retrieve all data of repository
      *
      * @param array $columns
