@@ -264,7 +264,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         $this->applyCriteria();
         
-        return $this->model->lists($column, $key);
+        if(method_exists($this->model, "lists"))
+            return $this->model->lists($column, $key);
+        
+        if(method_exists($this->model, "pluck"))
+            return $this->model->pluck($column, $key);
     }
 
     /**
@@ -550,6 +554,20 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->resetModel();
 
         event(new RepositoryEntityUpdated($this, $model));
+
+        return $this->parserResult($model);
+    }
+    
+    public function updateWhere(array $values, array $where = [])
+    {
+        $this->applyCriteria();
+        $this->applyScope();
+        
+        if( count($where) > 0 )
+            $this->applyConditions($where);
+
+        $model = $this->model->update($values);
+        $this->resetModel();
 
         return $this->parserResult($model);
     }
