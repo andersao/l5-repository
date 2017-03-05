@@ -255,7 +255,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Retrieve data array for populate field select
      *
-     * @param string      $column
+     * @param string $column
      * @param string|null $key
      *
      * @return \Illuminate\Support\Collection|array
@@ -263,14 +263,14 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function lists($column, $key = null)
     {
         $this->applyCriteria();
-        
+
         return $this->model->lists($column, $key);
     }
 
     /**
      * Retrieve data array for populate field select
      * Compatible with Laravel 5.3
-     * @param string      $column
+     * @param string $column
      * @param string|null $key
      *
      * @return \Illuminate\Support\Collection|array
@@ -280,6 +280,20 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->applyCriteria();
 
         return $this->model->pluck($column, $key);
+    }
+
+    /**
+     * Sync relations
+     *
+     * @param $id
+     * @param $relation
+     * @param array $attributes
+     * @return $this
+     */
+    public function sync($relation, $attributes)
+    {
+        $this->model = $this->model->with($relation)->getRelation($relation)->sync($attributes);
+        return $this;
     }
 
     /**
@@ -329,8 +343,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Retrieve all data of repository, paginated
      *
-     * @param null   $limit
-     * @param array  $columns
+     * @param null $limit
+     * @param array $columns
      * @param string $method
      *
      * @return mixed
@@ -350,7 +364,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Retrieve all data of repository, simple paginated
      *
-     * @param null  $limit
+     * @param null $limit
      * @param array $columns
      *
      * @return mixed
@@ -634,7 +648,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         return $this;
     }
-    
+
     /**
      * Load relation with closure
      *

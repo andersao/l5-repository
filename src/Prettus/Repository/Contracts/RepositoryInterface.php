@@ -29,6 +29,16 @@ interface RepositoryInterface
     public function pluck($column, $key = null);
 
     /**
+     * Sync relations
+     *
+     * @param $id
+     * @param $relation
+     * @param array $attributes
+     * @return $this
+     */
+    public function sync($relation, $attributes);
+
+    /**
      * Retrieve all data of repository
      *
      * @param array $columns
