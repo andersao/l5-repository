@@ -260,11 +260,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      *
      * @return \Illuminate\Support\Collection|array
      */
-    public function lists($column, $key = null)
+    public function pluck($column, $key = null)
     {
         $this->applyCriteria();
         
-        return $this->model->lists($column, $key);
+        return $this->model->pluck($column, $key);
     }
 
     /**
