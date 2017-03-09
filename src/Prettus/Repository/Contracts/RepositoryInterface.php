@@ -36,7 +36,7 @@ interface RepositoryInterface
      * @param array $attributes
      * @return $this
      */
-    public function sync($relation, $attributes);
+    public function sync($id, $relation, $attributes);
 
     /**
      * Retrieve all data of repository
@@ -178,6 +178,14 @@ interface RepositoryInterface
      * @return $this
      */
     public function with($relations);
+
+    /**
+     * Add subselect queries to count the relations.
+     *
+     * @param  mixed $relations
+     * @return $this
+     */
+    public function withCount($relations);
 
     /**
      * Set hidden fields

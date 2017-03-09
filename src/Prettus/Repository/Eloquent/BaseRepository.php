@@ -290,7 +290,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * @param array $attributes
      * @return $this
      */
-    public function sync($relation, $attributes)
+    public function sync($id, $relation, $attributes)
     {
         $this->model = $this->model->with($relation)->getRelation($relation)->sync($attributes);
         return $this;
@@ -646,6 +646,18 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         $this->model = $this->model->with($relations);
 
+        return $this;
+    }
+
+    /**
+     * Add subselect queries to count the relations.
+     *
+     * @param  mixed $relations
+     * @return $this
+     */
+    public function withCount($relations)
+    {
+        $this->model = $this->model->withCount($relations);
         return $this;
     }
 
