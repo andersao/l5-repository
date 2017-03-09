@@ -285,14 +285,28 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Sync relations
      *
+     * @param $id
      * @param $relation
      * @param array $attributes
-     * @return $this
+     * @param boolean $detaching
+     * @return array
      */
-    public function sync($relation, $attributes)
+    public function sync($id, $relation, $attributes, $detaching = true)
     {
-        $this->model = $this->model->with($relation)->getRelation($relation)->sync($attributes);
-        return $this;
+        return $this->find($id)->getRelation($relation)->sync($attributes, $detaching);
+    }
+
+    /**
+     * Sync relations without detaching
+     *
+     * @param $id
+     * @param $relation
+     * @param array $attributes
+     * @return array
+     */
+    public function syncWithoutDetaching($id, $relation, $attributes)
+    {
+        return $this->sync($id, $relation, $attributes, false);
     }
 
     /**
