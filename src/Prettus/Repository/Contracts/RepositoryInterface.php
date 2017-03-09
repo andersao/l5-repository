@@ -31,11 +31,13 @@ interface RepositoryInterface
     /**
      * Sync relations
      *
+     * @param $id
      * @param $relation
      * @param array $attributes
-     * @return $this
+     * @param boolean $detaching
+     * @return array
      */
-    public function sync($relation, $attributes);
+    public function sync($id, $relation, $attributes, $detaching = true);
 
     /**
      * Retrieve all data of repository
