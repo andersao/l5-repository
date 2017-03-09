@@ -285,12 +285,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Sync relations
      *
-     * @param $id
      * @param $relation
      * @param array $attributes
      * @return $this
      */
-    public function sync($id, $relation, $attributes)
+    public function sync($relation, $attributes)
     {
         $this->model = $this->model->with($relation)->getRelation($relation)->sync($attributes);
         return $this;
@@ -444,6 +443,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function findWhereIn($field, array $values, $columns = ['*'])
     {
         $this->applyCriteria();
+        $this->applyScope();
         $model = $this->model->whereIn($field, $values)->get($columns);
         $this->resetModel();
 
@@ -462,6 +462,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function findWhereNotIn($field, array $values, $columns = ['*'])
     {
         $this->applyCriteria();
+        $this->applyScope();
         $model = $this->model->whereNotIn($field, $values)->get($columns);
         $this->resetModel();
 
