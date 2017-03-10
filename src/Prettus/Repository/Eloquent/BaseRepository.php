@@ -293,7 +293,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function sync($id, $relation, $attributes, $detaching = true)
     {
-        return $this->find($id)->getRelation($relation)->sync($attributes, $detaching);
+        return $this->find($id)->{$relation}()->sync($attributes, $detaching);
     }
 
     /**
