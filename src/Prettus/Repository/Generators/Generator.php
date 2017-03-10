@@ -77,7 +77,7 @@ abstract class Generator
     {
         $path = config('repository.generator.stubsOverridePath', __DIR__);
 
-        if(!file_exists($path . '/Stubs/' . $this->stub . '.stub')){
+        if (!file_exists($path . '/Stubs/' . $this->stub . '.stub')) {
             $path = __DIR__;
         }
 
@@ -139,11 +139,11 @@ abstract class Generator
 
         return Str::studly(str_replace(' ', '/', ucwords(str_replace('/', ' ', $name))));
     }
-    
-    
+
+
    /**
      * Get application namespace
-     * 
+     *
      * @return string
      */
     public function getAppNamespace()
@@ -151,7 +151,7 @@ abstract class Generator
         return \Illuminate\Container\Container::getInstance()->getNamespace();
     }
 
-    
+
     /**
      * Get class name.
      *
@@ -231,7 +231,7 @@ abstract class Generator
         } else {
             $path = str_replace('/', '\\', $path);
         }
-        
+
 
         return $path;
     }

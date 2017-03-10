@@ -1,4 +1,5 @@
 <?php
+
 namespace Prettus\Repository\Exceptions;
 
 use Exception;

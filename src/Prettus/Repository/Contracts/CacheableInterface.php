@@ -1,4 +1,5 @@
 <?php
+
 namespace Prettus\Repository\Contracts;
 
 use Illuminate\Contracts\Cache\Repository as CacheRepository;

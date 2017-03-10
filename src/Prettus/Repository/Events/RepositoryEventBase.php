@@ -1,4 +1,5 @@
 <?php
+
 namespace Prettus\Repository\Events;
 
 use Illuminate\Database\Eloquent\Model;

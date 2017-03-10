@@ -30,8 +30,8 @@ return [
     JsonApiSerializer
 
     */
-    'fractal'    => [
-        'params'     => [
+    'fractal' => [
+        'params' => [
             'include' => 'include'
         ],
         'serializer' => League\Fractal\Serializer\DataArraySerializer::class
@@ -43,73 +43,73 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-    'cache'      => [
+    'cache' => [
         /*
-         |--------------------------------------------------------------------------
-         | Cache Status
-         |--------------------------------------------------------------------------
-         |
-         | Enable or disable cache
-         |
-         */
-        'enabled'    => true,
+        |--------------------------------------------------------------------------
+        | Cache Status
+        |--------------------------------------------------------------------------
+        |
+        | Enable or disable cache
+        |
+        */
+        'enabled' => true,
 
         /*
-         |--------------------------------------------------------------------------
-         | Cache Minutes
-         |--------------------------------------------------------------------------
-         |
-         | Time of expiration cache
-         |
-         */
-        'minutes'    => 30,
+        |--------------------------------------------------------------------------
+        | Cache Minutes
+        |--------------------------------------------------------------------------
+        |
+        | Time of expiration cache
+        |
+        */
+        'minutes' => 30,
 
         /*
-         |--------------------------------------------------------------------------
-         | Cache Repository
-         |--------------------------------------------------------------------------
-         |
-         | Instance of Illuminate\Contracts\Cache\Repository
-         |
-         */
+        |--------------------------------------------------------------------------
+        | Cache Repository
+        |--------------------------------------------------------------------------
+        |
+        | Instance of Illuminate\Contracts\Cache\Repository
+        |
+        */
         'repository' => 'cache',
 
         /*
-          |--------------------------------------------------------------------------
-          | Cache Clean Listener
-          |--------------------------------------------------------------------------
-          |
-          |
-          |
-          */
-        'clean'      => [
+        |--------------------------------------------------------------------------
+        | Cache Clean Listener
+        |--------------------------------------------------------------------------
+        |
+        |
+        |
+        */
+        'clean' => [
 
             /*
-              |--------------------------------------------------------------------------
-              | Enable clear cache on repository changes
-              |--------------------------------------------------------------------------
-              |
-              */
+            |--------------------------------------------------------------------------
+            | Enable clear cache on repository changes
+            |--------------------------------------------------------------------------
+            |
+            */
             'enabled' => true,
 
             /*
-              |--------------------------------------------------------------------------
-              | Actions in Repository
-              |--------------------------------------------------------------------------
-              |
-              | create : Clear Cache on create Entry in repository
-              | update : Clear Cache on update Entry in repository
-              | delete : Clear Cache on delete Entry in repository
-              |
-              */
-            'on'      => [
+            |--------------------------------------------------------------------------
+            | Actions in Repository
+            |--------------------------------------------------------------------------
+            |
+            | create : Clear Cache on create Entry in repository
+            | update : Clear Cache on update Entry in repository
+            | delete : Clear Cache on delete Entry in repository
+            |
+            */
+            'on' => [
                 'create' => true,
                 'update' => true,
                 'delete' => true,
             ]
         ],
 
-        'params'     => [
+        'params' => [
             /*
             |--------------------------------------------------------------------------
             | Skip Cache Params
@@ -122,21 +122,21 @@ return [
             'skipCache' => 'skipCache'
         ],
 
-        /*
-       |--------------------------------------------------------------------------
-       | Methods Allowed
-       |--------------------------------------------------------------------------
-       |
-       | methods cacheable : all, paginate, find, findByField, findWhere, getByCriteria
-       |
-       | Ex:
-       |
-       | 'only'  =>['all','paginate'],
-       |
-       | or
-       |
-       | 'except'  =>['find'],
-       */
+         /*
+         |--------------------------------------------------------------------------
+         | Methods Allowed
+         |--------------------------------------------------------------------------
+         |
+         | methods cacheable : all, paginate, find, findByField, findWhere, getByCriteria
+         |
+         | Ex:
+         |
+         | 'only'  =>['all','paginate'],
+         |
+         | or
+         |
+         | 'except'  =>['find'],
+        */
         'allowed'    => [
             'only'   => null,
             'except' => null
@@ -151,7 +151,7 @@ return [
     | Settings of request parameters names that will be used by Criteria
     |
     */
-    'criteria'   => [
+    'criteria' => [
         /*
         |--------------------------------------------------------------------------
         | Accepted Conditions
@@ -203,7 +203,7 @@ return [
         |   http://prettus.local/?search=lorem&orderBy=id&sortedBy=desc
         |
         */
-        'params'             => [
+        'params' => [
             'search'       => 'search',
             'searchFields' => 'searchFields',
             'filter'       => 'filter',
@@ -218,10 +218,10 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-    'generator'  => [
-        'basePath'      => app_path(),
+    'generator' => [
+        'basePath' => app_path(),
         'rootNamespace' => 'App\\',
-        'paths'         => [
+        'paths' => [
             'models'       => 'Entities',
             'repositories' => 'Repositories',
             'interfaces'   => 'Repositories',

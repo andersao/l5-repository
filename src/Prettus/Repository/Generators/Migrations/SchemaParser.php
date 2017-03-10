@@ -1,4 +1,5 @@
 <?php
+
 namespace Prettus\Repository\Generators\Migrations;
 
 use Illuminate\Contracts\Support\Arrayable;
