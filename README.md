@@ -154,10 +154,10 @@ class Post extends Eloquent { // or Ardent, Or any other Model Class
     protected $fillable = [
         'title',
         'author',
-        ...
+        // ...
      ];
 
-     ...
+     // ...
 }
 ```
 
@@ -177,7 +177,7 @@ class PostRepository extends BaseRepository {
      */
     function model()
     {
-        return "App\\Post";
+        return \App\Post::class;
     }
 }
 ```
@@ -193,9 +193,9 @@ You must first configure the storage location of the repository files. By defaul
 ```php
     ...
     'generator'=>[
-        'basePath'=>app_path(),
-        'rootNamespace'=>'App\\',
-        'paths'=>[
+        'basePath' => app_path(),
+        'rootNamespace' => 'App\\',
+        'paths' => [
             'models'       => 'Entities',
             'repositories' => 'Repositories',
             'interfaces'   => 'Repositories',
@@ -213,7 +213,7 @@ You may want to save the root of your project folder out of the app and add anot
 
 ```php
     ...
-     'generator'=>[
+     'generator' => [
         'basePath'      => base_path('src/Lorem'),
         'rootNamespace' => 'Lorem\\'
     ]
@@ -222,15 +222,15 @@ You may want to save the root of your project folder out of the app and add anot
 Additionally, you may wish to customize where your generated classes end up being saved.  That can be accomplished by editing the `paths` node to your liking.  For example:
 
 ```php
-    'generator'=>[
-        'basePath'=>app_path(),
-        'rootNamespace'=>'App\\',
-        'paths'=>[
-            'models'=>'Models',
-            'repositories'=>'Repositories\\Eloquent',
-            'interfaces'=>'Contracts\\Repositories',
-            'transformers'=>'Transformers',
-            'presenters'=>'Presenters'
+    'generator' => [
+        'basePath' => app_path(),
+        'rootNamespace' => 'App\\',
+        'paths' => [
+            'models' => 'Models',
+            'repositories' => 'Repositories\\Eloquent',
+            'interfaces'   => 'Contracts\\Repositories',
+            'transformers' => 'Transformers',
+            'presenters'   => 'Presenters'
             'validators'   => 'Validators',
             'controllers'  => 'Http/Controllers',
             'provider'     => 'RepositoryServiceProvider',
@@ -327,7 +327,7 @@ class PostsController extends BaseController {
         $this->repository = $repository;
     }
 
-    ....
+    // ...
 }
 ```
 
@@ -378,8 +378,8 @@ Find by result by multiple fields
 ```php
 $posts = $this->repository->findWhere([
     //Default Condition =
-    'state_id'=>'10',
-    'country_id'=>'15',
+    'state_id' => '10',
+    'country_id' => '15',
     //Custom Condition
     ['columnName','>','10']
 ]);
@@ -400,7 +400,7 @@ $posts = $this->repository->findWhereNotIn('id', [6,7,8,9,10]);
 Find all using custom scope
 
 ```php
-$posts = $this->repository->scopeQuery(function($query){
+$posts = $this->repository->scopeQuery(function ($query) {
     return $query->orderBy('sort_order','asc');
 })->all();
 ```
@@ -408,13 +408,13 @@ $posts = $this->repository->scopeQuery(function($query){
 Create new entry in Repository
 
 ```php
-$post = $this->repository->create( Input::all() );
+$post = $this->repository->create(Input::all());
 ```
 
 Update entry in Repository
 
 ```php
-$post = $this->repository->update( Input::all(), $id );
+$post = $this->repository->update(Input::all(), $id);
 ```
 
 Delete entry in Repository
@@ -442,7 +442,7 @@ class MyCriteria implements CriteriaInterface {
 
     public function apply($model, RepositoryInterface $repository)
     {
-        $model = $model->where('user_id','=', Auth::user()->id );
+        $model = $model->where('user_id','=', Auth::user()->id);
         return $model;
     }
 }
@@ -473,9 +473,8 @@ class PostsController extends BaseController {
         $this->repository->pushCriteria(new MyCriteria1());
         $this->repository->pushCriteria(MyCriteria2::class);
         $posts = $this->repository->all();
-		...
+        // ...
     }
-
 }
 ```
 
@@ -492,15 +491,15 @@ use Prettus\Repository\Eloquent\BaseRepository;
 
 class PostRepository extends BaseRepository {
 
-    public function boot(){
+    public function boot() {
         $this->pushCriteria(new MyCriteria());
         // or
         $this->pushCriteria(AnotherCriteria::class);
-        ...
+        // ...
     }
 
     function model(){
-       return "App\\Post";
+       return \App\Post::class;
     }
 }
 ```
@@ -551,11 +550,11 @@ class PostRepository extends BaseRepository {
 
     public function boot(){
         $this->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        ...
+        // ...
     }
 
     function model(){
-       return "App\\Post";
+       return \App\Post::class;
     }
 }
 ```
@@ -566,9 +565,9 @@ In your repository set **$fieldSearchable** with the name of the fields to be se
 
 ```php
 protected $fieldSearchable = [
-	'name',
-	'email',
-	'product.name'
+    'name',
+    'email',
+    'product.name'
 ];
 ```
 
@@ -576,9 +575,9 @@ You can set the type of condition which will be used to perform the query, the d
 
 ```php
 protected $fieldSearchable = [
-	'name'=>'like',
-	'email', // Default Condition "="
-	'your_field'=>'condition'
+    'name' => 'like',
+    'email', // Default Condition "="
+    'your_field' => 'condition'
 ];
 ```
 
@@ -586,11 +585,11 @@ protected $fieldSearchable = [
 ####Enabling in your Controller
 
 ```php
-	public function index()
+    public function index()
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         $posts = $this->repository->all();
-		...
+        // ...
     }
 ```
 
@@ -754,7 +753,7 @@ class PostRepository extends BaseRepository implements CacheableInterface {
 
     use CacheableRepository;
 
-    ...
+    // ...
 }
 ```
 
@@ -767,30 +766,30 @@ You can change the cache settings in the file *config/repository.php* and also d
 *config/repository.php*
 
 ```php
-'cache'=>[
+'cache' => [
     //Enable or disable cache repositories
-    'enabled'   => true,
+    'enabled' => true,
 
     //Lifetime of cache
-    'minutes'   => 30,
+    'minutes' => 30,
 
     //Repository Cache, implementation Illuminate\Contracts\Cache\Repository
-    'repository'=> 'cache',
+    'repository' => 'cache',
 
     //Sets clearing the cache
-    'clean'     => [
+    'clean' => [
         //Enable, disable clearing the cache on changes
         'enabled' => true,
 
         'on' => [
             //Enable, disable clearing the cache when you create an item
-            'create'=>true,
+            'create' => true,
 
             //Enable, disable clearing the cache when upgrading an item
-            'update'=>true,
+            'update' => true,
 
             //Enable, disable clearing the cache when you delete an item
-            'delete'=>true,
+            'delete' => true,
         ]
     ],
     'params' => [
@@ -799,10 +798,10 @@ You can change the cache settings in the file *config/repository.php* and also d
     ],
     'allowed'=>[
         //Allow caching only for some methods
-        'only'  =>null,
+        'only' => null,
 
         //Allow caching for all available methods, except
-        'except'=>null
+        'except' => null
     ],
 ],
 ```
@@ -825,7 +824,7 @@ class PostRepository extends BaseRepository implements CacheableInterface {
 
     use CacheableRepository;
 
-    ...
+    // ...
 }
 ```
 
@@ -894,8 +893,9 @@ class PostRepository extends BaseRepository {
      *
      * @return mixed
      */
-    function model(){
-       return "App\\Post";
+    function model()
+    {
+       return \App\Post::class;
     }
 
     /**
@@ -905,7 +905,7 @@ class PostRepository extends BaseRepository {
      */
     public function validator()
     {
-        return "App\\PostValidator";
+        return \App\PostValidator::class;
     }
 }
 ```
@@ -927,9 +927,9 @@ class PostRepository extends BaseRepository {
      */
      protected $rules = [
         ValidatorInterface::RULE_CREATE => [
-            'title' => 'required',
-            'text'  => 'min:3',
-            'author'=> 'required'
+            'title'  => 'required',
+            'text'   => 'min:3',
+            'author' => 'required'
         ],
         ValidatorInterface::RULE_UPDATE => [
             'title' => 'required'
@@ -942,7 +942,7 @@ class PostRepository extends BaseRepository {
      * @return mixed
      */
     function model(){
-       return "App\\Post";
+       return \App\Post::class;
     }
 
 }
@@ -1023,11 +1023,11 @@ use Prettus\Repository\Eloquent\BaseRepository;
 
 class PostRepository extends BaseRepository {
 
-    ...
+    // ...
 
     public function presenter()
     {
-        return "App\\Presenter\\PostPresenter";
+        return \App\Presenter\PostPresenter::class;
     }
 }
 ```
@@ -1035,7 +1035,7 @@ class PostRepository extends BaseRepository {
 Or enable it in your controller with
 
 ```php
-$this->repository->setPresenter("App\\Presenter\\PostPresenter");
+$this->repository->setPresenter('App\\Presenter\\PostPresenter');
 ```
 
 ###### Using the presenter after from the Model
@@ -1058,10 +1058,10 @@ class Post extends Eloquent implements Presentable {
     protected $fillable = [
         'title',
         'author',
-        ...
+        // ...
      ];
 
-     ...
+     // ...
 }
 ```
 
@@ -1069,21 +1069,20 @@ There, now you can submit your Model individually, See an example:
 
 ```php
 $repository = app('App\PostRepository');
-$repository->setPresenter("Prettus\\Repository\\Presenter\\ModelFractalPresenter");
+$repository->setPresenter('Prettus\\Repository\\Presenter\\ModelFractalPresenter');
 
 //Getting the result transformed by the presenter directly in the search
 $post = $repository->find(1);
 
 print_r( $post ); //It produces an output as array
 
-...
+// ...
 
 //Skip presenter and bringing the original result of the Model
 $post = $repository->skipPresenter()->find(1);
 
 print_r( $post ); //It produces an output as a Model object
 print_r( $post->presenter() ); //It produces an output as array
-
 ```
 
 You can skip the presenter at every visit and use it on demand directly into the model, for it set the `$skipPresenter` attribute to true in your repository:
@@ -1100,7 +1099,7 @@ class PostRepository extends BaseRepository {
 
     public function presenter()
     {
-        return "App\\Presenter\\PostPresenter";
+        return \App\Presenter\PostPresenter::class;
     }
 }
 ```
@@ -1115,7 +1114,9 @@ namespace App;
 use Prettus\Repository\Contracts\Transformable;
 
 class Post extends Eloquent implements Transformable {
-     ...
+
+     // ...
+
      /**
       * @return array
       */
@@ -1139,11 +1140,11 @@ use Prettus\Repository\Eloquent\BaseRepository;
 
 class PostRepository extends BaseRepository {
 
-    ...
+    // ...
 
     public function presenter()
     {
-        return "Prettus\\Repository\\Presenter\\ModelFractalPresenter";
+        return \Prettus\Repository\Presenter\ModelFractalPresenter::class;
     }
 }
 ```
@@ -1151,7 +1152,7 @@ class PostRepository extends BaseRepository {
 Or enable it in your controller with
 
 ```php
-$this->repository->setPresenter("Prettus\\Repository\\Presenter\\ModelFractalPresenter");
+$this->repository->setPresenter('Prettus\\Repository\\Presenter\\ModelFractalPresenter');
 ```
 
 ### Skip Presenter defined in the repository
