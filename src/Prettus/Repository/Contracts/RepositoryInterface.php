@@ -189,7 +189,17 @@ interface RepositoryInterface
      * @return $this
      */
     public function with($relations);
-
+    
+    /**
+     * Load relation with closure
+     *
+     * @param string $relation
+     * @param closure $closure
+     *
+     * @return $this
+     */
+    public function whereHas($relation, $closure);
+    
     /**
      * Add subselect queries to count the relations.
      *
