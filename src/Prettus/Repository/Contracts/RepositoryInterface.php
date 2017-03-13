@@ -266,4 +266,13 @@ interface RepositoryInterface
      * @return $this
      */
     public function skipPresenter($status = true);
+
+    /**
+     * Retrieve first data of repository, or return new Entity
+     *
+     * @param array $attributes
+     *
+     * @return mixed
+     */
+    public function firstOrNew(array $attributes = []);
 }
