@@ -275,4 +275,13 @@ interface RepositoryInterface
      * @return mixed
      */
     public function firstOrNew(array $attributes = []);
+
+    /**
+     * Retrieve first data of repository, or create new Entity
+     *
+     * @param array $attributes
+     *
+     * @return mixed
+     */
+    public function firstOrCreate(array $attributes = []);
 }
