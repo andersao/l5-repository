@@ -280,8 +280,9 @@ interface RepositoryInterface
      * Retrieve first data of repository, or create new Entity
      *
      * @param array $attributes
+     * @param array $values
      *
      * @return mixed
      */
-    public function firstOrCreate(array $attributes = []);
+    public function firstOrCreate(array $attributes, array $values = []);
 }
