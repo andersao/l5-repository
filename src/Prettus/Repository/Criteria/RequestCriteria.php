@@ -68,7 +68,20 @@ class RequestCriteria implements CriteriaInterface
                     $condition = trim(strtolower($condition));
 
                     if (isset($searchData[$field])) {
-                        $value = ($condition == "like" || $condition == "ilike") ? "%{$searchData[$field]}%" : $searchData[$field];
+                        switch ($condition) {
+                            case 'like':
+                            case 'ilike':
+                                $value = "%{$searchData[$field]}%";
+                            break;
+                            case 'between':
+                                $temp = $searchData[$field];
+                                $temp = explode(',', $temp);
+                                $value = $temp;
+                            break;
+                            default:
+                                $value = $searchData[$field];
+                            break;
+                        }
                     } else {
                         if (!is_null($search)) {
                             $value = ($condition == "like" || $condition == "ilike") ? "%{$search}%" : $search;
@@ -89,7 +102,15 @@ class RequestCriteria implements CriteriaInterface
                                     $query->where($field,$condition,$value);
                                 });
                             } else {
-                                $query->where($modelTableName.'.'.$field,$condition,$value);
+                                switch ($condition) {
+                                    case 'between':
+                                        $query->whereBetween($modelTableName.'.'.$field, $value);
+                                    break;
+                                    
+                                    default:
+                                        $query->where($modelTableName.'.'.$field,$condition,$value);
+                                    break;
+                                }
                             }
                             $isFirstField = false;
                         }
