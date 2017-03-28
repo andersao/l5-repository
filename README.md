@@ -74,7 +74,7 @@ $app->register(Prettus\Repository\Providers\LumenRepositoryServiceProvider::clas
 Publish Configuration
 
 ```shell
-php artisan vendor:publish
+php artisan vendor:publish --provider "Prettus\Repository\Providers\RepositoryServiceProvider"
 ```
 
 ## Methods
