@@ -42,5 +42,5 @@
       "dev-develop": "2.2-dev"
     }
   },
-  "minimum-stability": "dev-master"
+  "minimum-stability": "dev"
 }
