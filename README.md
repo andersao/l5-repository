@@ -74,7 +74,7 @@ $app->register(Prettus\Repository\Providers\LumenRepositoryServiceProvider::clas
 Publish Configuration
 
 ```shell
-php artisan vendor:publish
+php artisan vendor:publish --provider "Prettus\Repository\Providers\RepositoryServiceProvider"
 ```
 
 ## Methods
@@ -657,6 +657,22 @@ or
     }
 ]
 ```
+
+By default RequestCriteria makes its queries using the **OR** comparison operator for each query parameter.
+`http://prettus.local/users?search=age:17;email:john@gmail.com`
+
+The above example will execute the following query:
+``` sql
+SELECT * FROM users WHERE age = 17 OR email = 'john@gmail.com';
+```
+
+In order for it to query using the **AND**, pass the *searchJoin* parameter as shown below:
+
+`http://prettus.local/users?search=age:17;email:john@gmail.com&searchJoin=and`
+
+
+
+
 
 Filtering fields
 
