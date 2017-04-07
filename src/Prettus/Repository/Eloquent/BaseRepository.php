@@ -277,7 +277,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function pluck($column, $key = null)
     {
         $this->applyCriteria();
-        
+
         return $this->model->pluck($column, $key);
     }
 
@@ -670,12 +670,45 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         return $this;
     }
 
+    /**
+     * Order collection by a given column
+     *
+     * @param string $column
+     * @param string $direction
+     *
+     * @return $this
+     */
     public function orderBy($column, $direction = 'asc')
     {
         $this->model = $this->model->orderBy($column, $direction);
 
         return $this;
     }
+
+    /**
+     * Add an "order by" clause for a timestamp to the query.
+     *
+     * @param string $column
+     *
+     * @return $this
+     */
+    public function latest($column = 'created_at')
+    {
+        return $this->orderBy($column, 'desc');
+    }
+
+    /**
+     * Add an "order by" clause for a timestamp to the query.
+     *
+     * @param string $column
+     *
+     * @return $this
+     */
+    public function oldest($column = 'created_at')
+    {
+        return $this->orderBy($column, 'asc');
+    }
+
 
     /**
      * Set visible fields

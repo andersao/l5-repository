@@ -95,6 +95,8 @@ php artisan vendor:publish
 - delete($id)
 - deleteWhere(array $where)
 - orderBy($column, $direction = 'asc')
+- latest($column = 'created_at')
+- oldest($column = 'created_at')
 - with(array $relations)
 - hidden(array $fields)
 - visible(array $fields)
