@@ -46,7 +46,7 @@ class RequestCriteria implements CriteriaInterface
 
         if ($search && is_array($fieldsSearchable) && count($fieldsSearchable)) {
 
-            $searchFields = is_array($searchFields) || is_null($searchFields) ? $searchFields : explode(';', $searchFields);
+            $searchFields = is_array($searchFields) || is_null($searchFields) ? $searchFields : array_filter(explode(';', $searchFields));
             $fields = $this->parserFieldsSearch($fieldsSearchable, $searchFields);
             $isFirstField = true;
             $searchData = $this->parserSearchData($search);
@@ -114,7 +114,7 @@ class RequestCriteria implements CriteriaInterface
                 /*
                  * ex.
                  * products|description -> join products on current_table.product_id = products.id order by description
-                 * 
+                 *
                  * products:custom_id|products.description -> join products on current_table.custom_id = products.id order
                  * by products.description (in case both tables have same column name)
                  */
