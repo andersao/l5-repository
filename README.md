@@ -93,16 +93,15 @@ php artisan vendor:publish --provider "Prettus\Repository\Providers\RepositorySe
 - update(array $attributes, $id)
 - updateOrCreate(array $attributes, array $values = [])
 - delete($id)
-- orderBy($column, $direction = 'asc');
-- with(array $relations);
-- has(string $relation);
-- whereHas(string $relation, closure $closure);
-- hidden(array $fields);
-- visible(array $fields);
-- scopeQuery(Closure $scope);
-- getFieldsSearchable();
-- setPresenter($presenter);
-- skipPresenter($status = true);
+- deleteWhere(array $where)
+- orderBy($column, $direction = 'asc')
+- with(array $relations)
+- hidden(array $fields)
+- visible(array $fields)
+- scopeQuery(Closure $scope)
+- getFieldsSearchable()
+- setPresenter($presenter)
+- skipPresenter($status = true)
 
 
 ### Prettus\Repository\Contracts\RepositoryCriteriaInterface
@@ -421,6 +420,12 @@ Delete entry in Repository
 
 ```php
 $this->repository->delete($id)
+```
+
+Delete multiple entries in Repository
+
+```php
+$this->repository->deleteWhere($where)
 ```
 
 ### Create a Criteria
