@@ -114,7 +114,7 @@ class RequestCriteria implements CriteriaInterface
                 /*
                  * ex.
                  * products|description -> join products on current_table.product_id = products.id order by description
-                 * 
+                 *
                  * products:custom_id|products.description -> join products on current_table.custom_id = products.id order
                  * by products.description (in case both tables have same column name)
                  */
@@ -143,7 +143,19 @@ class RequestCriteria implements CriteriaInterface
                     ->orderBy($sortColumn, $sortedBy)
                     ->addSelect($table.'.*');
             } else {
-                $model = $model->orderBy($orderBy, $sortedBy);
+                if (strpos($orderBy, ".")) {
+                    $split = explode('.', $orderBy);
+                    $lastColumn = array_pop($split);
+                    foreach($split as $column) {
+                        $snakeName = snake_case($column);
+                        $keyName = $snakeName.'_id';
+                        $tableName = rtrim($snakeName.'s');
+                        $model = $model->leftJoin($tableName, $keyName, '=', $tableName.'.id' );
+                    }
+                    $model = $model->orderBy($tableName.'.'.$lastColumn, $sortedBy);
+                } else {
+                    $model = $model->orderBy($orderBy, $sortedBy);
+                }
             }
         }
 
