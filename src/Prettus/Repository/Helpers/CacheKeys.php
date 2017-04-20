@@ -4,6 +4,7 @@ namespace Prettus\Repository\Helpers;
 
 /**
  * Class CacheKeys
+ *
  * @package Prettus\Repository\Helpers
  */
 class CacheKeys

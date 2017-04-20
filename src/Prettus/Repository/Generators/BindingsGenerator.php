@@ -3,6 +3,7 @@ namespace Prettus\Repository\Generators;
 
 /**
  * Class BindingsGenerator
+ *
  * @package Prettus\Repository\Generators
  */
 class BindingsGenerator extends Generator

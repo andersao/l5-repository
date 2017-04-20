@@ -3,6 +3,7 @@ namespace Prettus\Repository\Contracts;
 
 /**
  * Interface RepositoryInterface
+ *
  * @package Prettus\Repository\Contracts
  */
 interface RepositoryInterface

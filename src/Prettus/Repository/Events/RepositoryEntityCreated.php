@@ -3,6 +3,7 @@ namespace Prettus\Repository\Events;
 
 /**
  * Class RepositoryEntityCreated
+ *
  * @package Prettus\Repository\Events
  */
 class RepositoryEntityCreated extends RepositoryEventBase

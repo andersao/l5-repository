@@ -11,6 +11,7 @@ use Prettus\Repository\Generators\Commands\ValidatorCommand;
 
 /**
  * Class LumenRepositoryServiceProvider
+ *
  * @package Prettus\Repository\Providers
  */
 class LumenRepositoryServiceProvider extends ServiceProvider

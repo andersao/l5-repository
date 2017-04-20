@@ -4,6 +4,7 @@ namespace Prettus\Repository\Generators;
 
 /**
  * Class Stub
+ *
  * @package Prettus\Repository\Generators
  */
 class Stub
@@ -14,12 +15,14 @@ class Stub
      * @var null|string
      */
     protected static $basePath = null;
+
     /**
      * The stub path.
      *
      * @var string
      */
     protected $path;
+    
     /**
      * The replacements array.
      *

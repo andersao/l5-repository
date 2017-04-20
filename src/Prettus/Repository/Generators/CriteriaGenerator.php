@@ -4,6 +4,7 @@ namespace Prettus\Repository\Generators;
 
 /**
  * Class CriteriaGenerator
+ *
  * @package Prettus\Repository\Generators
  */
 class CriteriaGenerator extends Generator
@@ -27,6 +28,7 @@ class CriteriaGenerator extends Generator
 
     /**
      * Get generator path config node.
+     *
      * @return string
      */
     public function getPathConfigNode()

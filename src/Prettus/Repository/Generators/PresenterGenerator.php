@@ -3,6 +3,7 @@ namespace Prettus\Repository\Generators;
 
 /**
  * Class PresenterGenerator
+ *
  * @package Prettus\Repository\Generators
  */
 
