@@ -132,6 +132,18 @@ interface RepositoryInterface
     public function findWhereNotIn($field, array $values, $columns = ['*']);
 
     /**
+     * Find data between values
+     *
+     * @param       $field
+     * @param array $values
+     * @param array $columns
+     *
+     * @return mixed
+     */
+
+    public function findWhereBetween($field, array $values, $columns = ['*']);
+    
+    /**
      * Save a new entity in repository
      *
      * @param array $attributes
