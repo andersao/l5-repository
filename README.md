@@ -23,13 +23,13 @@ You want to know a little more about the Repository pattern? [Read this great ar
     - <a href="#prettusrepositorycontractspresenterinterface">PresenterInterface</a>
     - <a href="#prettusrepositorycontractscriteriainterface">CriteriaInterface</a>
 - <a href="#usage">Usage</a>
-	- <a href="#create-a-model">Create a Model</a>
-	- <a href="#create-a-repository">Create a Repository</a>
-	- <a href="#generators">Generators</a>
-	- <a href="#use-methods">Use methods</a>
-	- <a href="#create-a-criteria">Create a Criteria</a>
-	- <a href="#using-the-criteria-in-a-controller">Using the Criteria in a Controller</a>
-	- <a href="#using-the-requestcriteria">Using the RequestCriteria</a>
+    - <a href="#create-a-model">Create a Model</a>
+    - <a href="#create-a-repository">Create a Repository</a>
+    - <a href="#generators">Generators</a>
+    - <a href="#use-methods">Use methods</a>
+    - <a href="#create-a-criteria">Create a Criteria</a>
+    - <a href="#using-the-criteria-in-a-controller">Using the Criteria in a Controller</a>
+    - <a href="#using-the-requestcriteria">Using the RequestCriteria</a>
 - <a href="#cache">Cache</a>
     - <a href="#cache-usage">Usage</a>
     - <a href="#cache-config">Config</a>
@@ -473,7 +473,7 @@ class PostsController extends BaseController {
         $this->repository->pushCriteria(new MyCriteria1());
         $this->repository->pushCriteria(MyCriteria2::class);
         $posts = $this->repository->all();
-		...
+        ...
     }
 
 }
@@ -532,7 +532,7 @@ You can perform a dynamic search, filter the data and customize the queries.
 
 To use the Criteria in your repository, you can add a new criteria in the boot method of your repository, or directly use in your controller, in order to filter out only a few requests.
 
-####Enabling in your Repository
+#### Enabling in your Repository
 
 ```php
 use Prettus\Repository\Eloquent\BaseRepository;
@@ -541,7 +541,7 @@ use Prettus\Repository\Criteria\RequestCriteria;
 
 class PostRepository extends BaseRepository {
 
-	/**
+    /**
      * @var array
      */
     protected $fieldSearchable = [
@@ -566,9 +566,9 @@ In your repository set **$fieldSearchable** with the name of the fields to be se
 
 ```php
 protected $fieldSearchable = [
-	'name',
-	'email',
-	'product.name'
+    'name',
+    'email',
+    'product.name'
 ];
 ```
 
@@ -576,21 +576,21 @@ You can set the type of condition which will be used to perform the query, the d
 
 ```php
 protected $fieldSearchable = [
-	'name'=>'like',
-	'email', // Default Condition "="
-	'your_field'=>'condition'
+    'name'=>'like',
+    'email', // Default Condition "="
+    'your_field'=>'condition'
 ];
 ```
 
 
-####Enabling in your Controller
+#### Enabling in your Controller
 
 ```php
-	public function index()
+    public function index()
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         $posts = $this->repository->all();
-		...
+        ...
     }
 ```
 
@@ -733,7 +733,7 @@ Add relationship
 
 
 
-####Overwrite params name
+#### Overwrite params name
 
 You can change the name of the parameters in the configuration file **config/repository.php**
 
