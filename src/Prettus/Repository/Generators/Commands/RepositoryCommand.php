@@ -46,7 +46,7 @@ class RepositoryCommand extends Command
      *
      * @return void
      */
-    public function fire()
+    public function handle()
     {
         $this->generators = new Collection();
 

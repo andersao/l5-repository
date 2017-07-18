@@ -38,7 +38,7 @@ class ControllerCommand extends Command
      *
      * @return void
      */
-    public function fire()
+    public function handle()
     {
         try {
             // Generate create request for controller

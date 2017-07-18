@@ -34,7 +34,7 @@ class EntityCommand extends Command
      *
      * @return void
      */
-    public function fire()
+    public function handle()
     {
 
         if ($this->confirm('Would you like to create a Presenter? [y|N]')) {
