@@ -1,22 +1,26 @@
 {
   "name": "prettus/l5-repository",
-  "description": "Laravel 5 - Repositories to  the database layer",
+  "description": "Laravel 5 - Repositories to the database layer",
   "keywords": ["laravel", "repository", "eloquent", "model", "cache"],
   "license": "MIT",
   "authors": [
     {
       "name": "Anderson Andrade",
       "email": "contato@andersonandra.de",
+      "homepage": "http://andersonandra.de",
       "role": "Developer"
     }
   ],
+  "homepage": "https://github.com/andersao/l5-repository",
   "support": {
     "email": "contato@andersonandra.de",
     "issues":"https://github.com/andersao/l5-repository/issues",
-    "wiki":"https://github.com/andersao/l5-repository",
+    "wiki":"https://github.com/andersao/l5-repository/wiki",
+    "docs":"https://github.com/andersao/l5-repository/wiki",
     "source":"https://github.com/andersao/l5-repository"
   },
   "require": {
+    "php": ">=5.6.4",
     "illuminate/http": "~5.0",
     "illuminate/config": "~5.0",
     "illuminate/support": "~5.0",
@@ -26,9 +30,17 @@
     "illuminate/filesystem": "~5.0",
     "prettus/laravel-validation": "1.1.*"
   },
+  "require-dev": {
+    "phpunit/phpunit": "~5.7"
+  },
   "autoload": {
     "psr-4": {
       "Prettus\\Repository\\": "src/Prettus/Repository/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
     }
   },
   "config": {
@@ -36,11 +48,12 @@
   },
   "suggest": {
     "league/fractal": "Required to use the Fractal Presenter (0.12.*).",
-    "robclancy/presenter": "Required to use the Presenter Model (1.3.*)"
+    "robclancy/presenter": "Required to use the Presenter Model (1.3.*)",
+    "prettus/laravel-validation": "Required to use the Validation (1.1.*)"
   },
   "extra": {
     "branch-alias": {
-      "dev-develop": "2.2-dev"
+      "3.0.0-dev": "3.0-dev"
     }
   },
   "minimum-stability": "stable"
