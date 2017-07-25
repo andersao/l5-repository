@@ -51,10 +51,5 @@
     "robclancy/presenter": "Required to use the Presenter Model (1.3.*)",
     "prettus/laravel-validation": "Required to use the Validation (1.1.*)"
   },
-  "extra": {
-    "branch-alias": {
-      "3.0.0-dev": "3.0-dev"
-    }
-  },
   "minimum-stability": "stable"
 }
