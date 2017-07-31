@@ -50,11 +50,15 @@ class RepositoryCommand extends Command
     {
         $this->generators = new Collection();
 
-        $this->generators->push(new MigrationGenerator([
+        $migrationGenerator = new MigrationGenerator([
             'name'   => 'create_' . snake_case(str_plural($this->argument('name'))) . '_table',
             'fields' => $this->option('fillable'),
             'force'  => $this->option('force'),
-        ]));
+        ]);
+
+        if (!$this->option('skip-migration')) {
+            $this->generators->push($migrationGenerator);
+        }
 
         $modelGenerator = new ModelGenerator([
             'name'     => $this->argument('name'),
@@ -62,7 +66,9 @@ class RepositoryCommand extends Command
             'force'    => $this->option('force')
         ]);
 
-        $this->generators->push($modelGenerator);
+        if (!$this->option('skip-model')) {
+            $this->generators->push($modelGenerator);
+        }
 
         $this->generators->push(new RepositoryInterfaceGenerator([
             'name'  => $this->argument('name'),
@@ -149,7 +155,21 @@ class RepositoryCommand extends Command
                 InputOption::VALUE_NONE,
                 'Force the creation if file already exists.',
                 null
-            ]
+            ],
+            [
+                'skip-migration',
+                null,
+                InputOption::VALUE_NONE,
+                'Skip the creation of a migration file.',
+                null,
+            ],
+            [
+                'skip-model',
+                null,
+                InputOption::VALUE_NONE,
+                'Skip the creation of a model.',
+                null,
+            ],
         ];
     }
 }
