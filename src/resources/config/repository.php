@@ -209,15 +209,17 @@ return [
         |   http://prettus.local/?search=lorem&searchJoin=or
         |
         */
-        'params'             => [
+        'params'           => [
             'search'       => 'search',
             'searchFields' => 'searchFields',
             'filter'       => 'filter',
             'orderBy'      => 'orderBy',
             'sortedBy'     => 'sortedBy',
             'with'         => 'with',
-            'searchJoin'   => 'searchJoin'            
-        ]
+            'searchJoin'   => 'searchJoin',
+        ],
+
+        'hashids' => false,
     ],
     /*
     |--------------------------------------------------------------------------

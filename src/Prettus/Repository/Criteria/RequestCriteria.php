@@ -54,6 +54,25 @@ class RequestCriteria implements CriteriaInterface
             $search = $this->parserSearchValue($search);
             $modelForceAndWhere = strtolower($searchJoin) === 'and';
 
+            // this block replaces the hashed id with the decoded (real) id
+            // check, if we have hashed ids
+            if(config('repository.criteria.hashids', false)) {
+
+                $hashIDKey = $repository->getHashIDKey();
+                $hashIDDecoder = $repository->getHashIDDecoder();
+
+                if($hashIDKey && $hashIDDecoder) {
+                    // check, if the hashIDKey is present in the search array
+                    if (array_key_exists($hashIDKey, $searchData)) {
+
+                        // and check, if there is a respective decoder method available
+                        if (method_exists($model, $hashIDDecoder)) {
+                            $searchData[$hashIDKey] = $model->{$hashIDDecoder}($searchData[$hashIDKey]);
+                        }
+                    }
+                }
+            }
+
             $model = $model->where(function ($query) use ($fields, $search, $searchData, $isFirstField, $modelForceAndWhere) {
                 /** @var Builder $query */
 

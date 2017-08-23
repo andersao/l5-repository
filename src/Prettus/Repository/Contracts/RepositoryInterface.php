@@ -284,4 +284,18 @@ interface RepositoryInterface
      * @return mixed
      */
     public function firstOrCreate(array $attributes = []);
+
+    /**
+     * Retrieves the name of the field where hashed ID is stored
+     *
+     * @return string
+     */
+    public function getHashIDKey();
+
+    /**
+     * Retrieves the name of the method used to decode the hashed id
+     *
+     * @return string
+     */
+    public function getHashIDDecoder();
 }

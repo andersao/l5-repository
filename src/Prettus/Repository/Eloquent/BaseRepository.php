@@ -83,6 +83,20 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     protected $scopeQuery = null;
 
     /**
+     * Default value for the name of the field where the hashed id is stored
+     *
+     * @var string
+     */
+    protected $hashIDKey = 'id';
+
+    /**
+     * Default value for the name of the method to decode the hashed id
+     *
+     * @var string
+     */
+    protected $hashIDDecoder = 'decode';
+
+    /**
      * @param Application $app
      */
     public function __construct(Application $app)
@@ -332,7 +346,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         return $this->parserResult($results);
     }
-
 
     /**
      * Retrieve first data of repository
@@ -982,5 +995,25 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         }
 
         return $result;
+    }
+
+    /**
+     * Retrieves the name of the field where hashed ID is stored
+     *
+     * @return string
+     */
+    public function getHashIDKey()
+    {
+        return $this->hashIDKey;
+    }
+
+    /**
+     * Retrieves the name of the method used to decode the hashed id
+     *
+     * @return string
+     */
+    public function getHashIDDecoder()
+    {
+        return $this->hashIDDecoder;
     }
 }
