@@ -56,6 +56,22 @@ return [
 
         /*
          |--------------------------------------------------------------------------
+         | Cache Driver
+         |--------------------------------------------------------------------------
+         |
+         | Select one option to store keys of cache. 
+         | Options: file|origin
+         |
+         | * file: This is the original format that this packages works, storing a 
+         |         json file in the storage path in the project
+         | * origin: Store the cache keys in the cache system configured in the 
+         |           project
+         |
+         */
+        'driver'    => 'file',
+
+        /*
+         |--------------------------------------------------------------------------
          | Cache Minutes
          |--------------------------------------------------------------------------
          |
