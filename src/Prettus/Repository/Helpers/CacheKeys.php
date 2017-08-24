@@ -60,14 +60,12 @@ class CacheKeys
                 self::storeKeys();
             $content = file_get_contents($file);
         }
-        else if( config('repository.cache.driver') == 'origin' ){
-            $content = cache( self::$keyStoreKeys , null);
-        }
+        else if( config('repository.cache.driver') == 'origin' )
+            $content = cache( self::$keyStoreKeys );
         else
             throw new RepositoryException("No valid cache driver", 1);
 
-        self::$keys = json_decode($content, []);
-
+        self::$keys = json_decode($content, true);
         return self::$keys;
     }
 
