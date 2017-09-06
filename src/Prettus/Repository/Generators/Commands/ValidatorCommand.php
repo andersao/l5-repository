@@ -48,7 +48,7 @@ class ValidatorCommand extends Command
      *
      * @return void
      */
-    public function fire()
+    public function handle()
     {
         try {
             (new ValidatorGenerator([

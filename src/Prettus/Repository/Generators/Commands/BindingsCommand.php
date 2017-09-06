@@ -48,7 +48,7 @@ class BindingsCommand extends Command
      *
      * @return void
      */
-    public function fire()
+    public function handle()
     {
         try {
             $bindingGenerator = new BindingsGenerator([
