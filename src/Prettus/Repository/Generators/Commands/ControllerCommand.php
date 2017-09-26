@@ -16,14 +16,14 @@ class ControllerCommand extends Command
      *
      * @var string
      */
-    protected $name = 'make:resource';
+    protected $name = 'make:rest-controller';
 
     /**
      * The description of command.
      *
      * @var string
      */
-    protected $description = 'Create a new RESTfull controller.';
+    protected $description = 'Create a new RESTful controller.';
 
     /**
      * The type of class being generated.

@@ -67,7 +67,7 @@ class EntityCommand extends Command
             ]);
         }
 
-        if ($this->confirm('Would you like to create a Controller? [y|N]')) {
+        if ($this->confirm('Would you like to create a RESTful Controller? [y|N]')) {
 
             $resource_args = [
                 'name'    => $this->argument('name')
@@ -79,7 +79,7 @@ class EntityCommand extends Command
             }
 
             // Generate a controller resource
-            $this->call('make:resource',$resource_args);
+            $this->call('make:rest-controller',$resource_args);
         }
 
         $this->call('make:repository', [
