@@ -34,7 +34,8 @@ return [
         'params'     => [
             'include' => 'include'
         ],
-        'serializer' => League\Fractal\Serializer\DataArraySerializer::class
+        'serializer' => League\Fractal\Serializer\DataArraySerializer::class,
+        'pagination' => League\Fractal\Pagination\IlluminatePaginatorAdapter::class
     ],
 
     /*
@@ -216,7 +217,7 @@ return [
             'orderBy'      => 'orderBy',
             'sortedBy'     => 'sortedBy',
             'with'         => 'with',
-            'searchJoin'   => 'searchJoin'            
+            'searchJoin'   => 'searchJoin'
         ]
     ],
     /*

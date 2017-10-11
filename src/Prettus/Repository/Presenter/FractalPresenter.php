@@ -4,10 +4,8 @@ namespace Prettus\Repository\Presenter;
 use Exception;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Pagination\AbstractPaginator;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use League\Fractal\Manager;
-use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\SerializerAbstract;
@@ -154,9 +152,10 @@ abstract class FractalPresenter implements PresenterInterface
      */
     protected function transformPaginator($paginator)
     {
+        $pagination = config('repository.fractal.pagination', 'League\\Fractal\\Pagination\\IlluminatePaginatorAdapter');
         $collection = $paginator->getCollection();
         $resource = new Collection($collection, $this->getTransformer(), $this->resourceKeyCollection);
-        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+        $resource->setPaginator(new $pagination($paginator));
 
         return $resource;
     }
