@@ -135,7 +135,7 @@ class RequestCriteria implements CriteriaInterface
                      * ex.
                      * products -> product_id
                      */
-                    $prefix = rtrim($sortTable, 's');
+                    $prefix = str_singular($sortTable);
                     $keyName = $table.'.'.$prefix.'_id';
                 }
 
