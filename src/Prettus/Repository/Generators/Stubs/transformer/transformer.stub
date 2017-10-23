@@ -13,8 +13,8 @@ class $CLASS$Transformer extends TransformerAbstract
 {
 
     /**
-     * Transform the \$CLASS$ entity
-     * @param \$CLASS$ $model
+     * Transform the $CLASS$ entity
+     * @param $MODEL$ $model
      *
      * @return array
      */
