@@ -532,7 +532,7 @@ You can perform a dynamic search, filter the data and customize the queries.
 
 To use the Criteria in your repository, you can add a new criteria in the boot method of your repository, or directly use in your controller, in order to filter out only a few requests.
 
-####Enabling in your Repository
+#### Enabling in your Repository
 
 ```php
 use Prettus\Repository\Eloquent\BaseRepository;
@@ -583,7 +583,7 @@ protected $fieldSearchable = [
 ```
 
 
-####Enabling in your Controller
+#### Enabling in your Controller
 
 ```php
 	public function index()
