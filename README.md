@@ -56,6 +56,12 @@ composer require prettus/l5-repository
 
 ### Laravel
 
+#### >= laravel5.5
+
+ServiceProvider will be attached automatically
+
+#### Other
+
 In your `config/app.php` add `Prettus\Repository\Providers\RepositoryServiceProvider::class` to the end of the `providers` array:
 
 ```php
