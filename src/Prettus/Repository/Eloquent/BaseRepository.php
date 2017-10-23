@@ -100,7 +100,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function boot()
     {
-
+        //
     }
 
     /**
@@ -331,6 +331,18 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->resetScope();
 
         return $this->parserResult($results);
+    }
+
+    /**
+     * Alias of All method
+     *
+     * @param array $columns
+     *
+     * @return mixed
+     */
+    public function get($columns = ['*'])
+    {
+        return $this->all($columns);
     }
 
 
@@ -963,7 +975,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function parserResult($result)
     {
         if ($this->presenter instanceof PresenterInterface) {
-
             if ($result instanceof Collection || $result instanceof LengthAwarePaginator) {
                 $result->each(function ($model) {
                     if ($model instanceof Presentable) {
