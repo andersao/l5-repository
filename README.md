@@ -992,7 +992,7 @@ The second way is to make your model implement the Transformable interface, and 
 php artisan make:transformer Post
 ```
 
-This wil generate the class beneath.
+This will generate the class beneath.
 
 ###### Create a Transformer Class
 
