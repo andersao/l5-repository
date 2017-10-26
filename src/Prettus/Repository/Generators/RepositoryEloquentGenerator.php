@@ -123,8 +123,6 @@ class RepositoryEloquentGenerator extends Generator
             'rules' => $this->rules,
             'force' => $this->force,
         ]);
-        
-        $validatorGenerator->run();
 
         $validator = $validatorGenerator->getRootNamespace() . '\\' . $validatorGenerator->getName();
 
