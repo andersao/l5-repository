@@ -99,6 +99,7 @@ php artisan vendor:publish --provider "Prettus\Repository\Providers\RepositorySe
 - update(array $attributes, $id)
 - updateOrCreate(array $attributes, array $values = [])
 - delete($id)
+- deleteWhere(array $where)
 - orderBy($column, $direction = 'asc');
 - with(array $relations);
 - has(string $relation);
@@ -427,6 +428,16 @@ Delete entry in Repository
 
 ```php
 $this->repository->delete($id)
+```
+
+Delete entry in Repository by multiple fields
+
+```php
+$this->repository->deleteWhere([
+    //Default Condition =
+    'state_id'=>'10',
+    'country_id'=>'15',
+])
 ```
 
 ### Create a Criteria
