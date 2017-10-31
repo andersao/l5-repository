@@ -661,6 +661,12 @@ or
 
 or
 
+Search one field by multiple values 
+
+`http://prettus.local/users?search=name:John Doe:Jane Doe`
+
+or
+
 `http://prettus.local/users?search=name:John;email:john@gmail.com&searchFields=name:like;email:=`
 
 ```json
