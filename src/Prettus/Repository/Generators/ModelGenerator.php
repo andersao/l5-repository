@@ -77,9 +77,9 @@ class ModelGenerator extends Generator
     public function getReplacements()
     {
         return array_merge(parent::getReplacements(), [
-            'fillable' => $this->getFillable(),
-            'parent_class'    => $this->getParentClass(),
-            'parent_class_name'    => $this->getParentClassName(),
+            'fillable'          => $this->getFillable(),
+            'parent_class'      => $this->getParentClass(),
+            'parent_class_name' => $this->getParentClassName(),
         ]);
     }
 

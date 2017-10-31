@@ -96,14 +96,14 @@ class ControllerGenerator extends Generator
     {
 
         return array_merge(parent::getReplacements(), [
-            'controller' => $this->getControllerName(),
-            'plural'     => $this->getPluralName(),
-            'singular'   => $this->getSingularName(),
-            'validator'  => $this->getValidator(),
-            'repository' => $this->getRepository(),
-            'appname'    => $this->getAppNamespace(),
-            'parent_class'    => $this->getParentClass(),
-            'parent_class_name'    => $this->getParentClassName(),
+            'controller'        => $this->getControllerName(),
+            'plural'            => $this->getPluralName(),
+            'singular'          => $this->getSingularName(),
+            'validator'         => $this->getValidator(),
+            'repository'        => $this->getRepository(),
+            'appname'           => $this->getAppNamespace(),
+            'parent_class'      => $this->getParentClass(),
+            'parent_class_name' => $this->getParentClassName(),
         ]);
     }
 

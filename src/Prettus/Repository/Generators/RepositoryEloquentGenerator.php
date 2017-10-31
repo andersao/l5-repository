@@ -81,13 +81,13 @@ class RepositoryEloquentGenerator extends Generator
         ], '\\', $repository);
 
         return array_merge(parent::getReplacements(), [
-            'fillable'      => $this->getFillable(),
-            'use_validator' => $this->getValidatorUse(),
-            'validator'     => $this->getValidatorMethod(),
-            'repository'    => $repository,
-            'model'         => isset($this->options['model']) ? $this->options['model'] : '',
-            'parent_class'    => $this->getParentClass(),
-            'parent_class_name'    => $this->getParentClassName(),
+            'fillable'          => $this->getFillable(),
+            'use_validator'     => $this->getValidatorUse(),
+            'validator'         => $this->getValidatorMethod(),
+            'repository'        => $repository,
+            'model'             => isset($this->options['model']) ? $this->options['model'] : '',
+            'parent_class'      => $this->getParentClass(),
+            'parent_class_name' => $this->getParentClassName(),
         ]);
     }
 

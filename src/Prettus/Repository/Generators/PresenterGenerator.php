@@ -63,9 +63,9 @@ class PresenterGenerator extends Generator
         echo $transformer;
 
         return array_merge(parent::getReplacements(), [
-            'transformer' => $transformer,
-            'parent_class'    => $this->getParentClass(),
-            'parent_class_name'    => $this->getParentClassName(),
+            'transformer'       => $transformer,
+            'parent_class'      => $this->getParentClass(),
+            'parent_class_name' => $this->getParentClassName(),
         ]);
     }
 

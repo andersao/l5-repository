@@ -82,9 +82,9 @@ class TransformerGenerator extends Generator
         ], '\\', $model);
 
         return array_merge(parent::getReplacements(), [
-            'model' => $model,
-            'parent_class'    => $this->getParentClass(),
-            'parent_class_name'    => $this->getParentClassName(),
+            'model'             => $model,
+            'parent_class'      => $this->getParentClass(),
+            'parent_class_name' => $this->getParentClassName(),
         ]);
     }
 }
