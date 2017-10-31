@@ -72,8 +72,8 @@ class RequestCriteria implements CriteriaInterface
                         $searches = $searchData[$field];
                         if(is_array($searches)){
                             //if we have an array of search values we need to keep them as array of searches
-                            foreach($searches as $search){
-                                $value[] = ($condition == "like" || $condition == "ilike") ? "%{$search}%" : $search;
+                            foreach($searches as $searchValue){
+                                $value[] = ($condition == "like" || $condition == "ilike") ? "%{$searchValue}%" : $searchValue;
                             }
                         } else {
                             $value = ($condition == "like" || $condition == "ilike") ? "%{$searches}%" : $searches;
