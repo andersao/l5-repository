@@ -2,7 +2,7 @@
 
 $NAMESPACE$
 
-use Prettus\Repository\Eloquent\BaseRepository;
+$PARENT_CLASS$
 use Prettus\Repository\Criteria\RequestCriteria;
 use $REPOSITORY$
 use $MODEL$;
@@ -12,7 +12,7 @@ $USE_VALIDATOR$
  * Class $CLASS$RepositoryEloquent
  * @package $NAMESPACE$
  */
-class $CLASS$RepositoryEloquent extends BaseRepository implements $CLASS$Repository
+class $CLASS$RepositoryEloquent extends $PARENT_CLASS_NAME$ implements $CLASS$Repository
 {
     /**
      * Specify Model class name

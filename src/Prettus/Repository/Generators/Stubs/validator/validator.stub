@@ -2,10 +2,10 @@
 
 $NAMESPACE$
 
+$PARENT_CLASS$
 use \Prettus\Validator\Contracts\ValidatorInterface;
-use \Prettus\Validator\LaravelValidator;
 
-class $CLASS$Validator extends LaravelValidator
+class $CLASS$Validator extends $PARENT_CLASS_NAME$
 {
 
     protected $rules = [

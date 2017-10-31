@@ -2,14 +2,14 @@
 
 $NAMESPACE$
 
-use League\Fractal\TransformerAbstract;
+$PARENT_CLASS$
 use $MODEL$;
 
 /**
  * Class $CLASS$Transformer
  * @package $NAMESPACE$
  */
-class $CLASS$Transformer extends TransformerAbstract
+class $CLASS$Transformer extends $PARENT_CLASS_NAME$
 {
 
     /**

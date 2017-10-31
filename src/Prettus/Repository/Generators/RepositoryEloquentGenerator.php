@@ -38,6 +38,16 @@ class RepositoryEloquentGenerator extends Generator
     }
 
     /**
+     * Get parent class config node.
+     *
+     * @return string
+     */
+    public function getParentClassConfigNode()
+    {
+        return 'repository';
+    }
+
+    /**
      * Get destination path for generated file.
      *
      * @return string
@@ -75,7 +85,9 @@ class RepositoryEloquentGenerator extends Generator
             'use_validator' => $this->getValidatorUse(),
             'validator'     => $this->getValidatorMethod(),
             'repository'    => $repository,
-            'model'         => isset($this->options['model']) ? $this->options['model'] : ''
+            'model'         => isset($this->options['model']) ? $this->options['model'] : '',
+            'parent_class'    => $this->getParentClass(),
+            'parent_class_name'    => $this->getParentClassName(),
         ]);
     }
 

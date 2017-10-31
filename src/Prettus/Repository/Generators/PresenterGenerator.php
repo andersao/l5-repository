@@ -36,6 +36,16 @@ class PresenterGenerator extends Generator
     }
 
     /**
+     * Get parent class config node.
+     *
+     * @return string
+     */
+    public function getParentClassConfigNode()
+    {
+        return 'presenter';
+    }
+
+    /**
      * Get array replacements.
      *
      * @return array
@@ -53,7 +63,9 @@ class PresenterGenerator extends Generator
         echo $transformer;
 
         return array_merge(parent::getReplacements(), [
-            'transformer' => $transformer
+            'transformer' => $transformer,
+            'parent_class'    => $this->getParentClass(),
+            'parent_class_name'    => $this->getParentClassName(),
         ]);
     }
 

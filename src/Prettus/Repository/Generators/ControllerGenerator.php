@@ -36,6 +36,16 @@ class ControllerGenerator extends Generator
     }
 
     /**
+     * Get parent class config node.
+     *
+     * @return string
+     */
+    public function getParentClassConfigNode()
+    {
+        return 'controller';
+    }
+
+    /**
      * Get destination path for generated file.
      *
      * @return string
@@ -92,6 +102,8 @@ class ControllerGenerator extends Generator
             'validator'  => $this->getValidator(),
             'repository' => $this->getRepository(),
             'appname'    => $this->getAppNamespace(),
+            'parent_class'    => $this->getParentClass(),
+            'parent_class_name'    => $this->getParentClassName(),
         ]);
     }
 

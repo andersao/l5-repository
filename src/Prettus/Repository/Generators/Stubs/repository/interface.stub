@@ -2,13 +2,13 @@
 
 $NAMESPACE$
 
-use Prettus\Repository\Contracts\RepositoryInterface;
+$PARENT_CLASS$
 
 /**
  * Interface $CLASS$Repository
  * @package $NAMESPACE$
  */
-interface $CLASS$Repository extends RepositoryInterface
+interface $CLASS$Repository extends $PARENT_CLASS_NAME$
 {
     //
 }

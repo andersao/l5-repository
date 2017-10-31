@@ -239,6 +239,15 @@ return [
             'controllers'  => 'Http/Controllers',
             'provider'     => 'RepositoryServiceProvider',
             'criteria'     => 'Criteria'
+        ],
+        'parentClasses'    => [
+            'model'        => \Illuminate\Database\Eloquent\Model::class,
+            'repository'   => \Prettus\Repository\Eloquent\BaseRepository::class,
+            'interface'    => \Prettus\Repository\Contracts\RepositoryInterface::class,
+            'transformer'  => \League\Fractal\TransformerAbstract::class,
+            'presenter'    => \Prettus\Repository\Presenter\FractalPresenter::class,
+            'validator'    => \Prettus\Validator\LaravelValidator::class,
+            'controller'   => \App\Http\Controllers\Controller::class,
         ]
     ]
 ];

@@ -237,7 +237,50 @@ abstract class Generator
     }
 
 
+    /**
+     * Get class-specific parent class.
+     *
+     * @param $class
+     *
+     * @return string
+     */
+    public function getConfigGeneratorParentClass($class)
+    {
+        switch ($class) {
+            case ('model' === $class):
+                $path = config('repository.generator.parentClasses.model', \Illuminate\Database\Eloquent\Model::class);
+                break;
+            case ('repository' === $class):
+                $path = config('repository.generator.parentClasses.repository', Prettus\Repository\Eloquent\BaseRepository::class);
+                break;
+            case ('interface' === $class):
+                $path = config('repository.generator.parentClasses.interface', Prettus\Repository\Contracts\RepositoryInterface::class);
+                break;
+            case ('presenter' === $class):
+                $path = config('repository.generator.parentClasses.presenter', Prettus\Repository\Presenter\FractalPresenter::class);
+                break;
+            case ('transformer' === $class):
+                $path = config('repository.generator.parentClasses.transformer', League\Fractal\TransformerAbstract::class);
+                break;
+            case ('validator' === $class):
+                $path = config('repository.generator.parentClasses.validator', \Prettus\Validator\LaravelValidator::class);
+                break;
+            case ('controller' === $class):
+                $path = config('repository.generator.parentClasses.controller', App\Http\Controllers\Controller::class);
+                break;
+            default:
+                $path = '';
+        }
+
+        return $path;
+    }
+
+
     abstract public function getPathConfigNode();
+
+    public function getParentClassConfigNode() {
+        return '';
+    }
 
 
     /**
@@ -255,6 +298,34 @@ abstract class Generator
         }
 
         return 'namespace ' . rtrim($rootNamespace . '\\' . implode($segments, '\\'), '\\') . ';';
+    }
+
+
+    /**
+     * Get parent class namespace.
+     *
+     * @return string
+     */
+    public function getParentClassNamespace()
+    {
+        return $this->getConfigGeneratorParentClass($this->getParentClassConfigNode());
+    }
+
+    public function getParentClass()
+    {
+        return 'use ' . $this->getParentClassNamespace() . ';';
+    }
+
+
+    /**
+     * Get parent class namespace.
+     *
+     * @return string
+     */
+    public function getParentClassName()
+    {
+        $array = explode('\\', $this->getParentClassNamespace());
+        return end($array);
     }
 
 

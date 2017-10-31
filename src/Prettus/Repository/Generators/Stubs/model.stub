@@ -2,11 +2,11 @@
 
 $NAMESPACE$
 
-use Illuminate\Database\Eloquent\Model;
+$PARENT_CLASS$
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
-class $CLASS$ extends Model implements Transformable
+class $CLASS$ extends $PARENT_CLASS_NAME$ implements Transformable
 {
     use TransformableTrait;
 

@@ -39,6 +39,16 @@ class ModelGenerator extends Generator
     }
 
     /**
+     * Get parent class config node.
+     *
+     * @return string
+     */
+    public function getParentClassConfigNode()
+    {
+        return 'model';
+    }
+
+    /**
      * Get destination path for generated file.
      *
      * @return string
@@ -67,7 +77,9 @@ class ModelGenerator extends Generator
     public function getReplacements()
     {
         return array_merge(parent::getReplacements(), [
-            'fillable' => $this->getFillable()
+            'fillable' => $this->getFillable(),
+            'parent_class'    => $this->getParentClass(),
+            'parent_class_name'    => $this->getParentClassName(),
         ]);
     }
 

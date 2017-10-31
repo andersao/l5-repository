@@ -4,6 +4,7 @@ $NAMESPACE$
 
 use Illuminate\Http\Request;
 
+$PARENT_CLASS$
 use $APPNAME$Http\Requests;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -13,7 +14,7 @@ $REPOSITORY$
 $VALIDATOR$
 
 
-class $CONTROLLER$Controller extends Controller
+class $CONTROLLER$Controller extends $PARENT_CLASS_NAME$
 {
 
     /**
