@@ -87,10 +87,26 @@ class RequestCriteria implements CriteriaInterface
                         if (!is_null($value)) {
                             if(!is_null($relation)) {
                                 $query->whereHas($relation, function($query) use($field,$condition,$value) {
-                                    $query->where($field,$condition,$value);
+                                    if(is_array($value)){
+                                        $query->where(function($query) use ($field,$condition, $value) {
+                                            foreach ($value as $val){
+                                                $query->orWhere($field,$condition,$val);
+                                            }
+                                        });
+                                    } else {
+                                        $query->where($field,$condition,$value);
+                                    }
                                 });
                             } else {
-                                $query->where($modelTableName.'.'.$field,$condition,$value);
+                                if(is_array($value)){
+                                    $query->where(function($query) use ($modelTableName, $field,$condition, $value) {
+                                        foreach ($value as $val){
+                                            $query->orWhere($modelTableName . '.' . $field, $condition, $val);
+                                        }
+                                    });
+                                } else {
+                                    $query->where($modelTableName.'.'.$field,$condition,$value);
+                                }
                             }
                             $isFirstField = false;
                         }
@@ -178,7 +194,13 @@ class RequestCriteria implements CriteriaInterface
 
             foreach ($fields as $row) {
                 try {
-                    list($field, $value) = explode(':', $row);
+                    $fields = explode(':', $row);
+                    if($fields > 2){
+                        $field = array_shift($fields);
+                        $value = $fields;
+                    } else {
+                        list($field, $value) = explode(':', $row);
+                    }
                     $searchData[$field] = $value;
                 } catch (\Exception $e) {
                     //Surround offset error
