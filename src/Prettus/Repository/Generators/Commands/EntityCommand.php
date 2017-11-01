@@ -28,7 +28,6 @@ class EntityCommand extends Command
      */
     protected $generators = null;
 
-
     /**
      * Execute the command.
      *
@@ -73,13 +72,9 @@ class EntityCommand extends Command
                 'name'    => $this->argument('name')
             ];
 
-            // The command "make:resource" in laravel 5.5 don't support option '--force'
-            if( (float) app()->version() <= 5.4 ){
-                $resource_args['--force'] = $this->option('force');
-            }
-
             // Generate a controller resource
-            $this->call('make:resource',$resource_args);
+            $controller_command = ((float) app()->version() >= 5.5  ? 'make:rest-controller' : 'make:resource');
+            $this->call($controller_command, $resource_args);
         }
 
         $this->call('make:repository', [
