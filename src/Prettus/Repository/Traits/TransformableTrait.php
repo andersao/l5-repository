@@ -1,4 +1,6 @@
-<?php namespace Prettus\Repository\Traits;
+<?php 
+
+namespace Prettus\Repository\Traits;
 
 /**
  * Class TransformableTrait
