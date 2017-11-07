@@ -30,6 +30,11 @@
       "Prettus\\Repository\\": "src/Prettus/Repository/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\" : "tests"
+    }
+  },
   "config": {
     "preferred-install": "dist"
   },
@@ -47,5 +52,8 @@
       ]
     }
   },
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "require-dev": {
+    "phpunit/phpunit": "6.4"
+  }
 }
