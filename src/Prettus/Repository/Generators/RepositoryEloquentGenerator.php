@@ -54,7 +54,7 @@ class RepositoryEloquentGenerator extends Generator
      */
     public function getBasePath()
     {
-        return config('repository.generator.basePath', app()->path);
+        return config('repository.generator.basePath', app()->path());
     }
 
     /**
