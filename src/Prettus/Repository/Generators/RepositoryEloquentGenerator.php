@@ -54,7 +54,7 @@ class RepositoryEloquentGenerator extends Generator
      */
     public function getBasePath()
     {
-        return config('repository.generator.basePath', app_path());
+        return config('repository.generator.basePath', app()->path);
     }
 
     /**
@@ -123,8 +123,6 @@ class RepositoryEloquentGenerator extends Generator
             'rules' => $this->rules,
             'force' => $this->force,
         ]);
-        
-        $validatorGenerator->run();
 
         $validator = $validatorGenerator->getRootNamespace() . '\\' . $validatorGenerator->getName();
 
