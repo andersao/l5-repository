@@ -24,7 +24,7 @@ class ControllerCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Create a new RESTfull controller.';
+    protected $description = 'Create a new RESTful controller.';
 
     /**
      * The type of class being generated.
@@ -33,6 +33,24 @@ class ControllerCommand extends Command
      */
     protected $type = 'Controller';
 
+    /**
+     * ControllerCommand constructor.
+     */
+    public function __construct()
+    {
+        $this->name = ((float) app()->version() >= 5.5  ? 'make:rest-controller' : 'make:resource');
+        parent::__construct();
+    }
+
+    /**
+     * Execute the command.
+     *
+     * @see fire()
+     * @return void
+     */
+    public function handle(){
+        $this->laravel->call([$this, 'fire'], func_get_args());
+    }
 
     /**
      * Execute the command.
@@ -46,6 +64,7 @@ class ControllerCommand extends Command
             $this->call('make:request', [
                 'name' => $this->argument('name') . 'CreateRequest'
             ]);
+
             // Generate update request for controller
             $this->call('make:request', [
                 'name' => $this->argument('name') . 'UpdateRequest'
@@ -55,7 +74,9 @@ class ControllerCommand extends Command
                 'name' => $this->argument('name'),
                 'force' => $this->option('force'),
             ]))->run();
+
             $this->info($this->type . ' created successfully.');
+
         } catch (FileAlreadyExistsException $e) {
             $this->error($this->type . ' already exists!');
 

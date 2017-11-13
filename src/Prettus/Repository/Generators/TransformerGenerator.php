@@ -53,7 +53,7 @@ class TransformerGenerator extends Generator
      */
     public function getBasePath()
     {
-        return config('repository.generator.basePath', app_path());
+        return config('repository.generator.basePath', app()->path());
     }
 
     /**

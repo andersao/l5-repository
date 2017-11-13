@@ -190,7 +190,17 @@ interface RepositoryInterface
      * @return $this
      */
     public function with($relations);
-
+    
+    /**
+     * Load relation with closure
+     *
+     * @param string $relation
+     * @param closure $closure
+     *
+     * @return $this
+     */
+    public function whereHas($relation, $closure);
+    
     /**
      * Add subselect queries to count the relations.
      *
@@ -257,4 +267,22 @@ interface RepositoryInterface
      * @return $this
      */
     public function skipPresenter($status = true);
+
+    /**
+     * Retrieve first data of repository, or return new Entity
+     *
+     * @param array $attributes
+     *
+     * @return mixed
+     */
+    public function firstOrNew(array $attributes = []);
+
+    /**
+     * Retrieve first data of repository, or create new Entity
+     *
+     * @param array $attributes
+     *
+     * @return mixed
+     */
+    public function firstOrCreate(array $attributes = []);
 }

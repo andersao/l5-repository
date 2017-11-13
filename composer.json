@@ -41,6 +41,11 @@
   "extra": {
     "branch-alias": {
       "dev-develop": "2.2-dev"
+    },
+    "laravel": {
+      "providers": [
+        "Prettus\\Repository\\Providers\\RepositoryServiceProvider"
+      ]
     }
   },
   "minimum-stability": "stable"

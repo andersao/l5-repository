@@ -101,7 +101,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function boot()
     {
-
+        //
     }
 
     /**
@@ -294,7 +294,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function sync($id, $relation, $attributes, $detaching = true)
     {
-        return $this->find($id)->getRelation($relation)->sync($attributes, $detaching);
+        return $this->find($id)->{$relation}()->sync($attributes, $detaching);
     }
 
     /**
@@ -334,6 +334,18 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         return $this->parserResult($results);
     }
 
+    /**
+     * Alias of All method
+     *
+     * @param array $columns
+     *
+     * @return mixed
+     */
+    public function get($columns = ['*'])
+    {
+        return $this->all($columns);
+    }
+
 
     /**
      * Retrieve first data of repository
@@ -352,6 +364,52 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->resetModel();
 
         return $this->parserResult($results);
+    }
+
+    /**
+     * Retrieve first data of repository, or return new Entity
+     *
+     * @param array $attributes
+     *
+     * @return mixed
+     */
+    public function firstOrNew(array $attributes = [])
+    {
+        $this->applyCriteria();
+        $this->applyScope();
+
+        $temporarySkipPresenter = $this->skipPresenter;
+        $this->skipPresenter(true);
+
+        $model = $this->model->firstOrNew($attributes);
+        $this->skipPresenter($temporarySkipPresenter);
+
+        $this->resetModel();
+
+        return $this->parserResult($model);
+    }
+
+    /**
+     * Retrieve first data of repository, or create new Entity
+     *
+     * @param array $attributes
+     *
+     * @return mixed
+     */
+    public function firstOrCreate(array $attributes = [])
+    {
+        $this->applyCriteria();
+        $this->applyScope();
+
+        $temporarySkipPresenter = $this->skipPresenter;
+        $this->skipPresenter(true);
+
+        $model = $this->model->firstOrCreate($attributes);
+        $this->skipPresenter($temporarySkipPresenter);
+
+        $this->resetModel();
+
+        return $this->parserResult($model);
     }
 
     /**
@@ -685,7 +743,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      *
      * @return $this
      */
-    function whereHas($relation, $closure)
+    public function whereHas($relation, $closure)
     {
         $this->model = $this->model->whereHas($relation, $closure);
 
@@ -918,7 +976,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function parserResult($result)
     {
         if ($this->presenter instanceof PresenterInterface) {
-
             if ($result instanceof Collection || $result instanceof LengthAwarePaginator) {
                 $result->each(function ($model) {
                     if ($model instanceof Presentable) {
