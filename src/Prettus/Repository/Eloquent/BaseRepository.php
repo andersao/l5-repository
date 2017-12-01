@@ -20,6 +20,7 @@ use Prettus\Repository\Events\RepositoryEntityUpdated;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
+use Illuminate\Http\Request;
 
 /**
  * Class BaseRepository
@@ -38,6 +39,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     protected $model;
 
+    protected $request;
     /**
      * @var array
      */
@@ -85,14 +87,15 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * @param Application $app
      */
-    public function __construct(Application $app)
+    public function __construct(Application $app, Request $request)
     {
-        $this->app = $app;
+        $this->app      = $app;
         $this->criteria = new Collection();
         $this->makeModel();
         $this->makePresenter();
         $this->makeValidator();
         $this->boot();
+        $this->request = $request;
     }
 
     /**
@@ -268,48 +271,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
-     * Retrieve data array for populate field select
-     * Compatible with Laravel 5.3
-     * @param string $column
-     * @param string|null $key
-     *
-     * @return \Illuminate\Support\Collection|array
-     */
-    public function pluck($column, $key = null)
-    {
-        $this->applyCriteria();
-
-        return $this->model->pluck($column, $key);
-    }
-
-    /**
-     * Sync relations
-     *
-     * @param $id
-     * @param $relation
-     * @param $attributes
-     * @param bool $detaching
-     * @return mixed
-     */
-    public function sync($id, $relation, $attributes, $detaching = true)
-    {
-        return $this->find($id)->{$relation}()->sync($attributes, $detaching);
-    }
-
-    /**
-     * SyncWithoutDetaching
-     *
-     * @param $id
-     * @param $relation
-     * @param $attributes
-     * @return mixed
-     */
-    public function syncWithoutDetaching($id, $relation, $attributes)
-    {
-        return $this->sync($id, $relation, $attributes, false);
-    }
-
-    /**
      * Retrieve all data of repository
      *
      * @param array $columns
@@ -354,61 +315,17 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
-     * Retrieve first data of repository, or return new Entity
-     *
-     * @param array $attributes
-     *
-     * @return mixed
-     */
-    public function firstOrNew(array $attributes = [])
-    {
-        $this->applyCriteria();
-        $this->applyScope();
-
-        $temporarySkipPresenter = $this->skipPresenter;
-        $this->skipPresenter(true);
-
-        $model = $this->model->firstOrNew($attributes);
-        $this->skipPresenter($temporarySkipPresenter);
-
-        $this->resetModel();
-
-        return $this->parserResult($model);
-    }
-
-    /**
-     * Retrieve first data of repository, or create new Entity
-     *
-     * @param array $attributes
-     *
-     * @return mixed
-     */
-    public function firstOrCreate(array $attributes = [])
-    {
-        $this->applyCriteria();
-        $this->applyScope();
-
-        $temporarySkipPresenter = $this->skipPresenter;
-        $this->skipPresenter(true);
-
-        $model = $this->model->firstOrCreate($attributes);
-        $this->skipPresenter($temporarySkipPresenter);
-
-        $this->resetModel();
-
-        return $this->parserResult($model);
-    }
-
-    /**
      * Retrieve all data of repository, paginated
      *
      * @param null $limit
+     * @param null $relation 预加载模型关系
      * @param array $columns
      * @param string $method
+     * @param array $param 
      *
      * @return mixed
      */
-    public function paginate($limit = null, $columns = ['*'], $method = "paginate")
+    public function paginate_bak($limit = null, $columns = ['*'], $method = "paginate")
     {
         $this->applyCriteria();
         $this->applyScope();
@@ -416,6 +333,117 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $results = $this->model->{$method}($limit, $columns);
         $results->appends(app('request')->query());
         $this->resetModel();
+
+        return $this->parserResult($results);
+    }
+
+    // 是否是关联数组
+    private function is_assoc($arr)
+    {
+        return array_keys($arr) !== range(0, count($arr) - 1);
+    }
+
+    //是否是数组类型
+    private function is_arr($arr) {
+        $is_arr = 1;
+        foreach ($arr as $key => $value) {
+            if (!is_array($value) && $is_arr) {
+                $is_arr = 0;
+                break;
+            }
+        }
+        return $is_arr;
+    }
+
+    /**
+     * Retrieve all data of repository, paginated
+     *
+     * @param null $limit
+     * @param null $relation 预加载模型关系
+     * @param array $param 额外参数需数组形式传如 [columns => ['*'], 'groupBy' => 'user_id']
+     *
+     * @return mixed
+     */
+    public function paginate($limit = null, $relation = [], $param = [])
+    {
+        $this->applyCriteria();
+        $this->applyScope();
+        $limit = is_null($limit) ? config('repository.pagination.limit', 15) : $limit;
+        $method = isset($param['method']) ? $param['method'] : 'paginate';
+        $columns = isset($param['columns']) ? $param['columns'] : ['*'];
+
+        $results = $this->model;
+        if (!empty($relation)) {
+            $results = $results->with($relation);
+        } 
+        if (!empty($param['left_join'])) {
+            if($this->is_arr($param['left_join'])){
+                foreach ($param['left_join'] as $field => $left_join) {
+                   $result = $results->leftJoin($left_join[0], $left_join[1], $left_join[2], $left_join[3]);
+                }
+            }else{
+                $result = $results->leftJoin($param['left_join'][0], $param['left_join'][1], $param['left_join'][2], $param['left_join'][3]);
+            }
+        }
+        if(!empty($param['withTrashed'])){
+            $results = $results->withTrashed();
+        }
+        if(!empty($param['select'])){
+            $results = $results->select($param['select']);
+        }
+        if(!empty($param['groupBy'])){
+            $results = $results->groupBy($param['groupBy']);
+        }
+        if(!empty($param['where'])){
+            $count_where = count($param['where']);
+
+            $is_arr = $this->is_arr($param['where']);
+
+            if($count_where > 1 && !$is_arr){
+                foreach ($param['where'] as $key => $where) {
+                    $results = $results->where($where);
+                }
+            }else{
+                $results = $results->where($param['where']);
+            }
+        }
+        if(!empty($param['orWhere'])){
+            $results = $results->orWhere($param['orWhere']);
+        }
+        if(!empty($param['whereIn'])){
+            $results = $results->whereIn($param['whereIn'][0], $param['whereIn'][1]);
+        }
+        if(!empty($param['orderBy'])){
+            if($this->is_assoc($param['orderBy'])){
+                foreach ($param['orderBy'] as $field => $sort) {
+                    $results = $results->orderBy($field, $sort);
+                }
+            }else{
+                $results = $results->orderBy($param['orderBy'][0], !empty($param['orderBy'][1]) ? $param['orderBy'][1]: 'asc');
+            }
+        }
+        if(!empty($param['orderByRaw'])){
+            $results = $results->orderByRaw($param['orderByRaw']);
+        }
+        if(!empty($param['whereHas'])){
+            $whereHas = $param['whereHas'];
+            // 是关联数组则处理多个
+            if($this->is_assoc($whereHas)){
+                foreach ($whereHas as $relation => $condition) {
+                    $results = $results->whereHas($relation, $condition);
+                }
+            }else{
+                $results = $results->whereHas($whereHas[0], $whereHas[1]);
+            }
+        }
+        // 不限制返回记录数
+        if(!empty($param['no_limit']) && $param['no_limit'] == 1){
+            $results = $results->get($columns);
+        }else{
+            $results = $results->{$method}($limit, $columns);
+            $results->appends(app('request')->query());
+            $this->resetModel();
+        }
 
         return $this->parserResult($results);
     }
@@ -430,7 +458,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function simplePaginate($limit = null, $columns = ['*'])
     {
-        return $this->paginate($limit, $columns, "simplePaginate");
+        return $this->paginate_bak($limit, $columns, "simplePaginate");
     }
 
     /**
@@ -503,8 +531,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function findWhereIn($field, array $values, $columns = ['*'])
     {
         $this->applyCriteria();
-        $this->applyScope();
         $model = $this->model->whereIn($field, $values)->get($columns);
+
         $this->resetModel();
 
         return $this->parserResult($model);
@@ -522,7 +550,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function findWhereNotIn($field, array $values, $columns = ['*'])
     {
         $this->applyCriteria();
-        $this->applyScope();
         $model = $this->model->whereNotIn($field, $values)->get($columns);
         $this->resetModel();
 
@@ -643,7 +670,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $temporarySkipPresenter = $this->skipPresenter;
         $this->skipPresenter(true);
 
-        $model = $this->find($id);
+        $model         = $this->find($id);
         $originalModel = clone $model;
 
         $this->skipPresenter($temporarySkipPresenter);
@@ -674,7 +701,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         $deleted = $this->model->delete();
 
-        event(new RepositoryEntityDeleted($this, $this->model->getModel()));
+        event(new RepositoryEntityDeleted($this, $this->model));
 
         $this->skipPresenter($temporarySkipPresenter);
         $this->resetModel();
@@ -711,18 +738,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
-     * Add subselect queries to count the relations.
-     *
-     * @param  mixed $relations
-     * @return $this
-     */
-    public function withCount($relations)
-    {
-        $this->model = $this->model->withCount($relations);
-        return $this;
-    }
-
-    /**
      * Load relation with closure
      *
      * @param string $relation
@@ -730,7 +745,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      *
      * @return $this
      */
-    public function whereHas($relation, $closure)
+    function whereHas($relation, $closure)
     {
         $this->model = $this->model->whereHas($relation, $closure);
 
@@ -837,7 +852,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function getByCriteria(CriteriaInterface $criteria)
     {
         $this->model = $criteria->apply($this->model, $this);
-        $results = $this->model->get();
+        $results     = $this->model->get();
         $this->resetModel();
 
         return $this->parserResult($results);
@@ -889,7 +904,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     protected function applyScope()
     {
         if (isset($this->scopeQuery) && is_callable($this->scopeQuery)) {
-            $callback = $this->scopeQuery;
+            $callback    = $this->scopeQuery;
             $this->model = $callback($this->model);
         }
 

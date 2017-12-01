@@ -28,7 +28,12 @@
  * @param {string} data-is-between   this need two input, they have same name, it will create a query string like 'created_at between "2017-03-17" and "2017-03-18"'
  * @param {string} data-order-by id
  *                 data-sorted-by desc
- *                                   these will make a laravel method like : ->orderBy('id', 'desc');
+ *                                   these will make a laravel method like : ->orderBy('id', 'desc'); *                                   
+ * @param {string} data-ignore       will build normal query string like : a=1&b=2
+ * @param {string} data-default-value       if user`s input is the default value then skip
+ * @param {string} data-trigger-before-submit 
+ *                 data-before-submit 
+ *                                   see instruction below
  *                                   
  */
 
@@ -40,7 +45,30 @@ $(".searchForm").submit(function () {
         searchFields = [], 
         orderBy = [], // eg: id
         sortedBy = [], // eg: desc
+        ignore  = '',// will build normal query string like : a=1&b=2
         todo = {}; // to deal query like between and further more
+
+    /**
+     * if specifies user defined validation function, belows code will run it and submit or not depends on code result.
+     * 
+     * @example scene: there are two submit button in the form, and the other is for downloading excel, but download data need condition in case of the php script crashes while downloading the whole table.
+     * 
+     * @usuase: 
+     * 1. specify the submit input an attribute like : data-trigger-before-submit="1"
+     * 2. specify the form an attribute like : data-before-submit="funcName", funcName is a user defined function return true/false, when false the submit event is stopped.
+     * 
+     */
+    var beforeSubmit = $(this).data('before-submit'),
+        triggerBeofreSubmit = $(e.originalEvent.explicitOriginalTarget || document.activeElement).data('trigger-before-submit') == 1;
+
+    // run user function
+    if(typeof beforeSubmit != 'undefined' && triggerBeofreSubmit){
+        var result = eval(beforeSubmit).call(null);
+        // submit stopped if user funciton returns false
+        if(result === false){
+            return false;
+        }
+    }
 
     // simple querys just direct join
     var set_query_param_direct = function (input) {
@@ -88,8 +116,31 @@ $(".searchForm").submit(function () {
     try {
         // find all has name attribute inputs, for db query usuage
         $(this).find('[name]').each(function () {
-            var key = $(this).attr('name');
-            if (!$(this).val()) {
+            var key = $(this).attr('name'),
+                default_value = $(this).data('default-value');
+            
+            // if specifies data-default-value and user input is the default value then skip
+            if(typeof default_value != 'undefined'){
+                if($(this).val() == default_value){
+                    return true;
+                }
+            }else{
+                // otherwise check the value if is fullfiled
+                if (!$(this).val()) {
+                    return true;
+                }
+            }
+
+            // if specifies data-ignore and will use normal query string like : a=1&b=2
+            if ($(this).data('ignore') == '1') {
+                // checkbox should be checked
+                if ($(this).attr('type') == 'checkbox' && !$(this).is(':checked')) {
+                    return true;
+                }
+                if ($(this).val() == '' ) {
+                    return true;
+                }
+                ignore += '&' + key + '=' + $(this).val();
                 return true;
             }
 
@@ -130,7 +181,7 @@ $(".searchForm").submit(function () {
 
         // redirect
         var op = url.indexOf('?') != -1 ? '&' : '?',
-            redirect_url = url + op + 'search=' + search.join(';') + '&searchFields=' + searchFields.join(';');
+            redirect_url = url + op + 'search=' + search.join(';') + '&searchFields=' + searchFields.join(';') + ignore;
 
         if (orderBy.length > 0) {
             redirect_url += '&orderBy=' + orderBy.join('|') + '&sortedBy=' + sortedBy.join('|');

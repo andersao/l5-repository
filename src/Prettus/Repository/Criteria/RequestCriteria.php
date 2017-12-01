@@ -36,6 +36,7 @@ class RequestCriteria implements CriteriaInterface
     public function apply($model, RepositoryInterface $repository)
     {
         $fieldsSearchable = $repository->getFieldsSearchable();
+        //dd($fieldsSearchable);
         $search = $this->request->get(config('repository.criteria.params.search', 'search'), null);
         $searchFields = $this->request->get(config('repository.criteria.params.searchFields', 'searchFields'), null);
         $filter = $this->request->get(config('repository.criteria.params.filter', 'filter'), null);
@@ -44,6 +45,7 @@ class RequestCriteria implements CriteriaInterface
         $with = $this->request->get(config('repository.criteria.params.with', 'with'), null);
         $sortedBy = !empty($sortedBy) ? $sortedBy : 'asc';
 
+      // dd($searchFields);
         if ($search && is_array($fieldsSearchable) && count($fieldsSearchable)) {
 
             $searchFields = is_array($searchFields) || is_null($searchFields) ? $searchFields : explode(';', $searchFields);
@@ -51,7 +53,7 @@ class RequestCriteria implements CriteriaInterface
             $isFirstField = true;
             $searchData = $this->parserSearchData($search);
             $search = $this->parserSearchValue($search);
-            $modelForceAndWhere = false;
+            $modelForceAndWhere = true;
 
             $model = $model->where(function ($query) use ($fields, $search, $searchData, $isFirstField, $modelForceAndWhere) {
                 /** @var Builder $query */
@@ -99,12 +101,26 @@ class RequestCriteria implements CriteriaInterface
                         if (!is_null($value)) {
                             if(!is_null($relation)) {
                                 $query->whereHas($relation, function($query) use($field,$condition,$value) {
-                                    $query->where($field,$condition,$value);
+                                    switch ($condition) {
+                                        case 'in':
+                                            $query->whereIn($field, explode(',', $value));
+                                        break;
+                                        case 'between':
+                                            $query->whereBetween($field, $value);
+                                        break;
+                                        
+                                        default:
+                                            $query->where($field,$condition,$value);
+                                        break;
+                                    }
                                 });
                             } else {
                                 switch ($condition) {
                                     case 'between':
                                         $query->whereBetween($modelTableName.'.'.$field, $value);
+                                    break;
+                                    case 'in':
+                                        $query->whereIn($modelTableName.'.'.$field, explode(',', $value));
                                     break;
                                     
                                     default:
@@ -198,8 +214,8 @@ class RequestCriteria implements CriteriaInterface
 
             foreach ($fields as $row) {
                 try {
-                    list($field, $value) = explode(':', $row);
-                    $searchData[$field] = $value;
+                    list($field, $value) = explode(':', $row, 2);
+                    $searchData[$field] = trim($value);
                 } catch (\Exception $e) {
                     //Surround offset error
                 }
