@@ -28,6 +28,15 @@ class EntityCommand extends Command
      */
     protected $generators = null;
 
+    /**
+     * Execute the command.
+     *
+     * @see fire()
+     * @return void
+     */
+    public function handle(){
+        $this->laravel->call([$this, 'fire'], func_get_args());
+    }
 
     /**
      * Execute the command.
@@ -59,11 +68,13 @@ class EntityCommand extends Command
 
         if ($this->confirm('Would you like to create a Controller? [y|N]')) {
 
+            $resource_args = [
+                'name'    => $this->argument('name')
+            ];
+
             // Generate a controller resource
-            $this->call('make:resource', [
-                'name'    => $this->argument('name'),
-                '--force' => $this->option('force')
-            ]);
+            $controller_command = ((float) app()->version() >= 5.5  ? 'make:rest-controller' : 'make:resource');
+            $this->call($controller_command, $resource_args);
         }
 
         $this->call('make:repository', [
