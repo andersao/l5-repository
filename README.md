@@ -599,6 +599,16 @@ protected $fieldSearchable = [
 ];
 ```
 
+Avoid doing string-type search on integer fields, the condition is "**int**"
+
+```php
+protected $fieldSearchable = [
+	'id'=>'int',
+	'name'=>'like',
+	'email', // Default Condition "="
+	'your_field'=>'condition'
+];
+```
 
 #### Enabling in your Controller
 
