@@ -69,7 +69,20 @@ class RequestCriteria implements CriteriaInterface
                     $condition = trim(strtolower($condition));
 
                     if (isset($searchData[$field])) {
-                        $value = ($condition == "like" || $condition == "ilike") ? "%{$searchData[$field]}%" : $searchData[$field];
+                      switch ($condition) {
+                        case 'like':
+                        case 'ilike':
+                          $value = "%{$searchData[$field]}%";
+                          break;
+                        case 'between':
+                          $temp = $searchData[$field];
+                          $temp = explode(',', $temp);
+                          $value = $temp;
+                          break;
+                        default:
+                          $value = $searchData[$field];
+                          break;
+                        }
                     } else {
                         if (!is_null($search)) {
                             $value = ($condition == "like" || $condition == "ilike") ? "%{$search}%" : $search;
@@ -88,9 +101,30 @@ class RequestCriteria implements CriteriaInterface
                             if(!is_null($relation)) {
                                 $query->whereHas($relation, function($query) use($field,$condition,$value) {
                                     $query->where($field,$condition,$value);
+                                    switch ($condition) {
+                                        case 'in':
+                                          $query->whereIn($field, explode(',', $value));
+                                        break;
+                                        case 'between':
+                                          $query->whereBetween($field, $value);
+                                        break;
+                                        default:
+                                          $query->where($field,$condition,$value);
+                                        break;
+                                    }
                                 });
                             } else {
-                                $query->where($modelTableName.'.'.$field,$condition,$value);
+                              switch ($condition) {
+                                case 'between':
+                                  $query->whereBetween($modelTableName.'.'.$field, $value);
+                                break;
+                                case 'in':
+                                  $query->whereIn($modelTableName.'.'.$field, explode(',', $value));
+                                break;
+                                default:
+                                  $query->where($modelTableName.'.'.$field,$condition,$value);
+                                break;
+                              }
                             }
                             $isFirstField = false;
                         }
@@ -178,8 +212,8 @@ class RequestCriteria implements CriteriaInterface
 
             foreach ($fields as $row) {
                 try {
-                    list($field, $value) = explode(':', $row);
-                    $searchData[$field] = $value;
+                    list($field, $value) = explode(':', $row, 2);
+                    $searchData[$field] = trim($value);
                 } catch (\Exception $e) {
                     //Surround offset error
                 }
