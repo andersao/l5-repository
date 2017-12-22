@@ -218,20 +218,21 @@ trait CacheableRepository
      *
      * @param null  $limit
      * @param array $columns
+     * @param string $method
      *
      * @return mixed
      */
-    public function paginate($limit = null, $columns = ['*'])
+    public function paginate($limit = null, $columns = ['*'], $method = 'paginate')
     {
         if (!$this->allowedCache('paginate') || $this->isSkippedCache()) {
-            return parent::paginate($limit, $columns);
+            return parent::paginate($limit, $columns, $method);
         }
 
         $key = $this->getCacheKey('paginate', func_get_args());
 
         $minutes = $this->getCacheMinutes();
-        $value = $this->getCacheRepository()->remember($key, $minutes, function () use ($limit, $columns) {
-            return parent::paginate($limit, $columns);
+        $value = $this->getCacheRepository()->remember($key, $minutes, function () use ($limit, $columns, $method) {
+            return parent::paginate($limit, $columns, $method);
         });
 
         $this->resetModel();
