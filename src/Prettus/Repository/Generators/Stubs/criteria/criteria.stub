@@ -6,7 +6,8 @@ use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
 /**
- * Class $CLASS$Criteria
+ * Class $CLASS$Criteria.
+ *
  * @package $NAMESPACE$
  */
 class $CLASS$Criteria implements CriteriaInterface
@@ -14,7 +15,7 @@ class $CLASS$Criteria implements CriteriaInterface
     /**
      * Apply criteria in query repository
      *
-     * @param                     $model
+     * @param string              $model
      * @param RepositoryInterface $repository
      *
      * @return mixed
