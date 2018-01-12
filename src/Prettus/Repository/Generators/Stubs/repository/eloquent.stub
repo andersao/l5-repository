@@ -9,7 +9,8 @@ use $MODEL$;
 $USE_VALIDATOR$
 
 /**
- * Class $CLASS$RepositoryEloquent
+ * Class $CLASS$RepositoryEloquent.
+ *
  * @package $NAMESPACE$
  */
 class $CLASS$RepositoryEloquent extends BaseRepository implements $CLASS$Repository
@@ -33,4 +34,5 @@ class $CLASS$RepositoryEloquent extends BaseRepository implements $CLASS$Reposit
     {
         $this->pushCriteria(app(RequestCriteria::class));
     }
+    
 }
