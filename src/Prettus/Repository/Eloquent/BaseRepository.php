@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\Presentable;
-use Prettus\Repository\Contracts\PresentableInterface;
 use Prettus\Repository\Contracts\PresenterInterface;
 use Prettus\Repository\Contracts\RepositoryCriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
