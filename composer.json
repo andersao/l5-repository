@@ -40,9 +40,6 @@
     "prettus/laravel-validation": "Required to provide easy validation with the repository (1.1.*)"
   },
   "extra": {
-    "branch-alias": {
-      "dev-develop": "develop"
-    },
     "laravel": {
       "providers": [
         "Prettus\\Repository\\Providers\\RepositoryServiceProvider"

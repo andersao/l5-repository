@@ -52,7 +52,7 @@ return [
          | Enable or disable cache
          |
          */
-        'enabled'    => true,
+        'enabled'    => false,
 
         /*
          |--------------------------------------------------------------------------
@@ -216,7 +216,7 @@ return [
             'orderBy'      => 'orderBy',
             'sortedBy'     => 'sortedBy',
             'with'         => 'with',
-            'searchJoin'   => 'searchJoin'            
+            'searchJoin'   => 'searchJoin'
         ]
     ],
     /*
