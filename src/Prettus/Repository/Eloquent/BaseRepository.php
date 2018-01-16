@@ -558,7 +558,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             if( version_compare($this->app->version(), "5.2.*", ">") ){
                 $attributes = $this->model->newInstance()->forceFill($attributes)->makeVisible($this->model->getHidden())->toArray();
             }else{
-                $attributes = $this->model->newInstance()->forceFill($attributes)->addVisible($this->model->getHidden())->toArray();
+                $model = $this->model->newInstance()->forceFill($attributes);
+                $model->addVisible($this->model->getHidden());
+                $attributes = $model->toArray();
             }
 
             $this->validator->with($attributes)->passesOrFail(ValidatorInterface::RULE_CREATE);
@@ -594,7 +596,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             if( version_compare($this->app->version(), "5.2.*", ">") ){
                 $attributes = $this->model->newInstance()->forceFill($attributes)->makeVisible($this->model->getHidden())->toArray();
             }else{
-                $attributes = $this->model->newInstance()->forceFill($attributes)->addVisible($this->model->getHidden())->toArray();
+                $model = $this->model->newInstance()->forceFill($attributes);
+                $model->addVisible($this->model->getHidden());
+                $attributes = $model->toArray();
             }
 
             $this->validator->with($attributes)->setId($id)->passesOrFail(ValidatorInterface::RULE_UPDATE);
