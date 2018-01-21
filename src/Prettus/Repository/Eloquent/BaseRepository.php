@@ -17,6 +17,7 @@ use Prettus\Repository\Events\RepositoryEntityCreated;
 use Prettus\Repository\Events\RepositoryEntityDeleted;
 use Prettus\Repository\Events\RepositoryEntityUpdated;
 use Prettus\Repository\Exceptions\RepositoryException;
+use Prettus\Repository\Traits\ComparesVersionsTrait;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
 
@@ -26,6 +27,7 @@ use Prettus\Validator\Exceptions\ValidatorException;
  */
 abstract class BaseRepository implements RepositoryInterface, RepositoryCriteriaInterface
 {
+    use ComparesVersionsTrait;
 
     /**
      * @var Application
@@ -555,7 +557,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             // we should pass data that has been casts by the model
             // to make sure data type are same because validator may need to use
             // this data to compare with data that fetch from database.
-            if( version_compare($this->app->version(), "5.2.*", ">") ){
+            if( $this->versionCompare($this->app->version(), "5.2.*", ">") ){
                 $attributes = $this->model->newInstance()->forceFill($attributes)->makeVisible($this->model->getHidden())->toArray();
             }else{
                 $model = $this->model->newInstance()->forceFill($attributes);
@@ -593,7 +595,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             // we should pass data that has been casts by the model
             // to make sure data type are same because validator may need to use
             // this data to compare with data that fetch from database.
-            if( version_compare($this->app->version(), "5.2.*", ">") ){
+            if( $this->versionCompare($this->app->version(), "5.2.*", ">") ){
                 $attributes = $this->model->newInstance()->forceFill($attributes)->makeVisible($this->model->getHidden())->toArray();
             }else{
                 $model = $this->model->newInstance()->forceFill($attributes);
