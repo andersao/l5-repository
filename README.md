@@ -51,7 +51,7 @@ You want to know a little more about the Repository pattern? [Read this great ar
 Execute the following command to get the latest version of the package:
 
 ```terminal
-composer require prettus/l5-repository
+composer require clms2/l5-repository
 ```
 
 ### Laravel
