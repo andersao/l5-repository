@@ -27,6 +27,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../../../resources/config/repository.php' => config_path('repository.php')
         ]);
+        
+        $this->publishes([
+            __DIR__ . '/../../../resources/js/build_query_param.js' => public_path('js/build_l5_query_param.js')
+        ]);
 
         $this->mergeConfigFrom(__DIR__ . '/../../../resources/config/repository.php', 'repository');
 
