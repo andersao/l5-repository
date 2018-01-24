@@ -205,7 +205,7 @@ class RequestCriteria implements CriteriaInterface
      *
      * @return array
      */
-    protected function parserSearchData($search)
+    public function parserSearchData($search)
     {
         $searchData = [];
 
@@ -230,7 +230,7 @@ class RequestCriteria implements CriteriaInterface
      *
      * @return null
      */
-    protected function parserSearchValue($search)
+    public function parserSearchValue($search)
     {
 
         if (stripos($search, ';') || stripos($search, ':')) {

@@ -376,6 +376,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         if (!empty($relation)) {
             $results = $results->with($relation);
         } 
+        if(!empty($param['withCount'])){
+            $results = $results->withCount($param['withCount']);
+        }
         if (!empty($param['left_join'])) {
             if($this->is_arr($param['left_join'])){
                 foreach ($param['left_join'] as $field => $left_join) {
@@ -435,6 +438,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             }else{
                 $results = $results->whereHas($whereHas[0], $whereHas[1]);
             }
+        }
+        if(!empty($param['whereNotNull'])){
+            $results = $results->whereNotNull($param['whereNotNull']);
         }
         // 不限制返回记录数
         if(!empty($param['no_limit']) && $param['no_limit'] == 1){
