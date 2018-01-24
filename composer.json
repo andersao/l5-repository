@@ -1,20 +1,20 @@
 {
-  "name": "prettus/l5-repository",
+  "name": "clms2/l5-repository",
   "description": "Laravel 5 - Repositories to  the database layer",
   "keywords": ["laravel", "repository", "eloquent", "model", "cache"],
   "license": "MIT",
   "authors": [
     {
-      "name": "Anderson Andrade",
-      "email": "contato@andersonandra.de",
+      "name": "hello world",
+      "email": "648003174@qq.com",
       "role": "Developer"
     }
   ],
   "support": {
     "email": "contato@andersonandra.de",
-    "issues":"https://github.com/andersao/l5-repository/issues",
-    "wiki":"https://github.com/andersao/l5-repository",
-    "source":"https://github.com/andersao/l5-repository"
+    "issues":"https://github.com/clms2/l5-repository/issues",
+    "wiki":"https://github.com/clms2/l5-repository",
+    "source":"https://github.com/clms2/l5-repository"
   },
   "require": {
     "illuminate/http": "~5.0",
