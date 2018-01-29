@@ -1,6 +1,8 @@
 # Laravel 5 Repositories
 
 Laravel 5 Repositories is used to abstract the data layer, making our application more flexible to maintain.
+The difference between andersao/l5-repository is: this one added front-end support for building querying string(see [js][222]).
+[222]: https://github.com/clms2/l5-repository/blob/5069c35f7e329238f2e1859ad54ed05f1aaf62cb/src/resources/js/build_query_param.js
 
 [![Latest Stable Version](https://poser.pugx.org/clms2/l5-repository/v/stable)](https://packagist.org/packages/clms2/l5-repository) [![Total Downloads](https://poser.pugx.org/clms2/l5-repository/downloads)](https://packagist.org/packages/clms2/l5-repository) [![Latest Unstable Version](https://poser.pugx.org/clms2/l5-repository/v/unstable)](https://packagist.org/packages/clms2/l5-repository) [![License](https://poser.pugx.org/clms2/l5-repository/license)](https://packagist.org/packages/clms2/l5-repository)
 [![Analytics](https://ga-beacon.appspot.com/UA-61050740-1/l5-repository/readme)](https://packagist.org/packages/clms2/l5-repository)
