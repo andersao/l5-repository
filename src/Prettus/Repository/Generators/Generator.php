@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 /**
  * Class Generator
  * @package Prettus\Repository\Generators
- * @author Anderson Andrade <contact@andersonandra.de>
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
 abstract class Generator
 {

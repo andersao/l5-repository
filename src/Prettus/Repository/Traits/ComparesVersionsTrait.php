@@ -4,7 +4,7 @@ namespace Prettus\Repository\Traits;
 /**
  * Trait ComparesVersionsTrait
  * @package Prettus\Repository\Traits
- * @author Anderson Andrade <contact@andersonandra.de>
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
 trait ComparesVersionsTrait
 {

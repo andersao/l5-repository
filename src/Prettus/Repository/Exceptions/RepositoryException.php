@@ -6,7 +6,7 @@ use Exception;
 /**
  * Class RepositoryException
  * @package Prettus\Repository\Exceptions
- * @author Anderson Andrade <contact@andersonandra.de>
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
 class RepositoryException extends Exception
 {

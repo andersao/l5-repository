@@ -11,7 +11,7 @@ use Symfony\Component\Console\Input\InputOption;
 /**
  * Class CriteriaCommand
  * @package Prettus\Repository\Generators\Commands
- * @author Anderson Andrade <contact@andersonandra.de>
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
 class CriteriaCommand extends Command
 {

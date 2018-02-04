@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputOption;
 /**
  * Class EntityCommand
  * @package Prettus\Repository\Generators\Commands
- * @author Anderson Andrade <contact@andersonandra.de>
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
 class EntityCommand extends Command
 {

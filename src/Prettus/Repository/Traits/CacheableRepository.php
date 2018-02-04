@@ -11,7 +11,7 @@ use Exception;
 /**
  * Class CacheableRepository
  * @package Prettus\Repository\Traits
- * @author Anderson Andrade <contact@andersonandra.de>
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
 trait CacheableRepository
 {

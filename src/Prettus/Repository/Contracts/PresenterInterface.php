@@ -4,7 +4,7 @@ namespace Prettus\Repository\Contracts;
 /**
  * Interface PresenterInterface
  * @package Prettus\Repository\Contracts
- * @author Anderson Andrade <contact@andersonandra.de>
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
 interface PresenterInterface
 {

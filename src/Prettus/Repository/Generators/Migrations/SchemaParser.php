@@ -6,7 +6,7 @@ use Illuminate\Contracts\Support\Arrayable;
 /**
  * Class SchemaParser
  * @package Prettus\Repository\Generators\Migrations
- * @author Anderson Andrade <contact@andersonandra.de>
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
 class SchemaParser implements Arrayable
 {

@@ -5,7 +5,7 @@ namespace Prettus\Repository\Generators;
 /**
  * Class CriteriaGenerator
  * @package Prettus\Repository\Generators
- * @author Anderson Andrade <contact@andersonandra.de>
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
 class CriteriaGenerator extends Generator
 {

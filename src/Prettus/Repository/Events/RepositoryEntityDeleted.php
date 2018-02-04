@@ -4,7 +4,7 @@ namespace Prettus\Repository\Events;
 /**
  * Class RepositoryEntityDeleted
  * @package Prettus\Repository\Events
- * @author Anderson Andrade <contact@andersonandra.de>
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
 class RepositoryEntityDeleted extends RepositoryEventBase
 {
