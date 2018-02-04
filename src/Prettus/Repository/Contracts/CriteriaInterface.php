@@ -4,6 +4,7 @@ namespace Prettus\Repository\Contracts;
 /**
  * Interface CriteriaInterface
  * @package Prettus\Repository\Contracts
+ * @author Anderson Andrade <contact@andersonandra.de>
  */
 interface CriteriaInterface
 {

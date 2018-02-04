@@ -4,8 +4,8 @@ namespace Prettus\Repository\Generators;
 /**
  * Class TransformerGenerator
  * @package Prettus\Repository\Generators
+ * @author Anderson Andrade <contact@andersonandra.de>
  */
-
 class TransformerGenerator extends Generator
 {
     /**

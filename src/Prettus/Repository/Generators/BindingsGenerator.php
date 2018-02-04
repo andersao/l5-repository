@@ -4,6 +4,7 @@ namespace Prettus\Repository\Generators;
 /**
  * Class BindingsGenerator
  * @package Prettus\Repository\Generators
+ * @author Anderson Andrade <contact@andersonandra.de>
  */
 class BindingsGenerator extends Generator
 {

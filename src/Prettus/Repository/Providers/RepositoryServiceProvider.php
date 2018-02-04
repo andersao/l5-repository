@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Class RepositoryServiceProvider
  * @package Prettus\Repository\Providers
+ * @author Anderson Andrade <contact@andersonandra.de>
  */
 class RepositoryServiceProvider extends ServiceProvider
 {

@@ -3,6 +3,11 @@ namespace Prettus\Repository\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class EventServiceProvider
+ * @package Prettus\Repository\Providers
+ * @author Anderson Andrade <contact@andersonandra.de>
+ */
 class EventServiceProvider extends ServiceProvider
 {
 

@@ -4,6 +4,7 @@ namespace Prettus\Repository\Generators\Migrations;
 /**
  * Class NameParser
  * @package Prettus\Repository\Generators\Migrations
+ * @author Anderson Andrade <contact@andersonandra.de>
  */
 class NameParser
 {

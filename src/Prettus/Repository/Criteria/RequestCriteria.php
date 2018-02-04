@@ -10,6 +10,7 @@ use Prettus\Repository\Contracts\RepositoryInterface;
 /**
  * Class RequestCriteria
  * @package Prettus\Repository\Criteria
+ * @author Anderson Andrade <contact@andersonandra.de>
  */
 class RequestCriteria implements CriteriaInterface
 {

@@ -11,6 +11,11 @@ use Prettus\Repository\Generators\RepositoryInterfaceGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * Class RepositoryCommand
+ * @package Prettus\Repository\Generators\Commands
+ * @author Anderson Andrade <contact@andersonandra.de>
+ */
 class RepositoryCommand extends Command
 {
 

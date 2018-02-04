@@ -24,6 +24,7 @@ use Prettus\Validator\Exceptions\ValidatorException;
 /**
  * Class BaseRepository
  * @package Prettus\Repository\Eloquent
+ * @author Anderson Andrade <contact@andersonandra.de>
  */
 abstract class BaseRepository implements RepositoryInterface, RepositoryCriteriaInterface
 {

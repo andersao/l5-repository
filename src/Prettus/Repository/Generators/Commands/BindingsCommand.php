@@ -9,6 +9,11 @@ use Prettus\Repository\Generators\FileAlreadyExistsException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * Class BindingsCommand
+ * @package Prettus\Repository\Generators\Commands
+ * @author Anderson Andrade <contact@andersonandra.de>
+ */
 class BindingsCommand extends Command
 {
 

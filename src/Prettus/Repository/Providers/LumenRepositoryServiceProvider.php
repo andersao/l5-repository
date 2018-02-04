@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Class LumenRepositoryServiceProvider
  * @package Prettus\Repository\Providers
+ * @author Anderson Andrade <contact@andersonandra.de>
  */
 class LumenRepositoryServiceProvider extends ServiceProvider
 {

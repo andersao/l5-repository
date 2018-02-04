@@ -1,13 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sune
- * Date: 21/01/2018
- * Time: 16.11
- */
-
 namespace Prettus\Repository\Traits;
 
+/**
+ * Trait ComparesVersionsTrait
+ * @package Prettus\Repository\Traits
+ * @author Anderson Andrade <contact@andersonandra.de>
+ */
 trait ComparesVersionsTrait
 {
     /**
