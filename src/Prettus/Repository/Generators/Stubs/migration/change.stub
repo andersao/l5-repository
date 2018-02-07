@@ -1,11 +1,13 @@
-˜<?php
+<?php
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+/**
+ * Class $CLASS$.
+ */
 class $CLASS$ extends Migration
 {
-
 	/**
 	 * Run the migrations.
 	 *
@@ -13,11 +15,9 @@ class $CLASS$ extends Migration
 	 */
 	public function up()
 	{
-	
 		Schema::table('$TABLE$', function(Blueprint $table) {
 $FIELDS_UP$
 		});
-
 	}
 
 	/**
@@ -27,11 +27,8 @@ $FIELDS_UP$
 	 */
 	public function down()
 	{
-
 		Schema::table('$TABLE$', function(Blueprint $table) {
 $FIELDS_DOWN$
 		});
-
 	}
-
 }

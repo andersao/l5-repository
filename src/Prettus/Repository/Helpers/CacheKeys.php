@@ -5,6 +5,7 @@ namespace Prettus\Repository\Helpers;
 /**
  * Class CacheKeys
  * @package Prettus\Repository\Helpers
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
 class CacheKeys
 {

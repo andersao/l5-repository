@@ -8,6 +8,7 @@ use Prettus\Repository\Contracts\PresenterInterface;
 /**
  * Class PresentableTrait
  * @package Prettus\Repository\Traits
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
 trait PresentableTrait
 {

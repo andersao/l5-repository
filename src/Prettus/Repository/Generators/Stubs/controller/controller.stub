@@ -12,10 +12,13 @@ use $APPNAME$Http\Requests\$CLASS$UpdateRequest;
 $REPOSITORY$
 $VALIDATOR$
 
-
+/**
+ * Class $CONTROLLER$Controller.
+ *
+ * @package $NAMESPACE$
+ */
 class $CONTROLLER$Controller extends Controller
 {
-
     /**
      * @var $CLASS$Repository
      */
@@ -26,12 +29,17 @@ class $CONTROLLER$Controller extends Controller
      */
     protected $validator;
 
+    /**
+     * $CONTROLLER$Controller constructor.
+     *
+     * @param $CLASS$Repository $repository
+     * @param $CLASS$Validator $validator
+     */
     public function __construct($CLASS$Repository $repository, $CLASS$Validator $validator)
     {
         $this->repository = $repository;
         $this->validator  = $validator;
     }
-
 
     /**
      * Display a listing of the resource.
@@ -59,10 +67,11 @@ class $CONTROLLER$Controller extends Controller
      * @param  $CLASS$CreateRequest $request
      *
      * @return \Illuminate\Http\Response
+     *
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
     public function store($CLASS$CreateRequest $request)
     {
-
         try {
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
@@ -92,7 +101,6 @@ class $CONTROLLER$Controller extends Controller
         }
     }
 
-
     /**
      * Display the specified resource.
      *
@@ -114,7 +122,6 @@ class $CONTROLLER$Controller extends Controller
         return view('$PLURAL$.show', compact('$SINGULAR$'));
     }
 
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -124,12 +131,10 @@ class $CONTROLLER$Controller extends Controller
      */
     public function edit($id)
     {
-
         $$SINGULAR$ = $this->repository->find($id);
 
         return view('$PLURAL$.edit', compact('$SINGULAR$'));
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -138,10 +143,11 @@ class $CONTROLLER$Controller extends Controller
      * @param  string            $id
      *
      * @return Response
+     *
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
     public function update($CLASS$UpdateRequest $request, $id)
     {
-
         try {
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);

@@ -5,6 +5,7 @@ namespace Prettus\Repository\Generators;
 /**
  * Class ControllerGenerator
  * @package Prettus\Repository\Generators
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
 class ControllerGenerator extends Generator
 {

@@ -8,6 +8,11 @@ use Prettus\Repository\Generators\FileAlreadyExistsException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * Class CriteriaCommand
+ * @package Prettus\Repository\Generators\Commands
+ * @author Anderson Andrade <contato@andersonandra.de>
+ */
 class CriteriaCommand extends Command
 {
     /**

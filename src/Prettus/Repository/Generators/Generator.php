@@ -5,6 +5,11 @@ namespace Prettus\Repository\Generators;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 
+/**
+ * Class Generator
+ * @package Prettus\Repository\Generators
+ * @author Anderson Andrade <contato@andersonandra.de>
+ */
 abstract class Generator
 {
 

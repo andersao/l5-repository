@@ -9,6 +9,11 @@ use Prettus\Repository\Generators\TransformerGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * Class PresenterCommand
+ * @package Prettus\Repository\Generators\Commands
+ * @author Anderson Andrade <contato@andersonandra.de>
+ */
 class PresenterCommand extends Command
 {
 
