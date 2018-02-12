@@ -139,20 +139,20 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function validator()
     {
 
-        if (isset($this->rules) && !is_null($this->rules) && is_array($this->rules) && !empty($this->rules)) {
-            if (class_exists('Prettus\Validator\LaravelValidator')) {
-                $validator = app('Prettus\Validator\LaravelValidator');
-                if ($validator instanceof ValidatorInterface) {
-                    $validator->setRules($this->rules);
-
-                    return $validator;
-                }
-            } else {
-                throw new Exception(trans('repository::packages.prettus_laravel_validation_required'));
-            }
+        if (!isset($this->rules) || is_null($this->rules) || !is_array($this->rules) || empty($this->rules)) {
+            return null;
         }
+        
+        if (!class_exists('Prettus\Validator\LaravelValidator')) {
+            throw new Exception(trans('repository::packages.prettus_laravel_validation_required'));
+        }
+        
+        $validator = app('Prettus\Validator\LaravelValidator');
+        if ($validator instanceof ValidatorInterface) {
+            $validator->setRules($this->rules);
 
-        return null;
+            return $validator;
+        } 
     }
 
     /**
