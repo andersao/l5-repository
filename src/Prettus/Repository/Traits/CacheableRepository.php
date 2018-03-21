@@ -340,4 +340,18 @@ trait CacheableRepository
         $this->resetScope();
         return $value;
     }
+    
+    /**
+     * Clear cache
+     *
+     * @return void
+     */
+    public function clearCache()
+    {
+        $keys = CacheKeys::getKeys(get_called_class());
+
+        foreach ($keys as $key) {
+            $this->getCacheRepository()->forget($key);
+        }
+    }
 }
