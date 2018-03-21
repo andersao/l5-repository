@@ -956,12 +956,20 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     protected function applyConditions(array $where)
     {
         foreach ($where as $field => $value) {
-            if (is_array($value)) {
+            if (!is_array($value))
+            {
+                $this->model = $this->model->where($field, '=', $value);
+                continue;
+            }
+
+            if (is_numeric($field))
+            {
                 list($field, $condition, $val) = $value;
                 $this->model = $this->model->where($field, $condition, $val);
-            } else {
-                $this->model = $this->model->where($field, '=', $value);
+                continue;
             }
+
+            $this->model = $this->model->whereIn($field, $value);
         }
     }
 

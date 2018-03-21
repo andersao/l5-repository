@@ -435,8 +435,25 @@ Delete entry in Repository by multiple fields
 ```php
 $this->repository->deleteWhere([
     //Default Condition =
-    'state_id'=>'10',
-    'country_id'=>'15',
+    'state_id'   => '10',
+    'country_id' => '15',
+])
+```
+
+or full form to specify where condition
+
+```php
+$this->repository->deleteWhere([
+    ['state_id', '=', '10'],
+    ['country_id', '=', '15'],
+])
+```
+
+Delete entry in Repository by multiple field values (whereIn)
+
+```php
+$this->repository->deleteWhere([
+    'status' => ['rejected', 'canceled']
 ])
 ```
 
