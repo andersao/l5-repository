@@ -78,13 +78,15 @@ class ModelGenerator extends Generator
      */
     public function getFillable()
     {
+        $this->fillable = $this->options['fillable'];
+
         if (!$this->fillable) {
             return '[]';
         }
         $results = '[' . PHP_EOL;
 
-        foreach ($this->getSchemaParser()->toArray() as $column => $value) {
-            $results .= "\t\t'{$column}'," . PHP_EOL;
+        foreach ($this->getSchemaParser() as $value) {
+            $results .= "\t\t'{$value}'," . PHP_EOL;
         }
 
         return $results . "\t" . ']';
@@ -97,6 +99,6 @@ class ModelGenerator extends Generator
      */
     public function getSchemaParser()
     {
-        return new SchemaParser($this->fillable);
+        return explode(',', str_replace(' ', '', $this->fillable));
     }
 }
