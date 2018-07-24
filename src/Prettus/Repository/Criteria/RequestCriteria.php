@@ -14,247 +14,152 @@ use Prettus\Repository\Contracts\RepositoryInterface;
  */
 class RequestCriteria implements CriteriaInterface
 {
-    /**
-     * @var \Illuminate\Http\Request
-     */
-    protected $request;
+    protected $operatorMap = [
+        'gt' => '>',
+        'gte' => '>=',
+        'lt' => '<',
+        'lte' => '<=',
+        'like' => 'like',
+        'in' => 'in'
+    ];
 
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
-
-
-    /**
-     * Apply criteria in query repository
-     *
-     * @param         Builder|Model     $model
-     * @param RepositoryInterface $repository
-     *
-     * @return mixed
-     * @throws \Exception
-     */
     public function apply($model, RepositoryInterface $repository)
     {
-        $fieldsSearchable = $repository->getFieldsSearchable();
-        $search = $this->request->get(config('repository.criteria.params.search', 'search'), null);
-        $searchFields = $this->request->get(config('repository.criteria.params.searchFields', 'searchFields'), null);
-        $filter = $this->request->get(config('repository.criteria.params.filter', 'filter'), null);
-        $orderBy = $this->request->get(config('repository.criteria.params.orderBy', 'orderBy'), null);
-        $sortedBy = $this->request->get(config('repository.criteria.params.sortedBy', 'sortedBy'), 'asc');
-        $with = $this->request->get(config('repository.criteria.params.with', 'with'), null);
-        $searchJoin = $this->request->get(config('repository.criteria.params.searchJoin', 'searchJoin'), null);
-        $sortedBy = !empty($sortedBy) ? $sortedBy : 'asc';
+        /*
+         * -------------
+         *  filtering
+         * -------------
+         */
+        $filterSetting = $this->parseSetting($repository->getFieldsSearchable());
 
-        if ($search && is_array($fieldsSearchable) && count($fieldsSearchable)) {
+        $requestsQuery = $this->request->query();
 
-            $searchFields = is_array($searchFields) || is_null($searchFields) ? $searchFields : explode(';', $searchFields);
-            $fields = $this->parserFieldsSearch($fieldsSearchable, $searchFields);
-            $isFirstField = true;
-            $searchData = $this->parserSearchData($search);
-            $search = $this->parserSearchValue($search);
-            $modelForceAndWhere = strtolower($searchJoin) === 'and';
+        foreach ($requestsQuery as $key => $value){
+            $queryName = $this->parseQueryName($key);
+            $operator = $this->parseOperator($key);
 
-            $model = $model->where(function ($query) use ($fields, $search, $searchData, $isFirstField, $modelForceAndWhere) {
+            // is query enable?
+            if(!array_key_exists($queryName, $filterSetting)) {
+                continue;
+            }
+
+            $setting = $filterSetting[$queryName];
+
+            // is operator enable?
+            if(isset($setting['operators']) && !isset($setting['operators'][$operator])) {
+                continue;
+            }
+            $primaryTable = $model->getModel()->getTable();
+            $column = $setting['column'] ?? $queryName;
+            $value = ($operator == 'like') ? "%{$value}%" : $value;
+
+            $model = $model->where(function($query)use($primaryTable, $column, $operator, $value, $setting){
                 /** @var Builder $query */
 
-                foreach ($fields as $field => $condition) {
+                if(isset($setting['relation'])){
+                    $relation = $setting['relation'];
+                    $query->whereHas($relation , function($query) use ($column, $operator, $value){
+                        $this->applyWhere($query,$column,$operator,$value);
+                    });
 
-                    if (is_numeric($field)) {
-                        $field = $condition;
-                        $condition = "=";
-                    }
-
-                    $value = null;
-
-                    $condition = trim(strtolower($condition));
-
-                    if (isset($searchData[$field])) {
-                        $value = ($condition == "like" || $condition == "ilike") ? "%{$searchData[$field]}%" : $searchData[$field];
-                    } else {
-                        if (!is_null($search)) {
-                            $value = ($condition == "like" || $condition == "ilike") ? "%{$search}%" : $search;
-                        }
-                    }
-
-                    $relation = null;
-                    if(stripos($field, '.')) {
-                        $explode = explode('.', $field);
-                        $field = array_pop($explode);
-                        $relation = implode('.', $explode);
-                    }
-                    $modelTableName = $query->getModel()->getTable();
-                    if ( $isFirstField || $modelForceAndWhere ) {
-                        if (!is_null($value)) {
-                            if(!is_null($relation)) {
-                                $query->whereHas($relation, function($query) use($field,$condition,$value) {
-                                    $query->where($field,$condition,$value);
-                                });
-                            } else {
-                                $query->where($modelTableName.'.'.$field,$condition,$value);
-                            }
-                            $isFirstField = false;
-                        }
-                    } else {
-                        if (!is_null($value)) {
-                            if(!is_null($relation)) {
-                                $query->orWhereHas($relation, function($query) use($field,$condition,$value) {
-                                    $query->where($field,$condition,$value);
-                                });
-                            } else {
-                                $query->orWhere($modelTableName.'.'.$field, $condition, $value);
-                            }
-                        }
-                    }
+                } else {
+                    $this->applyWhere($query,$primaryTable.'.'.$column,$operator,$value);
                 }
             });
         }
 
-        if (isset($orderBy) && !empty($orderBy)) {
-            $split = explode('|', $orderBy);
-            if(count($split) > 1) {
-                /*
-                 * ex.
-                 * products|description -> join products on current_table.product_id = products.id order by description
-                 *
-                 * products:custom_id|products.description -> join products on current_table.custom_id = products.id order
-                 * by products.description (in case both tables have same column name)
-                 */
-                $table = $model->getModel()->getTable();
-                $sortTable = $split[0];
-                $sortColumn = $split[1];
+        /*
+         * -------------
+         *  sorting
+         * -------------
+         */
 
-                $split = explode(':', $sortTable);
-                if(count($split) > 1) {
-                    $sortTable = $split[0];
-                    $keyName = $table.'.'.$split[1];
-                } else {
-                    /*
-                     * If you do not define which column to use as a joining column on current table, it will
-                     * use a singular of a join table appended with _id
-                     *
-                     * ex.
-                     * products -> product_id
-                     */
-                    $prefix = str_singular($sortTable);
-                    $keyName = $table.'.'.$prefix.'_id';
+        $orderBy = $this->request->query('order_by');
+        $sortSetting = $repository->getSortable();
+
+        if($orderBy && $sortSetting){
+            $sortSetting = $this->parseSetting($sortSetting);
+
+            // is query enable?
+            if(array_key_exists($orderBy, $sortSetting)) {
+                $setting = $sortSetting[$orderBy];
+
+                $primaryTable = $model->getModel()->getTable();
+                if(isset($setting['join'])){
+                    $relations = $setting['join'];
+                    $relationExplode = explode('.',$relations);
+
+                    $firstTable = null;
+                    foreach ($relationExplode as $index => $secondTable)
+                    {
+
+                        $firstTable = ($firstTable == null) ? $primaryTable : $relationExplode[$index-1];
+                        $joinScope = ($firstTable == $primaryTable) ? 'leftJoin' : 'join';
+                        if(\Schema::hasColumn($firstTable, str_singular($secondTable).'_id')) {
+                            $model = $model->{$joinScope}($secondTable, "$firstTable.".str_singular($secondTable)."_id", '=',"$secondTable.id");
+                        }else if(\Schema::hasColumn($secondTable, str_singular($firstTable).'_id')) {
+                            $model = $model->{$joinScope}($secondTable, "$firstTable.id", '=', "$secondTable.".str_singular($firstTable)."_id");
+                        }
+                    }
                 }
 
-                $model = $model
-                    ->leftJoin($sortTable, $keyName, '=', $sortTable.'.id')
-                    ->orderBy($sortColumn, $sortedBy)
-                    ->addSelect($table.'.*');
-            } else {
-                $model = $model->orderBy($orderBy, $sortedBy);
+                $dir = $this->request->query('order_dir','asc');
+                $column = $setting['column'] ?? $orderBy;
+                $model = $model->orderBy($column, $dir)
+                    ->addSelect("$primaryTable.*");
             }
         }
 
-        if (isset($filter) && !empty($filter)) {
-            if (is_string($filter)) {
-                $filter = explode(';', $filter);
-            }
-
-            $model = $model->select($filter);
-        }
-
-        if ($with) {
-            $with = explode(';', $with);
-            $model = $model->with($with);
-        }
 
         return $model;
     }
 
-    /**
-     * @param $search
-     *
-     * @return array
-     */
-    protected function parserSearchData($search)
+    protected function applyWhere($query, $column, $operator, $value, $boolean = 'and')
     {
-        $searchData = [];
+        if($value === "null"){
+            $value = null;
+        }
+        if($operator == 'in') {
+            $query->whereIn($column, array_wrap($value), $boolean);
+        }else{
+            $query->where($column, $operator, $value, $boolean);
+        }
+    }
 
-        if (stripos($search, ':')) {
-            $fields = explode(';', $search);
+    protected function parseSetting(array $original)
+    {
+        $setting = [];
 
-            foreach ($fields as $row) {
-                try {
-                    list($field, $value) = explode(':', $row);
-                    $searchData[$field] = $value;
-                } catch (\Exception $e) {
-                    //Surround offset error
-                }
+        foreach ($original as $key => $value){
+            if(is_string($key)){
+                $setting[$key] = $value;
+            }else{
+                $setting[$value] = [];
             }
         }
 
-        return $searchData;
+        return $setting;
     }
 
     /**
-     * @param $search
-     *
-     * @return null
+     * 'abc_123_gte' => 'abc_123'
+     * @param $queryName
+     * @return string
      */
-    protected function parserSearchValue($search)
+    protected function parseQueryName($originalQueryName)
     {
-
-        if (stripos($search, ';') || stripos($search, ':')) {
-            $values = explode(';', $search);
-            foreach ($values as $value) {
-                $s = explode(':', $value);
-                if (count($s) == 1) {
-                    return $s[0];
-                }
-            }
-
-            return null;
+        $operator = last(explode('_',$originalQueryName));
+        if(isset($this->operatorMap[$operator])){
+            $array = explode('_',$originalQueryName);
+            array_pop($array);
+            return implode($array,'_');
         }
-
-        return $search;
+        return $originalQueryName;
     }
 
-
-    protected function parserFieldsSearch(array $fields = [], array $searchFields = null)
+    protected function parseOperator($queryName)
     {
-        if (!is_null($searchFields) && count($searchFields)) {
-            $acceptedConditions = config('repository.criteria.acceptedConditions', [
-                '=',
-                'like'
-            ]);
-            $originalFields = $fields;
-            $fields = [];
-
-            foreach ($searchFields as $index => $field) {
-                $field_parts = explode(':', $field);
-                $temporaryIndex = array_search($field_parts[0], $originalFields);
-
-                if (count($field_parts) == 2) {
-                    if (in_array($field_parts[1], $acceptedConditions)) {
-                        unset($originalFields[$temporaryIndex]);
-                        $field = $field_parts[0];
-                        $condition = $field_parts[1];
-                        $originalFields[$field] = $condition;
-                        $searchFields[$index] = $field;
-                    }
-                }
-            }
-
-            foreach ($originalFields as $field => $condition) {
-                if (is_numeric($field)) {
-                    $field = $condition;
-                    $condition = "=";
-                }
-                if (in_array($field, $searchFields)) {
-                    $fields[$field] = $condition;
-                }
-            }
-
-            if (count($fields) == 0) {
-                throw new \Exception(trans('repository::criteria.fields_not_accepted', ['field' => implode(',', $searchFields)]));
-            }
-
-        }
-
-        return $fields;
+        $operator = last(explode('_',$queryName));
+        return $this->operatorMap[$operator] ?? '=';
     }
 }
