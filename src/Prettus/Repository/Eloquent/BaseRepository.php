@@ -46,6 +46,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     protected $fieldSearchable = [];
 
     /**
+     * @var array
+     */
+    protected $sortable = [];
+
+    /**
      * @var PresenterInterface
      */
     protected $presenter;
@@ -238,6 +243,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function getFieldsSearchable()
     {
         return $this->fieldSearchable;
+    }
+
+    public function getSortable()
+    {
+        return $this->sortable;
     }
 
     /**

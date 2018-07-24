@@ -285,4 +285,6 @@ interface RepositoryInterface
      * @return mixed
      */
     public function firstOrCreate(array $attributes = []);
+
+    public function getSortable();
 }
