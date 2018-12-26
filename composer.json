@@ -32,7 +32,10 @@
   "autoload": {
     "psr-4": {
       "Prettus\\Repository\\": "src/Prettus/Repository/"
-    }
+    },
+    "files": [
+      "src/Prettus/Repository/Helpers/mix.php"
+    ]
   },
   "config": {
     "preferred-install": "dist"
