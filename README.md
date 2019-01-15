@@ -296,7 +296,7 @@ The command will also create your basic RESTfull controller so just add this lin
 
 When running the command, you will be creating the "Entities" folder and "Repositories" inside the folder that you set as the default.
 
-Done, done that just now you do bind its interface for your real repository, for example in your own Repositories Service Provider.
+Now that is done, you still need to bind its interface for your real repository, for example in your own Repositories Service Provider.
 
 ```php
 App::bind('{YOUR_NAMESPACE}Repositories\PostRepository', '{YOUR_NAMESPACE}Repositories\PostRepositoryEloquent');
