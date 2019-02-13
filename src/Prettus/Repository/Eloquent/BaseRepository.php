@@ -525,6 +525,25 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
+     * Find data by between values in one field
+     *
+     * @param       $field
+     * @param array $values
+     * @param array $columns
+     *
+     * @return mixed
+     */
+    public function findWhereBetween($field, array $values, $columns = ['*'])
+    {
+        $this->applyCriteria();
+        $this->applyScope();
+        $model = $this->model->whereBetween($field, $values)->get($columns);
+        $this->resetModel();
+
+        return $this->parserResult($model);
+    }
+
+    /**
      * Find data by excluding multiple values in one field
      *
      * @param       $field

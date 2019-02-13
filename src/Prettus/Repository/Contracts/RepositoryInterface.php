@@ -48,7 +48,7 @@ interface RepositoryInterface
      * @param $attributes
      * @return mixed
      */
-     public function syncWithoutDetaching($id, $relation, $attributes);
+    public function syncWithoutDetaching($id, $relation, $attributes);
 
     /**
      * Retrieve all data of repository
@@ -120,6 +120,17 @@ interface RepositoryInterface
      * @return mixed
      */
     public function findWhereIn($field, array $values, $columns = ['*']);
+
+    /**
+     * Find data by between values in one field
+     *
+     * @param       $field
+     * @param array $values
+     * @param array $columns
+     *
+     * @return mixed
+     */
+    public function findWhereBetween($field, array $values, $columns = ['*']);
 
     /**
      * Find data by excluding multiple values in one field
