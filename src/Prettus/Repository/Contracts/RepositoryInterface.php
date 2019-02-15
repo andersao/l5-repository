@@ -122,17 +122,6 @@ interface RepositoryInterface
     public function findWhereIn($field, array $values, $columns = ['*']);
 
     /**
-     * Find data by between values in one field
-     *
-     * @param       $field
-     * @param array $values
-     * @param array $columns
-     *
-     * @return mixed
-     */
-    public function findWhereBetween($field, array $values, $columns = ['*']);
-
-    /**
      * Find data by excluding multiple values in one field
      *
      * @param       $field
@@ -142,6 +131,17 @@ interface RepositoryInterface
      * @return mixed
      */
     public function findWhereNotIn($field, array $values, $columns = ['*']);
+
+    /**
+     * Find data by between values in one field
+     *
+     * @param       $field
+     * @param array $values
+     * @param array $columns
+     *
+     * @return mixed
+     */
+    public function findWhereBetween($field, array $values, $columns = ['*']);
 
     /**
      * Save a new entity in repository
