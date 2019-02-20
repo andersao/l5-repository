@@ -291,6 +291,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * @param $attributes
      * @param bool $detaching
      * @return mixed
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
     public function sync($id, $relation, $attributes, $detaching = true)
     {
@@ -607,6 +608,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * @param       $id
      *
      * @return mixed
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
     public function update(array $attributes, $id)
     {
@@ -627,16 +629,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             $this->validator->with($attributes)->setId($id)->passesOrFail(ValidatorInterface::RULE_UPDATE);
         }
 
-        $temporarySkipPresenter = $this->skipPresenter;
-
-        $this->skipPresenter(true);
-
-        $model = $this->model->findOrFail($id);
-        $model->fill($attributes);
-        $model->save();
-
-        $this->skipPresenter($temporarySkipPresenter);
-        $this->resetModel();
+        $model = $this->findModel($id);
+        $model->update($attributes);
 
         event(new RepositoryEntityUpdated($this, $model));
 
@@ -681,6 +675,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * @param $id
      *
      * @return int
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
     public function delete($id)
     {
