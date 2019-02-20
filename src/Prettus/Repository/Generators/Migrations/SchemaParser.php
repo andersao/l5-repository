@@ -114,8 +114,8 @@ class SchemaParser implements Arrayable
      */
     public function getColumn($schema)
     {
-        return array_first(explode(':', $schema), function ($key) {
-            return $key;
+        return array_first(explode(':', $schema), function ($key, $value) {
+            return $value;
         });
     }
 
@@ -155,7 +155,7 @@ class SchemaParser implements Arrayable
      */
     public function getCustomAttribute($column)
     {
-        return (array) $this->customAttributes[$column];
+        return (array)$this->customAttributes[$column];
     }
 
     /**

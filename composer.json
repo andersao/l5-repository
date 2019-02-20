@@ -1,13 +1,7 @@
 {
   "name": "prettus/l5-repository",
   "description": "Laravel 5 - Repositories to  the database layer",
-  "keywords": [
-    "laravel",
-    "repository",
-    "eloquent",
-    "model",
-    "cache"
-  ],
+  "keywords": ["laravel", "repository", "eloquent", "model", "cache"],
   "license": "MIT",
   "authors": [
     {
@@ -15,19 +9,14 @@
       "homepage": "http://andersonandra.de",
       "email": "contato@andersonandra.de",
       "role": "Developer"
-    },
-    {
-      "name": "Photonite",
-      "email": "alaaisale7@gmail.com",
-      "role": "Developer"
     }
   ],
   "homepage": "http://andersao.github.io/l5-repository",
   "support": {
     "email": "contato@andersonandra.de",
-    "issues": "https://github.com/andersao/l5-repository/issues",
-    "wiki": "https://github.com/andersao/l5-repository",
-    "source": "https://github.com/andersao/l5-repository",
+    "issues":"https://github.com/andersao/l5-repository/issues",
+    "wiki":"https://github.com/andersao/l5-repository",
+    "source":"https://github.com/andersao/l5-repository",
     "docs": "http://andersao.github.io/l5-repository"
   },
   "require": {
@@ -40,20 +29,9 @@
     "illuminate/filesystem": "~5.0",
     "prettus/laravel-validation": "1.1.*"
   },
-  "require-dev": {
-    "prettus/laravel-validation": "1.1.*",
-    "fzaninotto/faker": "^1.4",
-    "phpunit/phpunit": "^7.0",
-    "mockery/mockery": "^1.0"
-  },
   "autoload": {
     "psr-4": {
       "Prettus\\Repository\\": "src/Prettus/Repository/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Tests\\": "tests/"
     }
   },
   "config": {

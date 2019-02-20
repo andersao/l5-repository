@@ -6,12 +6,13 @@
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
-         processIsolation="true"
+         processIsolation="false"
          stopOnFailure="false"
+         syntaxCheck="false"
         >
     <testsuites>
         <testsuite name="Prettus Repository Test Suite">
-            <directory suffix="Test.php">./tests/</directory>
+            <directory suffix=".php">./tests/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

@@ -138,16 +138,17 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function validator()
     {
-        if (isset($this->rules) && is_array($this->rules) && !empty($this->rules)) {
-            if (!class_exists('Prettus\Validator\LaravelValidator')) {
+
+        if (isset($this->rules) && !is_null($this->rules) && is_array($this->rules) && !empty($this->rules)) {
+            if (class_exists('Prettus\Validator\LaravelValidator')) {
+                $validator = app('Prettus\Validator\LaravelValidator');
+                if ($validator instanceof ValidatorInterface) {
+                    $validator->setRules($this->rules);
+
+                    return $validator;
+                }
+            } else {
                 throw new Exception(trans('repository::packages.prettus_laravel_validation_required'));
-            }
-
-            $validator = app('Prettus\Validator\LaravelValidator');
-
-            if ($validator instanceof ValidatorInterface) {
-                $validator->setRules($this->rules);
-                return $validator;
             }
         }
 
@@ -347,6 +348,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         return $this->all($columns);
     }
 
+
     /**
      * Retrieve first data of repository
      *
@@ -544,27 +546,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
-     * Find the first data by multiple fields
-     *
-     * @param array $where
-     * @param array $columns
-     *
-     * @throws \Prettus\Repository\Exceptions\RepositoryException
-     *
-     * @return mixed
-     *
-     */
-    public function firstWhere(array $where, $columns = ['*'])
-    {
-        $this->applyCriteria();
-        $this->applyScope();
-        $this->applyConditions($where);
-        $model = $this->model->first($columns);
-        $this->resetModel();
-        return $this->parserResult($model);
-    }
-
-    /**
      * Save a new entity in repository
      *
      * @throws ValidatorException
@@ -579,9 +560,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             // we should pass data that has been casts by the model
             // to make sure data type are same because validator may need to use
             // this data to compare with data that fetch from database.
-            if ($this->versionCompare($this->app->version(), "5.2.*", ">")) {
+            if( $this->versionCompare($this->app->version(), "5.2.*", ">") ){
                 $attributes = $this->model->newInstance()->forceFill($attributes)->makeVisible($this->model->getHidden())->toArray();
-            } else {
+            }else{
                 $model = $this->model->newInstance()->forceFill($attributes);
                 $model->addVisible($this->model->getHidden());
                 $attributes = $model->toArray();
@@ -618,9 +599,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             // we should pass data that has been casts by the model
             // to make sure data type are same because validator may need to use
             // this data to compare with data that fetch from database.
-            if ($this->versionCompare($this->app->version(), "5.2.*", ">")) {
+            if( $this->versionCompare($this->app->version(), "5.2.*", ">") ){
                 $attributes = $this->model->newInstance()->forceFill($attributes)->makeVisible($this->model->getHidden())->toArray();
-            } else {
+            }else{
                 $model = $this->model->newInstance()->forceFill($attributes);
                 $model->addVisible($this->model->getHidden());
                 $attributes = $model->toArray();
@@ -916,6 +897,84 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
+     * Apply scope in current Query
+     *
+     * @return $this
+     */
+    protected function applyScope()
+    {
+        if (isset($this->scopeQuery) && is_callable($this->scopeQuery)) {
+            $callback = $this->scopeQuery;
+            $this->model = $callback($this->model);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Apply criteria in current Query
+     *
+     * @return $this
+     */
+    protected function applyCriteria()
+    {
+
+        if ($this->skipCriteria === true) {
+            return $this;
+        }
+
+        $criteria = $this->getCriteria();
+
+        if ($criteria) {
+            foreach ($criteria as $c) {
+                if ($c instanceof CriteriaInterface) {
+                    $this->model = $c->apply($this->model, $this);
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Applies the given where conditions to the model.
+     *
+     * @param array $where
+     * @return void
+     */
+    protected function applyConditions(array $where)
+    {
+        foreach ($where as $field => $value) {
+            if (is_array($value)) {
+                list($field, $condition, $val) = $value;
+                $this->model = $this->model->where($field, $condition, $val);
+            } else {
+                $this->model = $this->model->where($field, '=', $value);
+            }
+        }
+    }
+
+    /**
+     * Finds the actual model without using the presenter
+     *
+     * @param $id
+     * @return Model
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     */
+    protected function findModel($id)
+    {
+        $temporarySkipPresenter = $this->skipPresenter;
+
+        $this->skipPresenter(true);
+
+        $model = $this->find($id);
+
+        $this->skipPresenter($temporarySkipPresenter);
+
+        return $model;
+    }
+
+    /**
      * Skip Presenter Wrapper
      *
      * @param bool $status
@@ -957,83 +1016,5 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         }
 
         return $result;
-    }
-
-    /**
-     * Applies the given where conditions to the model.
-     *
-     * @param array $where
-     * @return void
-     */
-    protected function applyConditions(array $where)
-    {
-        foreach ($where as $field => $value) {
-            if (is_array($value)) {
-                list($field, $condition, $val) = $value;
-                $this->model = $this->model->where($field, $condition, $val);
-            } else {
-                $this->model = $this->model->where($field, '=', $value);
-            }
-        }
-    }
-
-    /**
-     * Apply criteria in current Query
-     *
-     * @return $this
-     */
-    protected function applyCriteria()
-    {
-
-        if ($this->skipCriteria === true) {
-            return $this;
-        }
-
-        $criteria = $this->getCriteria();
-
-        if ($criteria) {
-            foreach ($criteria as $c) {
-                if ($c instanceof CriteriaInterface) {
-                    $this->model = $c->apply($this->model, $this);
-                }
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Apply scope in current Query
-     *
-     * @return $this
-     */
-    protected function applyScope()
-    {
-        if (isset($this->scopeQuery) && is_callable($this->scopeQuery)) {
-            $callback = $this->scopeQuery;
-            $this->model = $callback($this->model);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Finds the actual model without using the presenter
-     *
-     * @param $id
-     * @return Model
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
-     */
-    protected function findModel($id)
-    {
-        $temporarySkipPresenter = $this->skipPresenter;
-
-        $this->skipPresenter(true);
-
-        $model = $this->find($id);
-
-        $this->skipPresenter($temporarySkipPresenter);
-
-        return $model;
     }
 }
