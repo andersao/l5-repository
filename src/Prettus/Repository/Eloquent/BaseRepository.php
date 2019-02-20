@@ -294,7 +294,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function sync($id, $relation, $attributes, $detaching = true)
     {
-        return $this->find($id)->{$relation}()->sync($attributes, $detaching);
+        return $this->findModel($id)->{$relation}()->sync($attributes, $detaching);
     }
 
     /**
@@ -452,6 +452,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * @param array $columns
      *
      * @return mixed
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
     public function find($id, $columns = ['*'])
     {
@@ -683,16 +684,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function delete($id)
     {
-        $this->applyScope();
+        $model = $this->findModel($id);
 
-        $temporarySkipPresenter = $this->skipPresenter;
-        $this->skipPresenter(true);
-
-        $model = $this->find($id);
         $originalModel = clone $model;
-
-        $this->skipPresenter($temporarySkipPresenter);
-        $this->resetModel();
 
         $deleted = $model->delete();
 
@@ -927,64 +921,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
-     * Apply scope in current Query
-     *
-     * @return $this
-     */
-    protected function applyScope()
-    {
-        if (isset($this->scopeQuery) && is_callable($this->scopeQuery)) {
-            $callback = $this->scopeQuery;
-            $this->model = $callback($this->model);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Apply criteria in current Query
-     *
-     * @return $this
-     */
-    protected function applyCriteria()
-    {
-
-        if ($this->skipCriteria === true) {
-            return $this;
-        }
-
-        $criteria = $this->getCriteria();
-
-        if ($criteria) {
-            foreach ($criteria as $c) {
-                if ($c instanceof CriteriaInterface) {
-                    $this->model = $c->apply($this->model, $this);
-                }
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Applies the given where conditions to the model.
-     *
-     * @param array $where
-     * @return void
-     */
-    protected function applyConditions(array $where)
-    {
-        foreach ($where as $field => $value) {
-            if (is_array($value)) {
-                list($field, $condition, $val) = $value;
-                $this->model = $this->model->where($field, $condition, $val);
-            } else {
-                $this->model = $this->model->where($field, '=', $value);
-            }
-        }
-    }
-
-    /**
      * Skip Presenter Wrapper
      *
      * @param bool $status
@@ -1026,5 +962,83 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         }
 
         return $result;
+    }
+
+    /**
+     * Applies the given where conditions to the model.
+     *
+     * @param array $where
+     * @return void
+     */
+    protected function applyConditions(array $where)
+    {
+        foreach ($where as $field => $value) {
+            if (is_array($value)) {
+                list($field, $condition, $val) = $value;
+                $this->model = $this->model->where($field, $condition, $val);
+            } else {
+                $this->model = $this->model->where($field, '=', $value);
+            }
+        }
+    }
+
+    /**
+     * Apply criteria in current Query
+     *
+     * @return $this
+     */
+    protected function applyCriteria()
+    {
+
+        if ($this->skipCriteria === true) {
+            return $this;
+        }
+
+        $criteria = $this->getCriteria();
+
+        if ($criteria) {
+            foreach ($criteria as $c) {
+                if ($c instanceof CriteriaInterface) {
+                    $this->model = $c->apply($this->model, $this);
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Apply scope in current Query
+     *
+     * @return $this
+     */
+    protected function applyScope()
+    {
+        if (isset($this->scopeQuery) && is_callable($this->scopeQuery)) {
+            $callback = $this->scopeQuery;
+            $this->model = $callback($this->model);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Finds the actual model without using the presenter
+     *
+     * @param $id
+     * @return Model
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     */
+    protected function findModel($id)
+    {
+        $temporarySkipPresenter = $this->skipPresenter;
+
+        $this->skipPresenter(true);
+
+        $model = $this->find($id);
+
+        $this->skipPresenter($temporarySkipPresenter);
+
+        return $model;
     }
 }
