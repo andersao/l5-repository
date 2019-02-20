@@ -18,7 +18,6 @@ class RulesParser implements Arrayable
      */
     protected $rules;
 
-
     /**
      * Create new instance.
      *
@@ -82,11 +81,10 @@ class RulesParser implements Arrayable
      */
     public function getColumn($rules)
     {
-        return array_first(explode('=>', $rules), function ($key, $value) {
-            return $value;
+        return array_first(explode('=>', $rules), function ($key) {
+            return $key;
         });
     }
-
 
     /**
      * Get column attributes.
