@@ -49,7 +49,7 @@ $(".searchForm").submit(function(e) {
 
     // 执行自定义验证
     if(typeof beforeSubmit != 'undefined' && triggerBeofreSubmit){
-        var result = eval(beforeSubmit).call(null);
+        var result = eval('window.'+beforeSubmit + '()');
         // 验证失败则不提交
         if(result === false){
             return false;
@@ -110,7 +110,8 @@ $(".searchForm").submit(function(e) {
         // 获取输入框值并拼接
         $(this).find('[name]').each(function() {
             var key = $(this).attr('name'),
-                default_value = $(this).data('default-value');
+                default_value = $(this).data('default-value'),
+                allow_empty = $(this).data('allow-empty');
 
             // 如果有指定默认值 那么以指定的默认值来判断是否跳过
             if(typeof default_value != 'undefined'){
@@ -118,7 +119,7 @@ $(".searchForm").submit(function(e) {
                     return true;
                 }
             }else{
-                if (!$(this).val()) {
+                if (typeof allow_empty == 'undefined' && !$(this).val()) {
                     return true;
                 }
             }
@@ -126,7 +127,7 @@ $(".searchForm").submit(function(e) {
                 if ($(this).attr('type') == 'checkbox' && !$(this).is(':checked')) {
                     return true;
                 }
-                if ($(this).val() == '' ) {
+                if (typeof allow_empty == 'undefined' && $(this).val() == '' ) {
                     return true;
                 }
                 ignore += '&' + key + '=' + $(this).val();
