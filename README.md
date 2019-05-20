@@ -56,6 +56,12 @@ composer require prettus/l5-repository
 
 ### Laravel
 
+#### >= laravel5.5
+
+ServiceProvider will be attached automatically
+
+#### Other
+
 In your `config/app.php` add `Prettus\Repository\Providers\RepositoryServiceProvider::class` to the end of the `providers` array:
 
 ```php
@@ -93,6 +99,7 @@ php artisan vendor:publish --provider "Prettus\Repository\Providers\RepositorySe
 - update(array $attributes, $id)
 - updateOrCreate(array $attributes, array $values = [])
 - delete($id)
+- deleteWhere(array $where)
 - orderBy($column, $direction = 'asc');
 - with(array $relations);
 - has(string $relation);
@@ -193,7 +200,7 @@ You must first configure the storage location of the repository files. By defaul
 ```php
     ...
     'generator'=>[
-        'basePath'=>app_path(),
+        'basePath'=>app()->path(),
         'rootNamespace'=>'App\\',
         'paths'=>[
             'models'       => 'Entities',
@@ -223,7 +230,7 @@ Additionally, you may wish to customize where your generated classes end up bein
 
 ```php
     'generator'=>[
-        'basePath'=>app_path(),
+        'basePath'=>app()->path(),
         'rootNamespace'=>'App\\',
         'paths'=>[
             'models'=>'Models',
@@ -423,6 +430,16 @@ Delete entry in Repository
 $this->repository->delete($id)
 ```
 
+Delete entry in Repository by multiple fields
+
+```php
+$this->repository->deleteWhere([
+    //Default Condition =
+    'state_id'=>'10',
+    'country_id'=>'15',
+])
+```
+
 ### Create a Criteria
 
 #### Using the command
@@ -532,7 +549,7 @@ You can perform a dynamic search, filter the data and customize the queries.
 
 To use the Criteria in your repository, you can add a new criteria in the boot method of your repository, or directly use in your controller, in order to filter out only a few requests.
 
-####Enabling in your Repository
+#### Enabling in your Repository
 
 ```php
 use Prettus\Repository\Eloquent\BaseRepository;
@@ -583,7 +600,7 @@ protected $fieldSearchable = [
 ```
 
 
-####Enabling in your Controller
+#### Enabling in your Controller
 
 ```php
 	public function index()
@@ -749,7 +766,7 @@ Add relationship
 
 
 
-####Overwrite params name
+#### Overwrite params name
 
 You can change the name of the parameters in the configuration file **config/repository.php**
 
@@ -986,7 +1003,7 @@ The second way is to make your model implement the Transformable interface, and 
 php artisan make:transformer Post
 ```
 
-This wil generate the class beneath.
+This will generate the class beneath.
 
 ###### Create a Transformer Class
 

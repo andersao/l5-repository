@@ -6,6 +6,7 @@ use Prettus\Repository\Generators\Migrations\SchemaParser;
 /**
  * Class RepositoryEloquentGenerator
  * @package Prettus\Repository\Generators
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
 class RepositoryEloquentGenerator extends Generator
 {
@@ -54,7 +55,7 @@ class RepositoryEloquentGenerator extends Generator
      */
     public function getBasePath()
     {
-        return config('repository.generator.basePath', app_path());
+        return config('repository.generator.basePath', app()->path());
     }
 
     /**

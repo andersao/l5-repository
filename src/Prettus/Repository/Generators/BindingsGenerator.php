@@ -4,6 +4,7 @@ namespace Prettus\Repository\Generators;
 /**
  * Class BindingsGenerator
  * @package Prettus\Repository\Generators
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
 class BindingsGenerator extends Generator
 {
@@ -49,7 +50,7 @@ class BindingsGenerator extends Generator
      */
     public function getBasePath()
     {
-        return config('repository.generator.basePath', app_path());
+        return config('repository.generator.basePath', app()->path());
     }
 
     /**

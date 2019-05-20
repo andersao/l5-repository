@@ -4,8 +4,8 @@ namespace Prettus\Repository\Generators;
 /**
  * Class TransformerGenerator
  * @package Prettus\Repository\Generators
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
-
 class TransformerGenerator extends Generator
 {
     /**
@@ -52,7 +52,7 @@ class TransformerGenerator extends Generator
      */
     public function getBasePath()
     {
-        return config('repository.generator.basePath', app_path());
+        return config('repository.generator.basePath', app()->path());
     }
 
     /**

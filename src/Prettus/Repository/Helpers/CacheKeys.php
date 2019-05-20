@@ -7,6 +7,7 @@ use Prettus\Repository\Exceptions\RepositoryException;
 /**
  * Class CacheKeys
  * @package Prettus\Repository\Helpers
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
 class CacheKeys
 {

@@ -8,6 +8,10 @@ use Prettus\Repository\Generators\ValidatorGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * Class ValidatorCommand
+ * @package Prettus\Repository\Generators\Commands
+ */
 class ValidatorCommand extends Command
 {
 
@@ -32,6 +36,16 @@ class ValidatorCommand extends Command
      */
     protected $type = 'Validator';
 
+
+    /**
+     * Execute the command.
+     *
+     * @see fire()
+     * @return void
+     */
+    public function handle(){
+        $this->laravel->call([$this, 'fire'], func_get_args());
+    }
 
     /**
      * Execute the command.

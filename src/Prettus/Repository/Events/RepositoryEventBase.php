@@ -7,6 +7,7 @@ use Prettus\Repository\Contracts\RepositoryInterface;
 /**
  * Class RepositoryEventBase
  * @package Prettus\Repository\Events
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
 abstract class RepositoryEventBase
 {

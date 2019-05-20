@@ -5,6 +5,9 @@ $NAMESPACE$
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class $CLASS$.
+ */
 class $CLASS$ extends Seeder
 {
 	/**

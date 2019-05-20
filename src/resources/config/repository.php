@@ -52,7 +52,7 @@ return [
          | Enable or disable cache
          |
          */
-        'enabled'    => true,
+        'enabled'    => false,
 
         /*
          |--------------------------------------------------------------------------
@@ -232,7 +232,7 @@ return [
             'orderBy'      => 'orderBy',
             'sortedBy'     => 'sortedBy',
             'with'         => 'with',
-            'searchJoin'   => 'searchJoin'            
+            'searchJoin'   => 'searchJoin'
         ]
     ],
     /*
@@ -242,9 +242,9 @@ return [
     |
     */
     'generator'  => [
-        'basePath'      => app_path(),
+        'basePath'      => app()->path(),
         'rootNamespace' => 'App\\',
-        'stubsOverridePath' => app_path(),
+        'stubsOverridePath' => app()->path(),
         'paths'         => [
             'models'       => 'Entities',
             'repositories' => 'Repositories',

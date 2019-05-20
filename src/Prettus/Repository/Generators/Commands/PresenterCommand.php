@@ -8,6 +8,11 @@ use Prettus\Repository\Generators\TransformerGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * Class PresenterCommand
+ * @package Prettus\Repository\Generators\Commands
+ * @author Anderson Andrade <contato@andersonandra.de>
+ */
 class PresenterCommand extends Command
 {
 
@@ -32,6 +37,15 @@ class PresenterCommand extends Command
      */
     protected $type = 'Presenter';
 
+    /**
+     * Execute the command.
+     *
+     * @see fire()
+     * @return void
+     */
+    public function handle(){
+        $this->laravel->call([$this, 'fire'], func_get_args());
+    }
 
     /**
      * Execute the command.
@@ -48,7 +62,7 @@ class PresenterCommand extends Command
             ]))->run();
             $this->info("Presenter created successfully.");
 
-            if (!\File::exists(app_path() . '/Transformers/' . $this->argument('name') . 'Transformer.php')) {
+            if (!\File::exists(app()->path() . '/Transformers/' . $this->argument('name') . 'Transformer.php')) {
                 if ($this->confirm('Would you like to create a Transformer? [y|N]')) {
                     (new TransformerGenerator([
                         'name'  => $this->argument('name'),

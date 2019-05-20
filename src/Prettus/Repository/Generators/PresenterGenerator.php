@@ -4,8 +4,8 @@ namespace Prettus\Repository\Generators;
 /**
  * Class PresenterGenerator
  * @package Prettus\Repository\Generators
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
-
 class PresenterGenerator extends Generator
 {
     /**
@@ -74,6 +74,6 @@ class PresenterGenerator extends Generator
      */
     public function getBasePath()
     {
-        return config('repository.generator.basePath', app_path());
+        return config('repository.generator.basePath', app()->path());
     }
 }

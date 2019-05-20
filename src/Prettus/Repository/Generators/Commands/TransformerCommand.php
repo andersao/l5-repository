@@ -8,6 +8,11 @@ use Prettus\Repository\Generators\TransformerGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * Class TransformerCommand
+ * @package Prettus\Repository\Generators\Commands
+ * @author Anderson Andrade <contato@andersonandra.de>
+ */
 class TransformerCommand extends Command
 {
 
@@ -31,6 +36,16 @@ class TransformerCommand extends Command
      * @var string
      */
     protected $type = 'Transformer';
+
+    /**
+     * Execute the command.
+     *
+     * @see fire()
+     * @return void
+     */
+    public function handle(){
+        $this->laravel->call([$this, 'fire'], func_get_args());
+    }
 
     /**
      * Execute the command.

@@ -6,7 +6,7 @@ use $TRANSFORMER$;
 use Prettus\Repository\Presenter\FractalPresenter;
 
 /**
- * Class $CLASS$Presenter
+ * Class $CLASS$Presenter.
  *
  * @package $NAMESPACE$
  */

@@ -16,6 +16,7 @@ use Prettus\Repository\Contracts\PresenterInterface;
 /**
  * Class FractalPresenter
  * @package Prettus\Repository\Presenter
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
 abstract class FractalPresenter implements PresenterInterface
 {

@@ -11,6 +11,7 @@ use Exception;
 /**
  * Class CacheableRepository
  * @package Prettus\Repository\Traits
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
 trait CacheableRepository
 {
@@ -208,6 +209,8 @@ trait CacheableRepository
             return parent::all($columns);
         });
 
+        $this->resetModel();
+        $this->resetScope();
         return $value;
     }
 
@@ -216,22 +219,25 @@ trait CacheableRepository
      *
      * @param null  $limit
      * @param array $columns
+     * @param string $method
      *
      * @return mixed
      */
-    public function paginate($limit = null, $columns = ['*'])
+    public function paginate($limit = null, $columns = ['*'], $method = 'paginate')
     {
         if (!$this->allowedCache('paginate') || $this->isSkippedCache()) {
-            return parent::paginate($limit, $columns);
+            return parent::paginate($limit, $columns, $method);
         }
 
         $key = $this->getCacheKey('paginate', func_get_args());
 
         $minutes = $this->getCacheMinutes();
-        $value = $this->getCacheRepository()->remember($key, $minutes, function () use ($limit, $columns) {
-            return parent::paginate($limit, $columns);
+        $value = $this->getCacheRepository()->remember($key, $minutes, function () use ($limit, $columns, $method) {
+            return parent::paginate($limit, $columns, $method);
         });
 
+        $this->resetModel();
+        $this->resetScope();
         return $value;
     }
 
@@ -255,6 +261,8 @@ trait CacheableRepository
             return parent::find($id, $columns);
         });
 
+        $this->resetModel();
+        $this->resetScope();
         return $value;
     }
 
@@ -279,6 +287,8 @@ trait CacheableRepository
             return parent::findByField($field, $value, $columns);
         });
 
+        $this->resetModel();
+        $this->resetScope();
         return $value;
     }
 
@@ -302,6 +312,8 @@ trait CacheableRepository
             return parent::findWhere($where, $columns);
         });
 
+        $this->resetModel();
+        $this->resetScope();
         return $value;
     }
 
@@ -324,6 +336,8 @@ trait CacheableRepository
             return parent::getByCriteria($criteria);
         });
 
+        $this->resetModel();
+        $this->resetScope();
         return $value;
     }
 }

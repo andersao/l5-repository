@@ -5,6 +5,11 @@ namespace Prettus\Repository\Generators;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 
+/**
+ * Class Generator
+ * @package Prettus\Repository\Generators
+ * @author Anderson Andrade <contato@andersonandra.de>
+ */
 abstract class Generator
 {
 
@@ -139,11 +144,11 @@ abstract class Generator
 
         return Str::studly(str_replace(' ', '/', ucwords(str_replace('/', ' ', $name))));
     }
-    
-    
+
+
    /**
      * Get application namespace
-     * 
+     *
      * @return string
      */
     public function getAppNamespace()
@@ -151,7 +156,7 @@ abstract class Generator
         return \Illuminate\Container\Container::getInstance()->getNamespace();
     }
 
-    
+
     /**
      * Get class name.
      *
@@ -231,7 +236,7 @@ abstract class Generator
         } else {
             $path = str_replace('/', '\\', $path);
         }
-        
+
 
         return $path;
     }

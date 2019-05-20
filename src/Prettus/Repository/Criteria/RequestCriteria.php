@@ -10,6 +10,7 @@ use Prettus\Repository\Contracts\RepositoryInterface;
 /**
  * Class RequestCriteria
  * @package Prettus\Repository\Criteria
+ * @author Anderson Andrade <contato@andersonandra.de>
  */
 class RequestCriteria implements CriteriaInterface
 {
@@ -135,7 +136,7 @@ class RequestCriteria implements CriteriaInterface
                      * ex.
                      * products -> product_id
                      */
-                    $prefix = rtrim($sortTable, 's');
+                    $prefix = str_singular($sortTable);
                     $keyName = $table.'.'.$prefix.'_id';
                 }
 

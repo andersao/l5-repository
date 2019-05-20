@@ -6,15 +6,16 @@ use League\Fractal\TransformerAbstract;
 use $MODEL$;
 
 /**
- * Class $CLASS$Transformer
+ * Class $CLASS$Transformer.
+ *
  * @package $NAMESPACE$
  */
 class $CLASS$Transformer extends TransformerAbstract
 {
-
     /**
-     * Transform the \$CLASS$ entity
-     * @param \$CLASS$ $model
+     * Transform the $CLASS$ entity.
+     *
+     * @param \$MODEL$ $model
      *
      * @return array
      */
