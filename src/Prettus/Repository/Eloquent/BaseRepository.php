@@ -559,14 +559,14 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             // to make sure data type are same because validator may need to use
             // this data to compare with data that fetch from database.
             if( $this->versionCompare($this->app->version(), "5.2.*", ">") ){
-                $attributes = $this->model->newInstance()->forceFill($attributes)->makeVisible($this->model->getHidden())->toArray();
+                $attributesToValidate = $this->model->newInstance()->forceFill($attributes)->makeVisible($this->model->getHidden())->toArray();
             }else{
                 $model = $this->model->newInstance()->forceFill($attributes);
                 $model->addVisible($this->model->getHidden());
-                $attributes = $model->toArray();
+                $attributesToValidate = $model->toArray();
             }
 
-            $this->validator->with($attributes)->passesOrFail(ValidatorInterface::RULE_CREATE);
+            $this->validator->with($attributesToValidate)->passesOrFail(ValidatorInterface::RULE_CREATE);
         }
 
         $model = $this->model->newInstance($attributes);
