@@ -20,13 +20,13 @@
     "docs": "http://andersao.github.io/l5-repository"
   },
   "require": {
-    "illuminate/http": "~5.0",
-    "illuminate/config": "~5.0",
-    "illuminate/support": "~5.0",
-    "illuminate/database": "~5.0",
-    "illuminate/pagination": "~5.0",
-    "illuminate/console": "~5.0",
-    "illuminate/filesystem": "~5.0",
+    "illuminate/http": "~5.0|~6.0",
+    "illuminate/config": "~5.0|~6.0",
+    "illuminate/support": "~5.0|~6.0",
+    "illuminate/database": "~5.0|~6.0",
+    "illuminate/pagination": "~5.0|~6.0",
+    "illuminate/console": "~5.0|~6.0",
+    "illuminate/filesystem": "~5.0|~6.0",
     "prettus/laravel-validation": "1.1.*"
   },
   "autoload": {
