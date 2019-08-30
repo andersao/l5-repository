@@ -338,14 +338,19 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Count results of repository
      *
+     * @param array $where
      * @param string $columns
      *
      * @return int
      */
-    public function count($columns = '*')
+    public function count(array $where = [], $columns = '*')
     {
         $this->applyCriteria();
         $this->applyScope();
+
+        if($where) {
+            $this->applyConditions($where);
+        }
 
         $result = $this->model->count($columns);
 
