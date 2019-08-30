@@ -95,6 +95,7 @@ php artisan vendor:publish --provider "Prettus\Repository\Providers\RepositorySe
 - findWhere(array $where, $columns = ['*'])
 - findWhereIn($field, array $where, $columns = [*])
 - findWhereNotIn($field, array $where, $columns = [*])
+- findWhereBetween($field, array $where, $columns = [*])
 - create(array $attributes)
 - update(array $attributes, $id)
 - updateOrCreate(array $attributes, array $values = [])

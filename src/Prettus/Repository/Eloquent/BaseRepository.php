@@ -347,7 +347,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         return $this->all($columns);
     }
 
-
     /**
      * Retrieve first data of repository
      *
@@ -561,6 +560,25 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
+     * Find data by between values in one field
+     *
+     * @param       $field
+     * @param array $values
+     * @param array $columns
+     *
+     * @return mixed
+     */
+    public function findWhereBetween($field, array $values, $columns = ['*'])
+    {
+        $this->applyCriteria();
+        $this->applyScope();
+        $model = $this->model->whereBetween($field, $values)->get($columns);
+        $this->resetModel();
+
+        return $this->parserResult($model);
+    }
+
+    /**
      * Save a new entity in repository
      *
      * @throws ValidatorException
@@ -575,9 +593,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             // we should pass data that has been casts by the model
             // to make sure data type are same because validator may need to use
             // this data to compare with data that fetch from database.
-            if( $this->versionCompare($this->app->version(), "5.2.*", ">") ){
+            if ($this->versionCompare($this->app->version(), "5.2.*", ">")) {
                 $attributes = $this->model->newInstance()->forceFill($attributes)->makeVisible($this->model->getHidden())->toArray();
-            }else{
+            } else {
                 $model = $this->model->newInstance()->forceFill($attributes);
                 $model->addVisible($this->model->getHidden());
                 $attributes = $model->toArray();
@@ -613,9 +631,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             // we should pass data that has been casts by the model
             // to make sure data type are same because validator may need to use
             // this data to compare with data that fetch from database.
-            if( $this->versionCompare($this->app->version(), "5.2.*", ">") ){
+            if ($this->versionCompare($this->app->version(), "5.2.*", ">")) {
                 $attributes = $this->model->newInstance()->forceFill($attributes)->makeVisible($this->model->getHidden())->toArray();
-            }else{
+            } else {
                 $model = $this->model->newInstance()->forceFill($attributes);
                 $model->addVisible($this->model->getHidden());
                 $attributes = $model->toArray();
