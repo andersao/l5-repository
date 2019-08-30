@@ -2,6 +2,7 @@
 namespace Prettus\Repository\Generators\Migrations;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 /**
@@ -115,7 +116,7 @@ class SchemaParser implements Arrayable
      */
     public function getColumn($schema)
     {
-        return array_first(explode(':', $schema), function ($key, $value) {
+        return Arr::first(explode(':', $schema), function ($key, $value) {
             return $value;
         });
     }
