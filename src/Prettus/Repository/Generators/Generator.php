@@ -135,10 +135,10 @@ abstract class Generator
     public function getName()
     {
         $name = $this->name;
-        if (str_contains($this->name, '\\')) {
+        if (Str::contains($this->name, '\\')) {
             $name = str_replace('\\', '/', $this->name);
         }
-        if (str_contains($this->name, '/')) {
+        if (Str::contains($this->name, '/')) {
             $name = str_replace('/', '/', $this->name);
         }
 

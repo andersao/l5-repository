@@ -2,7 +2,7 @@
 namespace Prettus\Repository\Generators\Migrations;
 
 use Illuminate\Contracts\Support\Arrayable;
-
+use Illuminate\Support\Str;
 /**
  * Class SchemaParser
  * @package Prettus\Repository\Generators\Migrations
@@ -208,7 +208,7 @@ class SchemaParser implements Arrayable
         if ($key == 0) {
             return '->' . $field . "('" . $column . "')";
         }
-        if (str_contains($field, '(')) {
+        if (Str::contains($field, '(')) {
             return '->' . $field;
         }
 
