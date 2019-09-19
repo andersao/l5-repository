@@ -10,6 +10,7 @@ use Prettus\Repository\Generators\RepositoryEloquentGenerator;
 use Prettus\Repository\Generators\RepositoryInterfaceGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use Illuminate\Support\Str;
 
 /**
  * Class RepositoryCommand
@@ -66,7 +67,7 @@ class RepositoryCommand extends Command
         $this->generators = new Collection();
 
         $migrationGenerator = new MigrationGenerator([
-            'name'   => 'create_' . snake_case(str_plural($this->argument('name'))) . '_table',
+            'name'   => 'create_' . Str::snake(Str::str_plural($this->argument('name'))) . '_table',
             'fields' => $this->option('fillable'),
             'force'  => $this->option('force'),
         ]);
