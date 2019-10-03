@@ -3,6 +3,7 @@ namespace Prettus\Repository\Eloquent;
 
 use Closure;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Container\Container as Application;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -333,6 +334,37 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->resetScope();
 
         return $this->parserResult($results);
+    }
+
+    /**
+     * Get the SQL representation of the query.
+     *
+     * @return string
+     */
+    public function toSql()
+    {
+        $this->applyCriteria();
+        $this->applyScope();
+
+        $query = $this->model->toSql();
+        $bindings = $this->model->getBindings();
+        $pdo = DB::connection()->getPdo();
+
+        foreach ($bindings as $key => $binding) {
+            // This regex matches placeholders only, not the question marks,
+            // nested in quotes, while we iterate through the bindings
+            // and substitute placeholders by suitable values.
+            $regex = is_numeric($key)
+                ? "/\?(?=(?:[^'\\\']*'[^'\\\']*')*[^'\\\']*$)/"
+                : "/:{$key}(?=(?:[^'\\\']*'[^'\\\']*')*[^'\\\']*$)/";
+            // Mimic bindValue and only quote non-integer and non-float data types
+            if (!is_int($binding) && !is_float($binding)) {
+                $binding = $pdo->quote($binding);
+            }
+            $query = preg_replace($regex, $binding, $query, 1);
+        }
+
+        return $query;
     }
 
     /**
