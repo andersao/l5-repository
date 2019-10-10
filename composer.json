@@ -1,6 +1,6 @@
 {
-  "name": "prettus/l5-repository",
-  "description": "Laravel 5 - Repositories to  the database layer",
+  "name": "naldi/l5-repository",
+  "description": "Fork of prettus/l5-repository",
   "keywords": ["laravel", "repository", "eloquent", "model", "cache"],
   "license": "MIT",
   "authors": [
