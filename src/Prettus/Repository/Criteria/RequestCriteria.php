@@ -179,7 +179,7 @@ class RequestCriteria implements CriteriaInterface
 
             foreach ($fields as $row) {
                 try {
-                    list($field, $value) = explode(':', $row);
+                    list($field, $value) = explode(':', $row, 2);
                     $searchData[$field] = $value;
                 } catch (\Exception $e) {
                     //Surround offset error
