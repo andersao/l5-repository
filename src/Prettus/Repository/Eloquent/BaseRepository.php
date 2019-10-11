@@ -46,6 +46,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     protected $fieldSearchable = [];
 
     /**
+     * @var array
+     */
+    protected $dateFieldsSearchable = [];
+
+    /**
      * @var PresenterInterface
      */
     protected $presenter;
