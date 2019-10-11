@@ -262,6 +262,13 @@ interface RepositoryInterface
     public function getFieldsSearchable();
 
     /**
+     * Get Date Searchable Fields
+     *
+     * @return array
+     */
+    public function dateFieldsSearchable();
+
+    /**
      * Set Presenter
      *
      * @param $presenter

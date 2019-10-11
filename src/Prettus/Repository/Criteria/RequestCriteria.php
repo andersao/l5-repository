@@ -37,6 +37,7 @@ class RequestCriteria implements CriteriaInterface
     public function apply($model, RepositoryInterface $repository)
     {
         $fieldsSearchable = $repository->getFieldsSearchable();
+        $dateFieldsSearchable = $repository->dateFieldsSearchable();
         $search = $this->request->get(config('repository.criteria.params.search', 'search'), null);
         $searchFields = $this->request->get(config('repository.criteria.params.searchFields', 'searchFields'), null);
         $filter = $this->request->get(config('repository.criteria.params.filter', 'filter'), null);
@@ -47,7 +48,6 @@ class RequestCriteria implements CriteriaInterface
         $sortedBy = !empty($sortedBy) ? $sortedBy : 'asc';
 
         if ($search && is_array($fieldsSearchable) && count($fieldsSearchable)) {
-
             $searchFields = is_array($searchFields) || is_null($searchFields) ? $searchFields : explode(';', $searchFields);
             $fields = $this->parserFieldsSearch($fieldsSearchable, $searchFields);
             $isFirstField = true;
@@ -55,11 +55,10 @@ class RequestCriteria implements CriteriaInterface
             $search = $this->parserSearchValue($search);
             $modelForceAndWhere = strtolower($searchJoin) === 'and';
 
-            $model = $model->where(function ($query) use ($fields, $search, $searchData, $isFirstField, $modelForceAndWhere) {
+            $model = $model->where(function ($query) use ($fields, $dateFieldsSearchable, $search, $searchData, $isFirstField, $modelForceAndWhere) {
                 /** @var Builder $query */
 
                 foreach ($fields as $field => $condition) {
-
                     if (is_numeric($field)) {
                         $field = $condition;
                         $condition = "=";
@@ -78,31 +77,47 @@ class RequestCriteria implements CriteriaInterface
                     }
 
                     $relation = null;
-                    if(stripos($field, '.')) {
+                    if (stripos($field, '.')) {
                         $explode = explode('.', $field);
                         $field = array_pop($explode);
                         $relation = implode('.', $explode);
                     }
                     $modelTableName = $query->getModel()->getTable();
-                    if ( $isFirstField || $modelForceAndWhere ) {
+                    if ($isFirstField || $modelForceAndWhere) {
                         if (!is_null($value)) {
-                            if(!is_null($relation)) {
-                                $query->whereHas($relation, function($query) use($field,$condition,$value) {
-                                    $query->where($field,$condition,$value);
+                            if (!is_null($relation)) {
+                                $query->whereHas($relation, function ($query) use ($field, $dateFieldsSearchable, $condition, $value) {
+                                    if (in_array($field, $dateFieldsSearchable)) {
+                                        $query->whereDate($field, $condition, $value);
+                                    } else {
+                                        $query->where($field, $condition, $value);
+                                    }
                                 });
                             } else {
-                                $query->where($modelTableName.'.'.$field,$condition,$value);
+                                if (in_array($field, $dateFieldsSearchable)) {
+                                    $query->whereDate($modelTableName.'.'.$field, $condition, $value);
+                                } else {
+                                    $query->where($modelTableName.'.'.$field, $condition, $value);
+                                }
                             }
                             $isFirstField = false;
                         }
                     } else {
                         if (!is_null($value)) {
-                            if(!is_null($relation)) {
-                                $query->orWhereHas($relation, function($query) use($field,$condition,$value) {
-                                    $query->where($field,$condition,$value);
+                            if (!is_null($relation)) {
+                                $query->orWhereHas($relation, function ($query) use ($field, $dateFieldsSearchable, $condition, $value) {
+                                    if (in_array($field, $dateFieldsSearchable)) {
+                                        $query->whereDate($field, $condition, $value);
+                                    } else {
+                                        $query->where($field, $condition, $value);
+                                    }
                                 });
                             } else {
-                                $query->orWhere($modelTableName.'.'.$field, $condition, $value);
+                                if (in_array($field, $dateFieldsSearchable)) {
+                                    $query->orWhereDate($modelTableName.'.'.$field, $condition, $value);
+                                } else {
+                                    $query->orWhere($modelTableName.'.'.$field, $condition, $value);
+                                }
                             }
                         }
                     }

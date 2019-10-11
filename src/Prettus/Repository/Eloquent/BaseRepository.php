@@ -241,6 +241,16 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
+     * Get Date Searchable Fields
+     *
+     * @return array
+     */
+    public function dateFieldsSearchable()
+    {
+        return $this->dateFieldsSearchable;
+    }
+
+    /**
      * Query Scope
      *
      * @param \Closure $scope
@@ -348,7 +358,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->applyCriteria();
         $this->applyScope();
 
-        if($where) {
+        if ($where) {
             $this->applyConditions($where);
         }
 
@@ -436,7 +446,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         return $this->parserResult($model);
     }
-    
+
     /**
      * Set the "limit" value of the query.
      *
