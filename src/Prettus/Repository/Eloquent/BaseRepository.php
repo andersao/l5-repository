@@ -457,7 +457,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Retrieve all data of repository, paginated
      *
-     * @param null $limit
+     * @param null|int $limit
      * @param array $columns
      * @param string $method
      *
@@ -478,7 +478,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Retrieve all data of repository, simple paginated
      *
-     * @param null $limit
+     * @param null|int $limit
      * @param array $columns
      *
      * @return mixed
