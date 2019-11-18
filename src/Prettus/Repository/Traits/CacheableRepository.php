@@ -181,13 +181,14 @@ trait CacheableRepository
     /**
      * Get cache minutes
      *
-     * @return int
+     * @return Illuminate\Support\Carbon
      */
     public function getCacheMinutes()
     {
         $cacheMinutes = isset($this->cacheMinutes) ? $this->cacheMinutes : config('repository.cache.minutes', 30);
+        $cacheTimeStamp = now()->addMinutes($cacheMinutes);
 
-        return $cacheMinutes;
+        return $cacheTimeStamp;
     }
 
     /**
