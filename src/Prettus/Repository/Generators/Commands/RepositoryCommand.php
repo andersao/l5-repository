@@ -1,17 +1,18 @@
 <?php
+
 namespace Prettus\Repository\Generators\Commands;
 
+use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
-use Prettus\Repository\Generators\FileAlreadyExistsException;
-use Prettus\Repository\Generators\MigrationGenerator;
+use Symfony\Component\Console\Input\InputOption;
 use Prettus\Repository\Generators\ModelGenerator;
+use Symfony\Component\Console\Input\InputArgument;
+use Prettus\Repository\Generators\MigrationGenerator;
+use Prettus\Repository\Generators\FileAlreadyExistsException;
 use Prettus\Repository\Generators\RepositoryEloquentGenerator;
 use Prettus\Repository\Generators\RepositoryInterfaceGenerator;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
-use Illuminate\Support\Str;
+
 /**
  * Class RepositoryCommand
  * @package Prettus\Repository\Generators\Commands
@@ -53,7 +54,8 @@ class RepositoryCommand extends Command
      * @see fire()
      * @return void
      */
-    public function handle(){
+    public function handle()
+    {
         $this->laravel->call([$this, 'fire'], func_get_args());
     }
 
