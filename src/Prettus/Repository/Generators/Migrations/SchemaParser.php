@@ -1,9 +1,9 @@
 <?php
+
 namespace Prettus\Repository\Generators\Migrations;
 
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Contracts\Support\Arrayable;
 
 /**
  * Class SchemaParser

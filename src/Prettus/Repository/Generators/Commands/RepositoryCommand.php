@@ -11,7 +11,7 @@ use Prettus\Repository\Generators\RepositoryEloquentGenerator;
 use Prettus\Repository\Generators\RepositoryInterfaceGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-
+use Illuminate\Support\Str;
 /**
  * Class RepositoryCommand
  * @package Prettus\Repository\Generators\Commands
