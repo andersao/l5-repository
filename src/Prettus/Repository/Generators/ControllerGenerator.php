@@ -1,6 +1,8 @@
 <?php
 namespace Prettus\Repository\Generators;
 
+use Illuminate\Support\Str;
+
 /**
  * Class ControllerGenerator
  * @package Prettus\Repository\Generators
@@ -75,7 +77,7 @@ class ControllerGenerator extends Generator
     public function getPluralName()
     {
 
-        return str_plural(lcfirst(ucwords($this->getClass())));
+        return Str::plural(lcfirst(ucwords($this->getClass())));
     }
 
     /**
@@ -103,7 +105,7 @@ class ControllerGenerator extends Generator
      */
     public function getSingularName()
     {
-        return str_singular(lcfirst(ucwords($this->getClass())));
+        return Str::singular(lcfirst(ucwords($this->getClass())));
     }
 
     /**
