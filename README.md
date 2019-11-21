@@ -91,6 +91,7 @@ php artisan vendor:publish --provider "Prettus\Repository\Providers\RepositorySe
 - first($columns = array('*'))
 - paginate($limit = null, $columns = ['*'])
 - find($id, $columns = ['*'])
+- findOrFail($id, $columns = ['*'])
 - findByField($field, $value, $columns = ['*'])
 - findWhere(array $where, $columns = ['*'])
 - findWhereIn($field, array $where, $columns = [*])
@@ -302,7 +303,7 @@ Now that is done, you still need to bind its interface for your real repository,
 ```php
 App::bind('{YOUR_NAMESPACE}Repositories\PostRepository', '{YOUR_NAMESPACE}Repositories\PostRepositoryEloquent');
 ```
-
+`
 And use
 
 ```php
@@ -373,6 +374,12 @@ Loading the Model relationships
 
 ```php
 $post = $this->repository->with(['state'])->find($id);
+```
+
+Find or fail by result by id
+
+```php
+$post = $this->repository->findOrFail($id);
 ```
 
 Find by result by field name

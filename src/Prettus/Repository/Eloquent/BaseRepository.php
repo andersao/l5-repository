@@ -1,4 +1,5 @@
 <?php
+
 namespace Prettus\Repository\Eloquent;
 
 use Closure;
@@ -348,7 +349,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->applyCriteria();
         $this->applyScope();
 
-        if($where) {
+        if ($where) {
             $this->applyConditions($where);
         }
 
@@ -436,7 +437,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         return $this->parserResult($model);
     }
-    
+
     /**
      * Set the "limit" value of the query.
      *
@@ -497,6 +498,25 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * @return mixed
      */
     public function find($id, $columns = ['*'])
+    {
+        $this->applyCriteria();
+        $this->applyScope();
+        $model = $this->model->find($id, $columns);
+        $this->resetModel();
+
+        return $this->parserResult($model);
+    }
+
+    /**
+     * Find data by id 
+     * Return found object or fail
+     *
+     * @param       $id
+     * @param array $columns
+     *
+     * @return mixed
+     */
+    public function findOrFail($id, $columns = ['*'])
     {
         $this->applyCriteria();
         $this->applyScope();

@@ -90,6 +90,17 @@ interface RepositoryInterface
     public function find($id, $columns = ['*']);
 
     /**
+     * Find data by id
+     * Return found object or fail
+     *
+     * @param       $id
+     * @param array $columns
+     *
+     * @return mixed
+     */
+    public function findOrFail($id, $columns = ['*']);
+
+    /**
      * Find data by field and value
      *
      * @param       $field
