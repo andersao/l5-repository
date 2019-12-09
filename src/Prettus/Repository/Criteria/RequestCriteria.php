@@ -4,6 +4,7 @@ namespace Prettus\Repository\Criteria;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
@@ -136,7 +137,7 @@ class RequestCriteria implements CriteriaInterface
                      * ex.
                      * products -> product_id
                      */
-                    $prefix = str_singular($sortTable);
+                    $prefix = Str::singular($sortTable);
                     $keyName = $table.'.'.$prefix.'_id';
                 }
 
