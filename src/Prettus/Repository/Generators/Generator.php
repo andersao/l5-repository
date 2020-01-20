@@ -82,7 +82,7 @@ abstract class Generator
     {
         $path = config('repository.generator.stubsOverridePath', __DIR__);
 
-        if(!file_exists($path . '/Stubs/' . $this->stub . '.stub')){
+        if (!file_exists($path . '/Stubs/' . $this->stub . '.stub')) {
             $path = __DIR__;
         }
 
@@ -146,7 +146,7 @@ abstract class Generator
     }
 
 
-   /**
+    /**
      * Get application namespace
      *
      * @return string
@@ -259,7 +259,7 @@ abstract class Generator
             return null;
         }
 
-        return 'namespace ' . rtrim($rootNamespace . '\\' . implode($segments, '\\'), '\\') . ';';
+        return 'namespace ' . rtrim($rootNamespace . '\\' . implode('\\', $segments), '\\') . ';';
     }
 
 
