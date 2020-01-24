@@ -51,44 +51,62 @@ class EntityCommand extends Command
     public function fire()
     {
 
-        if ($this->confirm('Would you like to create a Presenter? [y|N]')) {
-            $this->call('make:presenter', [
-                'name'    => $this->argument('name'),
-                '--force' => $this->option('force'),
-            ]);
-        }
-
-        $validator = $this->option('validator');
-        if (is_null($validator) && $this->confirm('Would you like to create a Validator? [y|N]')) {
-            $validator = 'yes';
-        }
-
-        if ($validator == 'yes') {
-            $this->call('make:validator', [
-                'name'    => $this->argument('name'),
-                '--rules' => $this->option('rules'),
-                '--force' => $this->option('force'),
-            ]);
-        }
-
-        if ($this->confirm('Would you like to create a Controller? [y|N]')) {
-
+        if (config('repository.generator.api', false)){
             $resource_args = [
                 'name'    => $this->argument('name')
             ];
 
             // Generate a controller resource
-            $controller_command = ((float) app()->version() >= 5.5  ? 'make:rest-controller' : 'make:resource');
+            $controller_command = ((float) app()->version() >= 5.5  ? 'make:rest-controller' : 'make:api-resource');
             $this->call($controller_command, $resource_args);
-        }
 
-        $this->call('make:repository', [
-            'name'        => $this->argument('name'),
-            '--fillable'  => $this->option('fillable'),
-            '--rules'     => $this->option('rules'),
-            '--validator' => $validator,
-            '--force'     => $this->option('force')
-        ]);
+            $this->call('make:api-repository', [
+                'name'        => $this->argument('name'),
+                '--fillable'  => $this->option('fillable'),
+                '--rules'     => $this->option('rules'),
+                '--force'     => $this->option('force')
+            ]);
+        }
+        else{
+            if ($this->confirm('Would you like to create a Presenter? [y|N]')) {
+                $this->call('make:presenter', [
+                    'name'    => $this->argument('name'),
+                    '--force' => $this->option('force'),
+                ]);
+            }
+    
+            $validator = $this->option('validator');
+            if (is_null($validator) && $this->confirm('Would you like to create a Validator? [y|N]')) {
+                $validator = 'yes';
+            }
+    
+            if ($validator == 'yes') {
+                $this->call('make:validator', [
+                    'name'    => $this->argument('name'),
+                    '--rules' => $this->option('rules'),
+                    '--force' => $this->option('force'),
+                ]);
+            }
+    
+            if ($this->confirm('Would you like to create a Controller? [y|N]')) {
+    
+                $resource_args = [
+                    'name'    => $this->argument('name')
+                ];
+    
+                // Generate a controller resource
+                $controller_command = ((float) app()->version() >= 5.5  ? 'make:rest-controller' : 'make:resource');
+                $this->call($controller_command, $resource_args);
+            }
+
+            $this->call('make:repository', [
+                'name'        => $this->argument('name'),
+                '--fillable'  => $this->option('fillable'),
+                '--rules'     => $this->option('rules'),
+                '--validator' => $validator,
+                '--force'     => $this->option('force')
+            ]);
+        }
 
         $this->call('make:bindings', [
             'name'    => $this->argument('name'),
