@@ -227,6 +227,7 @@ return [
     |
     */
     'generator'  => [
+        'api'           => false,
         'basePath'      => app()->path(),
         'rootNamespace' => 'App\\',
         'stubsOverridePath' => app()->path(),

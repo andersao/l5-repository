@@ -1,0 +1,97 @@
+<?php
+
+$NAMESPACE$
+
+use $APPNAME$Http\Controllers\Controller;
+$REPOSITORY$
+use $APPNAME$Http\Requests\$CLASS$\{
+    IndexRequest,
+    CreateRequest,
+    ShowRequest,
+    UpdateRequest,
+    DestroyRequest,
+};
+
+/**
+ * Class $CONTROLLER$Controller.
+ *
+ * @package $NAMESPACE$
+ */
+class $CONTROLLER$Controller extends Controller
+{
+    /**
+     * @var $CLASS$Repository
+     */
+    protected $repository;
+
+    /**
+     * $CONTROLLER$Controller constructor.
+     *
+     * @param $CLASS$Repository $repository
+     */
+    public function __construct($CLASS$Repository $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(IndexRequest $request)
+    {
+        return $this->repository->paginate();
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  $CLASS\CreateRequest $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function store(CreateRequest $request)
+    {
+        return $this->repository->create($request->all());
+    }
+
+    /**
+     * Display the specified resource.
+
+     * @param  $CLASS\ShowRequest $request
+     * @param  int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function show(ShowRequest $request, $id)
+    {
+        return $this->repository->find($id);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  $CLASS\UpdateRequest $request
+     * @param  string            $id
+     *
+     * @return Response
+     */
+    public function update(UpdateRequest $request, $id)
+    {
+        return $this->repository->update($request->all(), $id);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  $CLASS\DestroyRequest $request
+     * @param  int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(DestroyRequest $request, $id)
+    {
+        return ["deleted" => $this->repository->delete($id)];
+    }
+}
