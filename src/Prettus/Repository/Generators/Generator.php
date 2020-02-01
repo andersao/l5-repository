@@ -259,7 +259,7 @@ abstract class Generator
             return null;
         }
 
-        return 'namespace ' . rtrim($rootNamespace . '\\' . implode($segments, '\\'), '\\') . ';';
+        return 'namespace ' . rtrim($rootNamespace . '\\' . implode('\\',$segments), '\\') . ';';
     }
 
 
