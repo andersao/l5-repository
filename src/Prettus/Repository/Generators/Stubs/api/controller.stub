@@ -41,7 +41,8 @@ class $CONTROLLER$Controller extends Controller
      */
     public function index(IndexRequest $request)
     {
-        return $this->repository->paginate();
+        $data = $this->repository->all();
+        return $this->respond($data);
     }
 
     /**
@@ -53,7 +54,8 @@ class $CONTROLLER$Controller extends Controller
      */
     public function store(CreateRequest $request)
     {
-        return $this->repository->create($request->all());
+        $data = $this->repository->create($request->all());
+        return $this->respondCreated($data);
     }
 
     /**
@@ -66,7 +68,8 @@ class $CONTROLLER$Controller extends Controller
      */
     public function show(ShowRequest $request, $id)
     {
-        return $this->repository->find($id);
+        $data = $this->repository->find($id);
+        return $this->respond($data);
     }
 
     /**
@@ -79,7 +82,8 @@ class $CONTROLLER$Controller extends Controller
      */
     public function update(UpdateRequest $request, $id)
     {
-        return $this->repository->update($request->all(), $id);
+        $data = $this->repository->update($request->all(), $id);
+        return $this->respond($data);
     }
 
     /**
@@ -92,6 +96,7 @@ class $CONTROLLER$Controller extends Controller
      */
     public function destroy(DestroyRequest $request, $id)
     {
-        return ["deleted" => $this->repository->delete($id)];
+        $this->repository->delete($id);
+        return $this->respondNoContent();
     }
 }
