@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits;
+namespace Prettus\Repository\Traits;
 
 trait Respondable {
     /**
