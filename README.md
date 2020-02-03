@@ -93,6 +93,17 @@ In your `config/repository.php` update:
 ]
 ```
 
+In your `Controller.php` update:
+```php
+use Prettus\Repository\Traits\Respondable;
+
+class Controller extends BaseController
+{
+    ...
+    use Respondable;
+}
+```
+
 ## Methods
 
 ### Prettus\Repository\Contracts\RepositoryInterface
