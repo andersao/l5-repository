@@ -83,6 +83,16 @@ Publish Configuration
 php artisan vendor:publish --provider "Prettus\Repository\Providers\RepositoryServiceProvider"
 ```
 
+#### Enable config for api generator
+In your `config/repository.php` update:
+
+```php
+'generator'  => [
+    'api' => true,
+    ...
+]
+```
+
 ## Methods
 
 ### Prettus\Repository\Contracts\RepositoryInterface
