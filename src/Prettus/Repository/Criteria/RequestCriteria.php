@@ -147,7 +147,8 @@ class RequestCriteria implements CriteriaInterface
                     ->orderBy($sortColumn, $sortedBy)
                     ->addSelect($table.'.*');
             } else {
-                $model = $model->orderBy($orderBy, $sortedBy);
+                if(!in_array($orderBy, $repository->model()::getArrayableAppends()))
+                    $model = $model->orderBy($orderBy, $sortedBy);
             }
         }
 
