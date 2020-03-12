@@ -523,6 +523,24 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         return $this->parserResult($model);
     }
+    
+    /**
+     * Find data by uuid and value
+     *
+     * @param       $uuid
+     * @param array $columns
+     *
+     * @return mixed
+     */
+    public function findByUuid($uuid, $columns = ['*'])
+    {
+        $this->applyCriteria();
+        $this->applyScope();
+        $model = $this->model->where('uuid', '=', $uuid)->get($columns);
+        $this->resetModel();
+
+        return $this->parserResult($model);
+    }
 
     /**
      * Find data by multiple fields
