@@ -376,6 +376,12 @@ Loading the Model relationships
 $post = $this->repository->with(['state'])->find($id);
 ```
 
+Find by result by uuid
+
+```php
+$post = $this->repository->findByUuid($uuid);
+```
+
 Find by result by field name
 
 ```php
