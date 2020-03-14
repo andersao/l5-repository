@@ -291,10 +291,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * @param $attributes
      * @param bool $detaching
      * @return mixed
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
     public function sync($id, $relation, $attributes, $detaching = true)
     {
-        return $this->find($id)->{$relation}()->sync($attributes, $detaching);
+        return $this->findModel($id)->{$relation}()->sync($attributes, $detaching);
     }
 
     /**
@@ -494,6 +495,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * @param array $columns
      *
      * @return mixed
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
     public function find($id, $columns = ['*'])
     {
@@ -646,6 +648,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * @param       $id
      *
      * @return mixed
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
     public function update(array $attributes, $id)
     {
@@ -666,16 +669,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             $this->validator->with($attributes)->setId($id)->passesOrFail(ValidatorInterface::RULE_UPDATE);
         }
 
-        $temporarySkipPresenter = $this->skipPresenter;
-
-        $this->skipPresenter(true);
-
-        $model = $this->model->findOrFail($id);
-        $model->fill($attributes);
-        $model->save();
-
-        $this->skipPresenter($temporarySkipPresenter);
-        $this->resetModel();
+        $model = $this->findModel($id);
+        $model->update($attributes);
 
         event(new RepositoryEntityUpdated($this, $model));
 
@@ -720,19 +715,13 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * @param $id
      *
      * @return int
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
     public function delete($id)
     {
-        $this->applyScope();
+        $model = $this->findModel($id);
 
-        $temporarySkipPresenter = $this->skipPresenter;
-        $this->skipPresenter(true);
-
-        $model = $this->find($id);
         $originalModel = clone $model;
-
-        $this->skipPresenter($temporarySkipPresenter);
-        $this->resetModel();
 
         $deleted = $model->delete();
 
@@ -1021,6 +1010,26 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
                 $this->model = $this->model->where($field, '=', $value);
             }
         }
+    }
+
+    /**
+     * Finds the actual model without using the presenter
+     *
+     * @param $id
+     * @return Model
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     */
+    protected function findModel($id)
+    {
+        $temporarySkipPresenter = $this->skipPresenter;
+
+        $this->skipPresenter(true);
+
+        $model = $this->find($id);
+
+        $this->skipPresenter($temporarySkipPresenter);
+
+        return $model;
     }
 
     /**
