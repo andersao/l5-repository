@@ -123,10 +123,26 @@ class RequestCriteria implements CriteriaInterface
                         if (!is_null($value)) {
                             if(!is_null($relation)) {
                                 $query->orWhereHas($relation, function($query) use($field,$condition,$value) {
-                                    $query->where($field,$condition,$value);
+                                    if ($condition == 'in') {
+                                        $query->whereIn($field, $value);
+                                    } elseif($condition == 'between') {
+                                        $query->whereBetween($field, $value);
+                                    } else {
+                                        $query->where($field,$condition,$value);
+                                    }
                                 });
                             } else {
-                                $query->orWhere($modelTableName.'.'.$field, $condition, $value);
+                                if ($condition == 'in') {
+                                    $query->orWhere(function ($query) use ($modelTableName, $field, $value) {
+                                        $query->whereIn($modelTableName . '.' . $field, $value);
+                                    });
+                                } elseif($condition == 'between') {
+                                    $query->orWhere(function ($query) use ($modelTableName, $field, $value) {
+                                        $query->whereBetween($modelTableName . '.' . $field, $value);
+                                    });
+                                } else {
+                                    $query->orWhere($modelTableName.'.'.$field, $condition, $value);
+                                }
                             }
                         }
                     }
