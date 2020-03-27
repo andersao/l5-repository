@@ -138,7 +138,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function validator()
     {
-
         if (isset($this->rules) && !is_null($this->rules) && is_array($this->rules) && !empty($this->rules)) {
             if (class_exists('Prettus\Validator\LaravelValidator')) {
                 $validator = app('Prettus\Validator\LaravelValidator');
@@ -348,7 +347,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->applyCriteria();
         $this->applyScope();
 
-        if($where) {
+        if ($where) {
             $this->applyConditions($where);
         }
 
@@ -436,7 +435,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         return $this->parserResult($model);
     }
-    
+
     /**
      * Set the "limit" value of the query.
      *
@@ -622,7 +621,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
                 $attributes = $this->model->newInstance()->forceFill($attributes)->makeVisible($this->model->getHidden())->toArray();
             } else {
                 $model = $this->model->newInstance()->forceFill($attributes);
-                $model->addVisible($this->model->getHidden());
+                $model->makeVisible($this->model->getHidden());
                 $attributes = $model->toArray();
             }
 
@@ -660,7 +659,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
                 $attributes = $this->model->newInstance()->forceFill($attributes)->makeVisible($this->model->getHidden())->toArray();
             } else {
                 $model = $this->model->newInstance()->forceFill($attributes);
-                $model->addVisible($this->model->getHidden());
+                $model->makeVisible($this->model->getHidden());
                 $attributes = $model->toArray();
             }
 
@@ -989,7 +988,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     protected function applyCriteria()
     {
-
         if ($this->skipCriteria === true) {
             return $this;
         }
