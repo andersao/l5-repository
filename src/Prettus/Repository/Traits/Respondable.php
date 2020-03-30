@@ -107,5 +107,15 @@ trait Respondable {
     {
         return $this->respondError($message, 500);
     }
+    
+    /**
+     * Respond with allow permissions.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function respondCheckPermissions($isAllow)
+    {
+        return $this->respond(['allowed' => $isAllow]);
+    }
 
 }
