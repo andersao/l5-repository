@@ -173,7 +173,6 @@ trait CacheableRepository
 
             return [
                 'hash' => md5((string) $r),
-                'properties' => $r->getProperties(),
             ];
         }
     }
