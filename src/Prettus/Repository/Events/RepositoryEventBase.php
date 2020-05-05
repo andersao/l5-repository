@@ -30,7 +30,7 @@ abstract class RepositoryEventBase
      * @param RepositoryInterface $repository
      * @param Model               $model
      */
-    public function __construct(RepositoryInterface $repository, Model $model)
+    public function __construct(RepositoryInterface $repository, Model $model = null)
     {
         $this->repository = $repository;
         $this->model = $model;
