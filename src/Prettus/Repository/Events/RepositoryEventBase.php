@@ -37,7 +37,7 @@ abstract class RepositoryEventBase
     }
 
     /**
-     * @return Model
+     * @return Model|array
      */
     public function getModel()
     {
