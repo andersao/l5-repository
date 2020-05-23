@@ -1,4 +1,4 @@
-# Laravel 5 Repositories
+# Laravel 5|6|7 Repositories
 
 Laravel 5 Repositories is used to abstract the data layer, making our application more flexible to maintain.
 
