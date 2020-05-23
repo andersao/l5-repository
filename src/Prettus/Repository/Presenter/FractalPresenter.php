@@ -1,4 +1,5 @@
 <?php
+
 namespace Prettus\Repository\Presenter;
 
 use Exception;
@@ -15,6 +16,7 @@ use Prettus\Repository\Contracts\PresenterInterface;
 
 /**
  * Class FractalPresenter
+ *
  * @package Prettus\Repository\Presenter
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -52,36 +54,6 @@ abstract class FractalPresenter implements PresenterInterface
         $this->fractal = new Manager();
         $this->parseIncludes();
         $this->setupSerializer();
-    }
-
-    /**
-     * @return $this
-     */
-    protected function setupSerializer()
-    {
-        $serializer = $this->serializer();
-
-        if ($serializer instanceof SerializerAbstract) {
-            $this->fractal->setSerializer(new $serializer());
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    protected function parseIncludes()
-    {
-
-        $request = app('Illuminate\Http\Request');
-        $paramIncludes = config('repository.fractal.params.include', 'include');
-
-        if ($request->has($paramIncludes)) {
-            $this->fractal->parseIncludes($request->get($paramIncludes));
-        }
-
-        return $this;
     }
 
     /**
@@ -129,6 +101,35 @@ abstract class FractalPresenter implements PresenterInterface
     }
 
     /**
+     * @return $this
+     */
+    protected function setupSerializer()
+    {
+        $serializer = $this->serializer();
+
+        if ($serializer instanceof SerializerAbstract) {
+            $this->fractal->setSerializer(new $serializer());
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function parseIncludes()
+    {
+        $request = app('Illuminate\Http\Request');
+        $paramIncludes = config('repository.fractal.params.include', 'include');
+
+        if ($request->has($paramIncludes)) {
+            $this->fractal->parseIncludes($request->get($paramIncludes));
+        }
+
+        return $this;
+    }
+
+    /**
      * @param $data
      *
      * @return Item
@@ -149,7 +150,7 @@ abstract class FractalPresenter implements PresenterInterface
     }
 
     /**
-     * @param AbstractPaginator|LengthAwarePaginator|Paginator $paginator
+     * @param  AbstractPaginator|LengthAwarePaginator|Paginator  $paginator
      *
      * @return \League\Fractal\Resource\Collection
      */

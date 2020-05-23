@@ -1,6 +1,8 @@
 <?php
+
 namespace Prettus\Repository\Generators\Commands;
 
+use File;
 use Illuminate\Console\Command;
 use Prettus\Repository\Generators\FileAlreadyExistsException;
 use Prettus\Repository\Generators\PresenterGenerator;
@@ -10,6 +12,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class PresenterCommand
+ *
  * @package Prettus\Repository\Generators\Commands
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -40,10 +43,11 @@ class PresenterCommand extends Command
     /**
      * Execute the command.
      *
-     * @see fire()
      * @return void
+     * @see fire()
      */
-    public function handle(){
+    public function handle()
+    {
         $this->laravel->call([$this, 'fire'], func_get_args());
     }
 
@@ -54,25 +58,28 @@ class PresenterCommand extends Command
      */
     public function fire()
     {
-
         try {
-            (new PresenterGenerator([
-                'name'  => $this->argument('name'),
-                'force' => $this->option('force'),
-            ]))->run();
+            (new PresenterGenerator(
+                [
+                    'name' => $this->argument('name'),
+                    'force' => $this->option('force'),
+                ]
+            ))->run();
             $this->info("Presenter created successfully.");
 
-            if (!\File::exists(app()->path() . '/Transformers/' . $this->argument('name') . 'Transformer.php')) {
+            if (!File::exists(app()->path().'/Transformers/'.$this->argument('name').'Transformer.php')) {
                 if ($this->confirm('Would you like to create a Transformer? [y|N]')) {
-                    (new TransformerGenerator([
-                        'name'  => $this->argument('name'),
-                        'force' => $this->option('force'),
-                    ]))->run();
+                    (new TransformerGenerator(
+                        [
+                            'name' => $this->argument('name'),
+                            'force' => $this->option('force'),
+                        ]
+                    ))->run();
                     $this->info("Transformer created successfully.");
                 }
             }
         } catch (FileAlreadyExistsException $e) {
-            $this->error($this->type . ' already exists!');
+            $this->error($this->type.' already exists!');
 
             return false;
         }
@@ -91,7 +98,7 @@ class PresenterCommand extends Command
                 'name',
                 InputArgument::REQUIRED,
                 'The name of model for which the presenter is being generated.',
-                null
+                null,
             ],
         ];
     }
@@ -110,8 +117,8 @@ class PresenterCommand extends Command
                 'f',
                 InputOption::VALUE_NONE,
                 'Force the creation if file already exists.',
-                null
-            ]
+                null,
+            ],
         ];
     }
 }

@@ -1,10 +1,12 @@
 <?php
+
 namespace Prettus\Repository\Contracts;
 
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 
 /**
  * Interface CacheableInterface
+ *
  * @package Prettus\Repository\Contracts
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -13,7 +15,7 @@ interface CacheableInterface
     /**
      * Set Cache Repository
      *
-     * @param CacheRepository $repository
+     * @param  CacheRepository  $repository
      *
      * @return $this
      */
@@ -47,7 +49,7 @@ interface CacheableInterface
     /**
      * Skip Cache
      *
-     * @param bool $status
+     * @param  bool  $status
      *
      * @return $this
      */

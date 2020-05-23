@@ -1,4 +1,5 @@
 <?php
+
 namespace Prettus\Repository\Contracts;
 
 use Illuminate\Support\Collection;
@@ -6,6 +7,7 @@ use Illuminate\Support\Collection;
 
 /**
  * Interface RepositoryCriteriaInterface
+ *
  * @package Prettus\Repository\Contracts
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -40,7 +42,7 @@ interface RepositoryCriteriaInterface
     /**
      * Find data by Criteria
      *
-     * @param CriteriaInterface $criteria
+     * @param  CriteriaInterface  $criteria
      *
      * @return mixed
      */
@@ -49,7 +51,7 @@ interface RepositoryCriteriaInterface
     /**
      * Skip Criteria
      *
-     * @param bool $status
+     * @param  bool  $status
      *
      * @return $this
      */

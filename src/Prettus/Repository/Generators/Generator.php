@@ -2,11 +2,13 @@
 
 namespace Prettus\Repository\Generators;
 
+use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 
 /**
  * Class Generator
+ *
  * @package Prettus\Repository\Generators
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -38,7 +40,7 @@ abstract class Generator
     /**
      * Create new instance of this class.
      *
-     * @param array $options
+     * @param  array  $options
      */
     public function __construct(array $options = [])
     {
@@ -61,7 +63,7 @@ abstract class Generator
     /**
      * Set the filesystem instance.
      *
-     * @param \Illuminate\Filesystem\Filesystem $filesystem
+     * @param  \Illuminate\Filesystem\Filesystem  $filesystem
      *
      * @return $this
      */
@@ -82,11 +84,11 @@ abstract class Generator
     {
         $path = config('repository.generator.stubsOverridePath', __DIR__);
 
-        if(!file_exists($path . '/Stubs/' . $this->stub . '.stub')){
+        if (!file_exists($path.'/Stubs/'.$this->stub.'.stub')) {
             $path = __DIR__;
         }
 
-        return (new Stub($path . '/Stubs/' . $this->stub . '.stub', $this->getReplacements()))->render();
+        return (new Stub($path.'/Stubs/'.$this->stub.'.stub', $this->getReplacements()))->render();
     }
 
 
@@ -98,9 +100,9 @@ abstract class Generator
     public function getReplacements()
     {
         return [
-            'class'          => $this->getClass(),
-            'namespace'      => $this->getNamespace(),
-            'root_namespace' => $this->getRootNamespace()
+            'class' => $this->getClass(),
+            'namespace' => $this->getNamespace(),
+            'root_namespace' => $this->getRootNamespace(),
         ];
     }
 
@@ -123,7 +125,7 @@ abstract class Generator
      */
     public function getPath()
     {
-        return $this->getBasePath() . '/' . $this->getName() . '.php';
+        return $this->getBasePath().'/'.$this->getName().'.php';
     }
 
 
@@ -146,14 +148,14 @@ abstract class Generator
     }
 
 
-   /**
+    /**
      * Get application namespace
      *
      * @return string
      */
     public function getAppNamespace()
     {
-        return \Illuminate\Container\Container::getInstance()->getNamespace();
+        return Container::getInstance()->getNamespace();
     }
 
 
@@ -259,7 +261,7 @@ abstract class Generator
             return null;
         }
 
-        return 'namespace ' . rtrim($rootNamespace . '\\' . implode('\\', $segments), '\\') . ';';
+        return 'namespace '.rtrim($rootNamespace.'\\'.implode('\\', $segments), '\\').';';
     }
 
 
@@ -308,7 +310,7 @@ abstract class Generator
     /**
      * Determinte whether the given key exist in options array.
      *
-     * @param  string $key
+     * @param  string  $key
      *
      * @return boolean
      */
@@ -321,8 +323,8 @@ abstract class Generator
     /**
      * Get value from options by given key.
      *
-     * @param  string      $key
-     * @param  string|null $default
+     * @param  string  $key
+     * @param  string|null  $default
      *
      * @return string
      */
@@ -339,8 +341,8 @@ abstract class Generator
     /**
      * Helper method for "getOption".
      *
-     * @param  string      $key
-     * @param  string|null $default
+     * @param  string  $key
+     * @param  string|null  $default
      *
      * @return string
      */
@@ -353,7 +355,7 @@ abstract class Generator
     /**
      * Handle call to __get method.
      *
-     * @param  string $key
+     * @param  string  $key
      *
      * @return string|mixed
      */

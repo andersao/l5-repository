@@ -7,6 +7,7 @@ use Prettus\Repository\Contracts\PresenterInterface;
 
 /**
  * Class PresentableTrait
+ *
  * @package Prettus\Repository\Traits
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -19,7 +20,7 @@ trait PresentableTrait
     protected $presenter = null;
 
     /**
-     * @param \Prettus\Repository\Contracts\PresenterInterface $presenter
+     * @param  \Prettus\Repository\Contracts\PresenterInterface  $presenter
      *
      * @return $this
      */
@@ -32,7 +33,7 @@ trait PresentableTrait
 
     /**
      * @param      $key
-     * @param null $default
+     * @param  null  $default
      *
      * @return mixed|null
      */
@@ -48,14 +49,6 @@ trait PresentableTrait
     }
 
     /**
-     * @return bool
-     */
-    protected function hasPresenter()
-    {
-        return isset($this->presenter) && $this->presenter instanceof PresenterInterface;
-    }
-
-    /**
      * @return $this|mixed
      */
     public function presenter()
@@ -65,5 +58,13 @@ trait PresentableTrait
         }
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function hasPresenter()
+    {
+        return isset($this->presenter) && $this->presenter instanceof PresenterInterface;
     }
 }

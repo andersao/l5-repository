@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 /**
  * Class MigrationGenerator
+ *
  * @package Prettus\Repository\Generators
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -29,7 +30,7 @@ class MigrationGenerator extends Generator
      */
     public function getBasePath()
     {
-        return base_path() . '/database/migrations/';
+        return base_path().'/database/migrations/';
     }
 
 
@@ -40,7 +41,7 @@ class MigrationGenerator extends Generator
      */
     public function getPath()
     {
-        return $this->getBasePath() . $this->getFileName() . '.php';
+        return $this->getBasePath().$this->getFileName().'.php';
     }
 
 
@@ -65,51 +66,6 @@ class MigrationGenerator extends Generator
         return '';
     }
 
-
-    /**
-     * Get migration name.
-     *
-     * @return string
-     */
-    public function getMigrationName()
-    {
-        return strtolower($this->name);
-    }
-
-
-    /**
-     * Get file name.
-     *
-     * @return string
-     */
-    public function getFileName()
-    {
-        return date('Y_m_d_His_') . $this->getMigrationName();
-    }
-
-
-    /**
-     * Get schema parser.
-     *
-     * @return SchemaParser
-     */
-    public function getSchemaParser()
-    {
-        return new SchemaParser($this->fields);
-    }
-
-
-    /**
-     * Get name parser.
-     *
-     * @return NameParser
-     */
-    public function getNameParser()
-    {
-        return new NameParser($this->name);
-    }
-
-
     /**
      * Get stub templates.
      *
@@ -127,9 +83,9 @@ class MigrationGenerator extends Generator
             case 'insert':
                 $file = 'change';
                 $replacements = [
-                    'class'       => $this->getClass(),
-                    'table'       => $parser->getTable(),
-                    'fields_up'   => $this->getSchemaParser()->up(),
+                    'class' => $this->getClass(),
+                    'table' => $parser->getTable(),
+                    'fields_up' => $this->getSchemaParser()->up(),
                     'fields_down' => $this->getSchemaParser()->down(),
                 ];
                 break;
@@ -139,31 +95,71 @@ class MigrationGenerator extends Generator
             case 'alter':
                 $file = 'change';
                 $replacements = [
-                    'class'       => $this->getClass(),
-                    'table'       => $parser->getTable(),
+                    'class' => $this->getClass(),
+                    'table' => $parser->getTable(),
                     'fields_down' => $this->getSchemaParser()->up(),
-                    'fields_up'   => $this->getSchemaParser()->down(),
+                    'fields_up' => $this->getSchemaParser()->down(),
                 ];
                 break;
             default:
                 $file = 'create';
                 $replacements = [
-                    'class'  => $this->getClass(),
-                    'table'  => $parser->getTable(),
+                    'class' => $this->getClass(),
+                    'table' => $parser->getTable(),
                     'fields' => $this->getSchemaParser()->up(),
                 ];
                 break;
         }
         $path = config('repository.generator.stubsOverridePath', __DIR__);
 
-        if (!file_exists($path . "/Stubs/migration/{$file}.stub")) {
+        if (!file_exists($path."/Stubs/migration/{$file}.stub")) {
             $path = __DIR__;
         }
 
-        if (!file_exists($path . "/Stubs/migration/{$file}.stub")) {
-            throw new FileNotFoundException($path . "/Stubs/migration/{$file}.stub");
+        if (!file_exists($path."/Stubs/migration/{$file}.stub")) {
+            throw new FileNotFoundException($path."/Stubs/migration/{$file}.stub");
         }
 
-        return Stub::create($path . "/Stubs/migration/{$file}.stub", $replacements);
+        return Stub::create($path."/Stubs/migration/{$file}.stub", $replacements);
+    }
+
+    /**
+     * Get migration name.
+     *
+     * @return string
+     */
+    public function getMigrationName()
+    {
+        return strtolower($this->name);
+    }
+
+    /**
+     * Get file name.
+     *
+     * @return string
+     */
+    public function getFileName()
+    {
+        return date('Y_m_d_His_').$this->getMigrationName();
+    }
+
+    /**
+     * Get schema parser.
+     *
+     * @return SchemaParser
+     */
+    public function getSchemaParser()
+    {
+        return new SchemaParser($this->fields);
+    }
+
+    /**
+     * Get name parser.
+     *
+     * @return NameParser
+     */
+    public function getNameParser()
+    {
+        return new NameParser($this->name);
     }
 }

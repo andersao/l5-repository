@@ -1,4 +1,5 @@
 <?php
+
 namespace Prettus\Repository\Generators\Commands;
 
 use Illuminate\Console\Command;
@@ -10,6 +11,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class TransformerCommand
+ *
  * @package Prettus\Repository\Generators\Commands
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -40,10 +42,11 @@ class TransformerCommand extends Command
     /**
      * Execute the command.
      *
-     * @see fire()
      * @return void
+     * @see fire()
      */
-    public function handle(){
+    public function handle()
+    {
         $this->laravel->call([$this, 'fire'], func_get_args());
     }
 
@@ -55,13 +58,15 @@ class TransformerCommand extends Command
     public function fire()
     {
         try {
-            (new TransformerGenerator([
-                'name' => $this->argument('name'),
-                'force' => $this->option('force'),
-            ]))->run();
+            (new TransformerGenerator(
+                [
+                    'name' => $this->argument('name'),
+                    'force' => $this->option('force'),
+                ]
+            ))->run();
             $this->info("Transformer created successfully.");
         } catch (FileAlreadyExistsException $e) {
-            $this->error($this->type . ' already exists!');
+            $this->error($this->type.' already exists!');
 
             return false;
         }
@@ -80,7 +85,7 @@ class TransformerCommand extends Command
                 'name',
                 InputArgument::REQUIRED,
                 'The name of model for which the transformer is being generated.',
-                null
+                null,
             ],
         ];
     }
@@ -98,8 +103,8 @@ class TransformerCommand extends Command
                 'f',
                 InputOption::VALUE_NONE,
                 'Force the creation if file already exists.',
-                null
-            ]
+                null,
+            ],
         ];
     }
 }

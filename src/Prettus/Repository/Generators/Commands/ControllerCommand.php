@@ -1,4 +1,5 @@
 <?php
+
 namespace Prettus\Repository\Generators\Commands;
 
 use Illuminate\Console\Command;
@@ -10,6 +11,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class ControllerCommand
+ *
  * @package Prettus\Repository\Generators\Commands
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -42,17 +44,18 @@ class ControllerCommand extends Command
      */
     public function __construct()
     {
-        $this->name = ((float) app()->version() >= 5.5  ? 'make:rest-controller' : 'make:resource');
+        $this->name = ((float)app()->version() >= 5.5 ? 'make:rest-controller' : 'make:resource');
         parent::__construct();
     }
 
     /**
      * Execute the command.
      *
-     * @see fire()
      * @return void
+     * @see fire()
      */
-    public function handle(){
+    public function handle()
+    {
         $this->laravel->call([$this, 'fire'], func_get_args());
     }
 
@@ -65,24 +68,31 @@ class ControllerCommand extends Command
     {
         try {
             // Generate create request for controller
-            $this->call('make:request', [
-                'name' => $this->argument('name') . 'CreateRequest'
-            ]);
+            $this->call(
+                'make:request',
+                [
+                    'name' => $this->argument('name').'CreateRequest',
+                ]
+            );
 
             // Generate update request for controller
-            $this->call('make:request', [
-                'name' => $this->argument('name') . 'UpdateRequest'
-            ]);
+            $this->call(
+                'make:request',
+                [
+                    'name' => $this->argument('name').'UpdateRequest',
+                ]
+            );
 
-            (new ControllerGenerator([
-                'name' => $this->argument('name'),
-                'force' => $this->option('force'),
-            ]))->run();
+            (new ControllerGenerator(
+                [
+                    'name' => $this->argument('name'),
+                    'force' => $this->option('force'),
+                ]
+            ))->run();
 
-            $this->info($this->type . ' created successfully.');
-
+            $this->info($this->type.' created successfully.');
         } catch (FileAlreadyExistsException $e) {
-            $this->error($this->type . ' already exists!');
+            $this->error($this->type.' already exists!');
 
             return false;
         }
@@ -101,7 +111,7 @@ class ControllerCommand extends Command
                 'name',
                 InputArgument::REQUIRED,
                 'The name of model for which the controller is being generated.',
-                null
+                null,
             ],
         ];
     }
@@ -120,7 +130,7 @@ class ControllerCommand extends Command
                 'f',
                 InputOption::VALUE_NONE,
                 'Force the creation if file already exists.',
-                null
+                null,
             ],
         ];
     }

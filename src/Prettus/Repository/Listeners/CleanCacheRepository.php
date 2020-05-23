@@ -2,6 +2,7 @@
 
 namespace Prettus\Repository\Listeners;
 
+use Exception;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +13,7 @@ use Prettus\Repository\Helpers\CacheKeys;
 
 /**
  * Class CleanCacheRepository
+ *
  * @package Prettus\Repository\Listeners
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -47,7 +49,7 @@ class CleanCacheRepository
     }
 
     /**
-     * @param RepositoryEventBase $event
+     * @param  RepositoryEventBase  $event
      */
     public function handle(RepositoryEventBase $event)
     {
@@ -69,7 +71,7 @@ class CleanCacheRepository
                     }
                 }
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error($e->getMessage());
         }
     }

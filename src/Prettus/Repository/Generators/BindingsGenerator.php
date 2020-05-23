@@ -1,8 +1,12 @@
 <?php
+
 namespace Prettus\Repository\Generators;
+
+use File;
 
 /**
  * Class BindingsGenerator
+ *
  * @package Prettus\Repository\Generators
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -24,13 +28,18 @@ class BindingsGenerator extends Generator
 
     public function run()
     {
-
-
         // Add entity repository binding to the repository service provider
-        $provider = \File::get($this->getPath());
-        $repositoryInterface = '\\' . $this->getRepository() . "::class";
-        $repositoryEloquent = '\\' . $this->getEloquentRepository() . "::class";
-        \File::put($this->getPath(), str_replace($this->bindPlaceholder, "\$this->app->bind({$repositoryInterface}, $repositoryEloquent);" . PHP_EOL . '        ' . $this->bindPlaceholder, $provider));
+        $provider = File::get($this->getPath());
+        $repositoryInterface = '\\'.$this->getRepository()."::class";
+        $repositoryEloquent = '\\'.$this->getEloquentRepository()."::class";
+        File::put(
+            $this->getPath(),
+            str_replace(
+                $this->bindPlaceholder,
+                "\$this->app->bind({$repositoryInterface}, $repositoryEloquent);".PHP_EOL.'        '.$this->bindPlaceholder,
+                $provider
+            )
+        );
     }
 
     /**
@@ -40,7 +49,10 @@ class BindingsGenerator extends Generator
      */
     public function getPath()
     {
-        return $this->getBasePath() . '/Providers/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) . '.php';
+        return $this->getBasePath().'/Providers/'.parent::getConfigGeneratorClassPath(
+                $this->getPathConfigNode(),
+                true
+            ).'.php';
     }
 
     /**
@@ -64,51 +76,13 @@ class BindingsGenerator extends Generator
     }
 
     /**
-     * Gets repository full class name
-     *
-     * @return string
-     */
-    public function getRepository()
-    {
-        $repositoryGenerator = new RepositoryInterfaceGenerator([
-            'name' => $this->name,
-        ]);
-
-        $repository = $repositoryGenerator->getRootNamespace() . '\\' . $repositoryGenerator->getName();
-
-        return str_replace([
-            "\\",
-            '/'
-        ], '\\', $repository) . 'Repository';
-    }
-
-    /**
-     * Gets eloquent repository full class name
-     *
-     * @return string
-     */
-    public function getEloquentRepository()
-    {
-        $repositoryGenerator = new RepositoryEloquentGenerator([
-            'name' => $this->name,
-        ]);
-
-        $repository = $repositoryGenerator->getRootNamespace() . '\\' . $repositoryGenerator->getName();
-
-        return str_replace([
-            "\\",
-            '/'
-        ], '\\', $repository) . 'RepositoryEloquent';
-    }
-
-    /**
      * Get root namespace.
      *
      * @return string
      */
     public function getRootNamespace()
     {
-        return parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode());
+        return parent::getRootNamespace().parent::getConfigGeneratorClassPath($this->getPathConfigNode());
     }
 
     /**
@@ -118,11 +92,63 @@ class BindingsGenerator extends Generator
      */
     public function getReplacements()
     {
+        return array_merge(
+            parent::getReplacements(),
+            [
+                'repository' => $this->getRepository(),
+                'eloquent' => $this->getEloquentRepository(),
+                'placeholder' => $this->bindPlaceholder,
+            ]
+        );
+    }
 
-        return array_merge(parent::getReplacements(), [
-            'repository' => $this->getRepository(),
-            'eloquent' => $this->getEloquentRepository(),
-            'placeholder' => $this->bindPlaceholder,
-        ]);
+    /**
+     * Gets repository full class name
+     *
+     * @return string
+     */
+    public function getRepository()
+    {
+        $repositoryGenerator = new RepositoryInterfaceGenerator(
+            [
+                'name' => $this->name,
+            ]
+        );
+
+        $repository = $repositoryGenerator->getRootNamespace().'\\'.$repositoryGenerator->getName();
+
+        return str_replace(
+                [
+                    "\\",
+                    '/',
+                ],
+                '\\',
+                $repository
+            ).'Repository';
+    }
+
+    /**
+     * Gets eloquent repository full class name
+     *
+     * @return string
+     */
+    public function getEloquentRepository()
+    {
+        $repositoryGenerator = new RepositoryEloquentGenerator(
+            [
+                'name' => $this->name,
+            ]
+        );
+
+        $repository = $repositoryGenerator->getRootNamespace().'\\'.$repositoryGenerator->getName();
+
+        return str_replace(
+                [
+                    "\\",
+                    '/',
+                ],
+                '\\',
+                $repository
+            ).'RepositoryEloquent';
     }
 }

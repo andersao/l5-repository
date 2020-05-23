@@ -4,6 +4,7 @@ namespace Prettus\Repository\Generators;
 
 /**
  * Class CriteriaGenerator
+ *
  * @package Prettus\Repository\Generators
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -23,11 +24,12 @@ class CriteriaGenerator extends Generator
      */
     public function getRootNamespace()
     {
-        return parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode());
+        return parent::getRootNamespace().parent::getConfigGeneratorClassPath($this->getPathConfigNode());
     }
 
     /**
      * Get generator path config node.
+     *
      * @return string
      */
     public function getPathConfigNode()
@@ -42,7 +44,10 @@ class CriteriaGenerator extends Generator
      */
     public function getPath()
     {
-        return $this->getBasePath() . '/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) . '/' . $this->getName() . 'Criteria.php';
+        return $this->getBasePath().'/'.parent::getConfigGeneratorClassPath(
+                $this->getPathConfigNode(),
+                true
+            ).'/'.$this->getName().'Criteria.php';
     }
 
     /**

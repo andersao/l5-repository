@@ -1,8 +1,10 @@
 <?php
+
 namespace Prettus\Repository\Generators\Migrations;
 
 /**
  * Class NameParser
+ *
  * @package Prettus\Repository\Generators\Migrations
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -28,43 +30,33 @@ class NameParser
     protected $actions = [
         'create' => [
             'create',
-            'make'
+            'make',
         ],
         'delete' => [
             'delete',
-            'remove'
+            'remove',
         ],
-        'add'    => [
+        'add' => [
             'add',
             'update',
             'append',
-            'insert'
+            'insert',
         ],
-        'drop'   => [
+        'drop' => [
             'destroy',
-            'drop'
-        ]
+            'drop',
+        ],
     ];
 
     /**
      * The constructor.
      *
-     * @param string $name
+     * @param  string  $name
      */
     public function __construct($name)
     {
         $this->name = $name;
         $this->data = $this->fetchData();
-    }
-
-    /**
-     * Fetch the migration name to an array data.
-     *
-     * @return array
-     */
-    protected function fetchData()
-    {
-        return explode('_', $this->name);
     }
 
     /**
@@ -207,5 +199,15 @@ class NameParser
     public function isDrop()
     {
         return in_array($this->getAction(), $this->actions['drop']);
+    }
+
+    /**
+     * Fetch the migration name to an array data.
+     *
+     * @return array
+     */
+    protected function fetchData()
+    {
+        return explode('_', $this->name);
     }
 }

@@ -1,6 +1,8 @@
 <?php
+
 namespace Prettus\Repository\Criteria;
 
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -10,6 +12,7 @@ use Prettus\Repository\Contracts\RepositoryInterface;
 
 /**
  * Class RequestCriteria
+ *
  * @package Prettus\Repository\Criteria
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -29,8 +32,8 @@ class RequestCriteria implements CriteriaInterface
     /**
      * Apply criteria in query repository
      *
-     * @param         Builder|Model     $model
-     * @param RepositoryInterface $repository
+     * @param  Builder|Model  $model
+     * @param  RepositoryInterface  $repository
      *
      * @return mixed
      * @throws \Exception
@@ -49,72 +52,81 @@ class RequestCriteria implements CriteriaInterface
         $sortedBy = !empty($sortedBy) ? $sortedBy : 'asc';
 
         if ($search && is_array($fieldsSearchable) && count($fieldsSearchable)) {
-
-            $searchFields = is_array($searchFields) || is_null($searchFields) ? $searchFields : explode(';', $searchFields);
+            $searchFields = is_array($searchFields) || is_null($searchFields) ? $searchFields : explode(
+                ';',
+                $searchFields
+            );
             $fields = $this->parserFieldsSearch($fieldsSearchable, $searchFields);
             $isFirstField = true;
             $searchData = $this->parserSearchData($search);
             $search = $this->parserSearchValue($search);
             $modelForceAndWhere = strtolower($searchJoin) === 'and';
 
-            $model = $model->where(function ($query) use ($fields, $search, $searchData, $isFirstField, $modelForceAndWhere) {
-                /** @var Builder $query */
+            $model = $model->where(
+                function ($query) use ($fields, $search, $searchData, $isFirstField, $modelForceAndWhere) {
+                    /** @var Builder $query */
 
-                foreach ($fields as $field => $condition) {
-
-                    if (is_numeric($field)) {
-                        $field = $condition;
-                        $condition = "=";
-                    }
-
-                    $value = null;
-
-                    $condition = trim(strtolower($condition));
-
-                    if (isset($searchData[$field])) {
-                        $value = ($condition == "like" || $condition == "ilike") ? "%{$searchData[$field]}%" : $searchData[$field];
-                    } else {
-                        if (!is_null($search)) {
-                            $value = ($condition == "like" || $condition == "ilike") ? "%{$search}%" : $search;
+                    foreach ($fields as $field => $condition) {
+                        if (is_numeric($field)) {
+                            $field = $condition;
+                            $condition = "=";
                         }
-                    }
 
-                    $relation = null;
-                    if(stripos($field, '.')) {
-                        $explode = explode('.', $field);
-                        $field = array_pop($explode);
-                        $relation = implode('.', $explode);
-                    }
-                    $modelTableName = $query->getModel()->getTable();
-                    if ( $isFirstField || $modelForceAndWhere ) {
-                        if (!is_null($value)) {
-                            if(!is_null($relation)) {
-                                $query->whereHas($relation, function($query) use($field,$condition,$value) {
-                                    $query->where($field,$condition,$value);
-                                });
-                            } else {
-                                $query->where($modelTableName.'.'.$field,$condition,$value);
+                        $value = null;
+
+                        $condition = trim(strtolower($condition));
+
+                        if (isset($searchData[$field])) {
+                            $value = ($condition == "like" || $condition == "ilike") ? "%{$searchData[$field]}%" : $searchData[$field];
+                        } else {
+                            if (!is_null($search)) {
+                                $value = ($condition == "like" || $condition == "ilike") ? "%{$search}%" : $search;
                             }
-                            $isFirstField = false;
                         }
-                    } else {
-                        if (!is_null($value)) {
-                            if(!is_null($relation)) {
-                                $query->orWhereHas($relation, function($query) use($field,$condition,$value) {
-                                    $query->where($field,$condition,$value);
-                                });
-                            } else {
-                                $query->orWhere($modelTableName.'.'.$field, $condition, $value);
+
+                        $relation = null;
+                        if (stripos($field, '.')) {
+                            $explode = explode('.', $field);
+                            $field = array_pop($explode);
+                            $relation = implode('.', $explode);
+                        }
+                        $modelTableName = $query->getModel()->getTable();
+                        if ($isFirstField || $modelForceAndWhere) {
+                            if (!is_null($value)) {
+                                if (!is_null($relation)) {
+                                    $query->whereHas(
+                                        $relation,
+                                        function ($query) use ($field, $condition, $value) {
+                                            $query->where($field, $condition, $value);
+                                        }
+                                    );
+                                } else {
+                                    $query->where($modelTableName.'.'.$field, $condition, $value);
+                                }
+                                $isFirstField = false;
+                            }
+                        } else {
+                            if (!is_null($value)) {
+                                if (!is_null($relation)) {
+                                    $query->orWhereHas(
+                                        $relation,
+                                        function ($query) use ($field, $condition, $value) {
+                                            $query->where($field, $condition, $value);
+                                        }
+                                    );
+                                } else {
+                                    $query->orWhere($modelTableName.'.'.$field, $condition, $value);
+                                }
                             }
                         }
                     }
                 }
-            });
+            );
         }
 
         if (isset($orderBy) && !empty($orderBy)) {
             $split = explode('|', $orderBy);
-            if(count($split) > 1) {
+            if (count($split) > 1) {
                 /*
                  * ex.
                  * products|description -> join products on current_table.product_id = products.id order by description
@@ -127,7 +139,7 @@ class RequestCriteria implements CriteriaInterface
                 $sortColumn = $split[1];
 
                 $split = explode(':', $sortTable);
-                if(count($split) > 1) {
+                if (count($split) > 1) {
                     $sortTable = $split[0];
                     $keyName = $table.'.'.$split[1];
                 } else {
@@ -188,7 +200,7 @@ class RequestCriteria implements CriteriaInterface
                 try {
                     list($field, $value) = explode(':', $row);
                     $searchData[$field] = $value;
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     //Surround offset error
                 }
             }
@@ -204,7 +216,6 @@ class RequestCriteria implements CriteriaInterface
      */
     protected function parserSearchValue($search)
     {
-
         if (stripos($search, ';') || stripos($search, ':')) {
             $values = explode(';', $search);
             foreach ($values as $value) {
@@ -224,10 +235,13 @@ class RequestCriteria implements CriteriaInterface
     protected function parserFieldsSearch(array $fields = [], array $searchFields = null)
     {
         if (!is_null($searchFields) && count($searchFields)) {
-            $acceptedConditions = config('repository.criteria.acceptedConditions', [
-                '=',
-                'like'
-            ]);
+            $acceptedConditions = config(
+                'repository.criteria.acceptedConditions',
+                [
+                    '=',
+                    'like',
+                ]
+            );
             $originalFields = $fields;
             $fields = [];
 
@@ -257,9 +271,10 @@ class RequestCriteria implements CriteriaInterface
             }
 
             if (count($fields) == 0) {
-                throw new \Exception(trans('repository::criteria.fields_not_accepted', ['field' => implode(',', $searchFields)]));
+                throw new Exception(
+                    trans('repository::criteria.fields_not_accepted', ['field' => implode(',', $searchFields)])
+                );
             }
-
         }
 
         return $fields;

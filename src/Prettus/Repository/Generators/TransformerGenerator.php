@@ -1,8 +1,10 @@
 <?php
+
 namespace Prettus\Repository\Generators;
 
 /**
  * Class TransformerGenerator
+ *
  * @package Prettus\Repository\Generators
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -22,7 +24,7 @@ class TransformerGenerator extends Generator
      */
     public function getRootNamespace()
     {
-        return parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode());
+        return parent::getRootNamespace().parent::getConfigGeneratorClassPath($this->getPathConfigNode());
     }
 
     /**
@@ -42,7 +44,10 @@ class TransformerGenerator extends Generator
      */
     public function getPath()
     {
-        return $this->getBasePath() . '/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) . '/' . $this->getName() . 'Transformer.php';
+        return $this->getBasePath().'/'.parent::getConfigGeneratorClassPath(
+                $this->getPathConfigNode(),
+                true
+            ).'/'.$this->getName().'Transformer.php';
     }
 
     /**
@@ -62,17 +67,26 @@ class TransformerGenerator extends Generator
      */
     public function getReplacements()
     {
-        $modelGenerator = new ModelGenerator([
-            'name' => $this->name
-        ]);
-        $model = $modelGenerator->getRootNamespace() . '\\' . $modelGenerator->getName();
-        $model = str_replace([
-            "\\",
-            '/'
-        ], '\\', $model);
+        $modelGenerator = new ModelGenerator(
+            [
+                'name' => $this->name,
+            ]
+        );
+        $model = $modelGenerator->getRootNamespace().'\\'.$modelGenerator->getName();
+        $model = str_replace(
+            [
+                "\\",
+                '/',
+            ],
+            '\\',
+            $model
+        );
 
-        return array_merge(parent::getReplacements(), [
-            'model' => $model
-        ]);
+        return array_merge(
+            parent::getReplacements(),
+            [
+                'model' => $model,
+            ]
+        );
     }
 }

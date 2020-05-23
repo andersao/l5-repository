@@ -1,4 +1,5 @@
 <?php
+
 namespace Prettus\Repository\Events;
 
 use Illuminate\Database\Eloquent\Model;
@@ -6,6 +7,7 @@ use Prettus\Repository\Contracts\RepositoryInterface;
 
 /**
  * Class RepositoryEventBase
+ *
  * @package Prettus\Repository\Events
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -27,8 +29,8 @@ abstract class RepositoryEventBase
     protected $action;
 
     /**
-     * @param RepositoryInterface $repository
-     * @param Model               $model
+     * @param  RepositoryInterface  $repository
+     * @param  Model  $model
      */
     public function __construct(RepositoryInterface $repository, Model $model = null)
     {

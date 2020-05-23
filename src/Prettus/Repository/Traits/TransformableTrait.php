@@ -4,6 +4,7 @@ namespace Prettus\Repository\Traits;
 
 /**
  * Class TransformableTrait
+ *
  * @package Prettus\Repository\Traits
  * @author Anderson Andrade <contato@andersonandra.de>
  */

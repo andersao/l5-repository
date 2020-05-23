@@ -1,4 +1,5 @@
 <?php
+
 namespace Prettus\Repository\Generators\Migrations;
 
 use Illuminate\Contracts\Support\Arrayable;
@@ -7,6 +8,7 @@ use Illuminate\Support\Str;
 
 /**
  * Class SchemaParser
+ *
  * @package Prettus\Repository\Generators\Migrations
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -19,7 +21,7 @@ class SchemaParser implements Arrayable
      */
     protected $customAttributes = [
         'remember_token' => 'rememberToken()',
-        'soft_delete'    => 'softDeletes()',
+        'soft_delete' => 'softDeletes()',
     ];
     /**
      * The migration schema.
@@ -31,7 +33,7 @@ class SchemaParser implements Arrayable
     /**
      * Create new instance.
      *
-     * @param string|null $schema
+     * @param  string|null  $schema
      */
     public function __construct($schema = null)
     {
@@ -76,7 +78,7 @@ class SchemaParser implements Arrayable
     /**
      * Parse a string to array of formatted schema.
      *
-     * @param  string $schema
+     * @param  string  $schema
      *
      * @return array
      */
@@ -110,28 +112,31 @@ class SchemaParser implements Arrayable
     /**
      * Get column name from schema.
      *
-     * @param  string $schema
+     * @param  string  $schema
      *
      * @return string
      */
     public function getColumn($schema)
     {
-        return Arr::first(explode(':', $schema), function ($key, $value) {
-            return $value;
-        });
+        return Arr::first(
+            explode(':', $schema),
+            function ($key, $value) {
+                return $value;
+            }
+        );
     }
 
     /**
      * Get column attributes.
      *
-     * @param  string $column
-     * @param  string $schema
+     * @param  string  $column
+     * @param  string  $schema
      *
      * @return array
      */
     public function getAttributes($column, $schema)
     {
-        $fields = str_replace($column . ':', '', $schema);
+        $fields = str_replace($column.':', '', $schema);
 
         return $this->hasCustomAttribute($column) ? $this->getCustomAttribute($column) : explode(':', $fields);
     }
@@ -139,7 +144,7 @@ class SchemaParser implements Arrayable
     /**
      * Determinte whether the given column is exist in customAttributes array.
      *
-     * @param  string $column
+     * @param  string  $column
      *
      * @return boolean
      */
@@ -151,7 +156,7 @@ class SchemaParser implements Arrayable
     /**
      * Get custom attributes value.
      *
-     * @param  string $column
+     * @param  string  $column
      *
      * @return array
      */
@@ -163,19 +168,19 @@ class SchemaParser implements Arrayable
     /**
      * Create field.
      *
-     * @param  string $column
+     * @param  string  $column
      * @param  array  $attributes
      *
      * @return string
      */
     public function createField($column, $attributes, $type = 'add')
     {
-        $results = "\t\t\t" . '$table';
+        $results = "\t\t\t".'$table';
         foreach ($attributes as $key => $field) {
             $results .= $this->{"{$type}Column"}($key, $field, $column);
         }
 
-        return $results .= ';' . PHP_EOL;
+        return $results .= ';'.PHP_EOL;
     }
 
     /**
@@ -196,42 +201,42 @@ class SchemaParser implements Arrayable
     /**
      * Format field to script.
      *
-     * @param  int    $key
-     * @param  string $field
-     * @param  string $column
+     * @param  int  $key
+     * @param  string  $field
+     * @param  string  $column
      *
      * @return string
      */
     protected function addColumn($key, $field, $column)
     {
         if ($this->hasCustomAttribute($column)) {
-            return '->' . $field;
+            return '->'.$field;
         }
         if ($key == 0) {
-            return '->' . $field . "('" . $column . "')";
+            return '->'.$field."('".$column."')";
         }
         if (Str::contains($field, '(')) {
-            return '->' . $field;
+            return '->'.$field;
         }
 
-        return '->' . $field . '()';
+        return '->'.$field.'()';
     }
 
     /**
      * Format field to script.
      *
-     * @param  int    $key
-     * @param  string $field
-     * @param  string $column
+     * @param  int  $key
+     * @param  string  $field
+     * @param  string  $column
      *
      * @return string
      */
     protected function removeColumn($key, $field, $column)
     {
         if ($this->hasCustomAttribute($column)) {
-            return '->' . $field;
+            return '->'.$field;
         }
 
-        return '->dropColumn(' . "'" . $column . "')";
+        return '->dropColumn('."'".$column."')";
     }
 }

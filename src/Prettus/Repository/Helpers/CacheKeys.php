@@ -4,6 +4,7 @@ namespace Prettus\Repository\Helpers;
 
 /**
  * Class CacheKeys
+ *
  * @package Prettus\Repository\Helpers
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -65,7 +66,7 @@ class CacheKeys
      */
     public static function getFileKeys()
     {
-        $file = storage_path("framework/cache/" . self::$storeFile);
+        $file = storage_path("framework/cache/".self::$storeFile);
 
         return $file;
     }
@@ -105,10 +106,13 @@ class CacheKeys
     {
         $instance = new static;
 
-        return call_user_func_array([
-            $instance,
-            $method
-        ], $parameters);
+        return call_user_func_array(
+            [
+                $instance,
+                $method,
+            ],
+            $parameters
+        );
     }
 
     /**
@@ -121,9 +125,12 @@ class CacheKeys
     {
         $instance = new static;
 
-        return call_user_func_array([
-            $instance,
-            $method
-        ], $parameters);
+        return call_user_func_array(
+            [
+                $instance,
+                $method,
+            ],
+            $parameters
+        );
     }
 }

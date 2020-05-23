@@ -1,10 +1,12 @@
 <?php
+
 namespace Prettus\Repository\Generators;
 
 use Illuminate\Support\Str;
 
 /**
  * Class ControllerGenerator
+ *
  * @package Prettus\Repository\Generators
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -25,7 +27,11 @@ class ControllerGenerator extends Generator
      */
     public function getRootNamespace()
     {
-        return str_replace('/', '\\', parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode()));
+        return str_replace(
+            '/',
+            '\\',
+            parent::getRootNamespace().parent::getConfigGeneratorClassPath($this->getPathConfigNode())
+        );
     }
 
     /**
@@ -45,7 +51,10 @@ class ControllerGenerator extends Generator
      */
     public function getPath()
     {
-        return $this->getBasePath() . '/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) . '/' . $this->getControllerName() . 'Controller.php';
+        return $this->getBasePath().'/'.parent::getConfigGeneratorClassPath(
+                $this->getPathConfigNode(),
+                true
+            ).'/'.$this->getControllerName().'Controller.php';
     }
 
     /**
@@ -59,13 +68,32 @@ class ControllerGenerator extends Generator
     }
 
     /**
+     * Get array replacements.
+     *
+     * @return array
+     */
+    public function getReplacements()
+    {
+        return array_merge(
+            parent::getReplacements(),
+            [
+                'controller' => $this->getControllerName(),
+                'plural' => $this->getPluralName(),
+                'singular' => $this->getSingularName(),
+                'validator' => $this->getValidator(),
+                'repository' => $this->getRepository(),
+                'appname' => $this->getAppNamespace(),
+            ]
+        );
+    }
+
+    /**
      * Gets controller name based on model
      *
      * @return string
      */
     public function getControllerName()
     {
-
         return ucfirst($this->getPluralName());
     }
 
@@ -76,26 +104,7 @@ class ControllerGenerator extends Generator
      */
     public function getPluralName()
     {
-
         return Str::plural(lcfirst(ucwords($this->getClass())));
-    }
-
-    /**
-     * Get array replacements.
-     *
-     * @return array
-     */
-    public function getReplacements()
-    {
-
-        return array_merge(parent::getReplacements(), [
-            'controller' => $this->getControllerName(),
-            'plural'     => $this->getPluralName(),
-            'singular'   => $this->getSingularName(),
-            'validator'  => $this->getValidator(),
-            'repository' => $this->getRepository(),
-            'appname'    => $this->getAppNamespace(),
-        ]);
     }
 
     /**
@@ -115,16 +124,22 @@ class ControllerGenerator extends Generator
      */
     public function getValidator()
     {
-        $validatorGenerator = new ValidatorGenerator([
-            'name' => $this->name,
-        ]);
+        $validatorGenerator = new ValidatorGenerator(
+            [
+                'name' => $this->name,
+            ]
+        );
 
-        $validator = $validatorGenerator->getRootNamespace() . '\\' . $validatorGenerator->getName();
+        $validator = $validatorGenerator->getRootNamespace().'\\'.$validatorGenerator->getName();
 
-        return 'use ' . str_replace([
-            "\\",
-            '/'
-        ], '\\', $validator) . 'Validator;';
+        return 'use '.str_replace(
+                [
+                    "\\",
+                    '/',
+                ],
+                '\\',
+                $validator
+            ).'Validator;';
     }
 
 
@@ -135,15 +150,21 @@ class ControllerGenerator extends Generator
      */
     public function getRepository()
     {
-        $repositoryGenerator = new RepositoryInterfaceGenerator([
-            'name' => $this->name,
-        ]);
+        $repositoryGenerator = new RepositoryInterfaceGenerator(
+            [
+                'name' => $this->name,
+            ]
+        );
 
-        $repository = $repositoryGenerator->getRootNamespace() . '\\' . $repositoryGenerator->getName();
+        $repository = $repositoryGenerator->getRootNamespace().'\\'.$repositoryGenerator->getName();
 
-        return 'use ' . str_replace([
-            "\\",
-            '/'
-        ], '\\', $repository) . 'Repository;';
+        return 'use '.str_replace(
+                [
+                    "\\",
+                    '/',
+                ],
+                '\\',
+                $repository
+            ).'Repository;';
     }
 }

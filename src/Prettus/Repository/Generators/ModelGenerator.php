@@ -6,6 +6,7 @@ use Prettus\Repository\Generators\Migrations\SchemaParser;
 
 /**
  * Class ModelGenerator
+ *
  * @package Prettus\Repository\Generators
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -26,7 +27,7 @@ class ModelGenerator extends Generator
      */
     public function getRootNamespace()
     {
-        return parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode());
+        return parent::getRootNamespace().parent::getConfigGeneratorClassPath($this->getPathConfigNode());
     }
 
     /**
@@ -46,7 +47,10 @@ class ModelGenerator extends Generator
      */
     public function getPath()
     {
-        return $this->getBasePath() . '/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) . '/' . $this->getName() . '.php';
+        return $this->getBasePath().'/'.parent::getConfigGeneratorClassPath(
+                $this->getPathConfigNode(),
+                true
+            ).'/'.$this->getName().'.php';
     }
 
     /**
@@ -67,9 +71,12 @@ class ModelGenerator extends Generator
      */
     public function getReplacements()
     {
-        return array_merge(parent::getReplacements(), [
-            'fillable' => $this->getFillable()
-        ]);
+        return array_merge(
+            parent::getReplacements(),
+            [
+                'fillable' => $this->getFillable(),
+            ]
+        );
     }
 
     /**
@@ -82,13 +89,13 @@ class ModelGenerator extends Generator
         if (!$this->fillable) {
             return '[]';
         }
-        $results = '[' . PHP_EOL;
+        $results = '['.PHP_EOL;
 
         foreach ($this->getSchemaParser()->toArray() as $column => $value) {
-            $results .= "\t\t'{$column}'," . PHP_EOL;
+            $results .= "\t\t'{$column}',".PHP_EOL;
         }
 
-        return $results . "\t" . ']';
+        return $results."\t".']';
     }
 
     /**

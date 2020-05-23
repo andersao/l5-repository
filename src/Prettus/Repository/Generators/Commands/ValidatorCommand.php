@@ -1,4 +1,5 @@
 <?php
+
 namespace Prettus\Repository\Generators\Commands;
 
 use Illuminate\Console\Command;
@@ -10,6 +11,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class ValidatorCommand
+ *
  * @package Prettus\Repository\Generators\Commands
  */
 class ValidatorCommand extends Command
@@ -40,10 +42,11 @@ class ValidatorCommand extends Command
     /**
      * Execute the command.
      *
-     * @see fire()
      * @return void
+     * @see fire()
      */
-    public function handle(){
+    public function handle()
+    {
         $this->laravel->call([$this, 'fire'], func_get_args());
     }
 
@@ -55,14 +58,16 @@ class ValidatorCommand extends Command
     public function fire()
     {
         try {
-            (new ValidatorGenerator([
-                'name' => $this->argument('name'),
-                'rules' => $this->option('rules'),
-                'force' => $this->option('force'),
-            ]))->run();
+            (new ValidatorGenerator(
+                [
+                    'name' => $this->argument('name'),
+                    'rules' => $this->option('rules'),
+                    'force' => $this->option('force'),
+                ]
+            ))->run();
             $this->info("Validator created successfully.");
         } catch (FileAlreadyExistsException $e) {
-            $this->error($this->type . ' already exists!');
+            $this->error($this->type.' already exists!');
 
             return false;
         }
@@ -81,7 +86,7 @@ class ValidatorCommand extends Command
                 'name',
                 InputArgument::REQUIRED,
                 'The name of model for which the validator is being generated.',
-                null
+                null,
             ],
         ];
     }
@@ -100,14 +105,14 @@ class ValidatorCommand extends Command
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'The rules of validation attributes.',
-                null
+                null,
             ],
             [
                 'force',
                 'f',
                 InputOption::VALUE_NONE,
                 'Force the creation if file already exists.',
-                null
+                null,
             ],
         ];
     }
