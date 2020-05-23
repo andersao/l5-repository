@@ -1,6 +1,6 @@
 {
   "name": "prettus/l5-repository",
-  "description": "Laravel 5 - Repositories to  the database layer",
+  "description": "Laravel 5 - Repositories to the database layer",
   "keywords": ["laravel", "repository", "eloquent", "model", "cache"],
   "license": "MIT",
   "authors": [
