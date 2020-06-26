@@ -14,8 +14,11 @@ use Prettus\Repository\Contracts\PresenterInterface;
 use Prettus\Repository\Contracts\RepositoryCriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 use Prettus\Repository\Events\RepositoryEntityCreated;
+use Prettus\Repository\Events\RepositoryEntityCreating;
 use Prettus\Repository\Events\RepositoryEntityDeleted;
+use Prettus\Repository\Events\RepositoryEntityDeleting;
 use Prettus\Repository\Events\RepositoryEntityUpdated;
+use Prettus\Repository\Events\RepositoryEntityUpdating;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Repository\Traits\ComparesVersionsTrait;
 use Prettus\Validator\Contracts\ValidatorInterface;
@@ -628,6 +631,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             $this->validator->with($attributes)->passesOrFail(ValidatorInterface::RULE_CREATE);
         }
 
+        event(new RepositoryEntityCreating($this, $attributes));
+
         $model = $this->model->newInstance($attributes);
         $model->save();
         $this->resetModel();
@@ -671,6 +676,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->skipPresenter(true);
 
         $model = $this->model->findOrFail($id);
+
+        event(new RepositoryEntityUpdating($this, $model));
+
         $model->fill($attributes);
         $model->save();
 
@@ -704,6 +712,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         $this->skipPresenter(true);
 
+        event(new RepositoryEntityCreating($this, $attributes));
+
         $model = $this->model->updateOrCreate($attributes, $values);
 
         $this->skipPresenter($temporarySkipPresenter);
@@ -734,6 +744,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->skipPresenter($temporarySkipPresenter);
         $this->resetModel();
 
+        event(new RepositoryEntityDeleting($this, $model));
+
         $deleted = $model->delete();
 
         event(new RepositoryEntityDeleted($this, $originalModel));
@@ -756,6 +768,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->skipPresenter(true);
 
         $this->applyConditions($where);
+
+        event(new RepositoryEntityDeleting($this, $this->model->getModel()));
 
         $deleted = $this->model->delete();
 

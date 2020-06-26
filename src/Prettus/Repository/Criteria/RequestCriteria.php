@@ -113,41 +113,15 @@ class RequestCriteria implements CriteriaInterface
         }
 
         if (isset($orderBy) && !empty($orderBy)) {
-            $split = explode('|', $orderBy);
-            if(count($split) > 1) {
-                /*
-                 * ex.
-                 * products|description -> join products on current_table.product_id = products.id order by description
-                 *
-                 * products:custom_id|products.description -> join products on current_table.custom_id = products.id order
-                 * by products.description (in case both tables have same column name)
-                 */
-                $table = $model->getModel()->getTable();
-                $sortTable = $split[0];
-                $sortColumn = $split[1];
-
-                $split = explode(':', $sortTable);
-                if(count($split) > 1) {
-                    $sortTable = $split[0];
-                    $keyName = $table.'.'.$split[1];
-                } else {
-                    /*
-                     * If you do not define which column to use as a joining column on current table, it will
-                     * use a singular of a join table appended with _id
-                     *
-                     * ex.
-                     * products -> product_id
-                     */
-                    $prefix = Str::singular($sortTable);
-                    $keyName = $table.'.'.$prefix.'_id';
+            $orderBySplit = explode(';', $orderBy);
+            if(count($orderBySplit) > 1) {
+                $sortedBySplit = explode(';', $sortedBy);
+                foreach ($orderBySplit as $orderBySplitItemKey => $orderBySplitItem) {
+                    $sortedBy = isset($sortedBySplit[$orderBySplitItemKey]) ? $sortedBySplit[$orderBySplitItemKey] : $sortedBySplit[0];
+                    $model = $this->parserFieldsOrderBy($model, $orderBySplitItem, $sortedBy);
                 }
-
-                $model = $model
-                    ->leftJoin($sortTable, $keyName, '=', $sortTable.'.id')
-                    ->orderBy($sortColumn, $sortedBy)
-                    ->addSelect($table.'.*');
             } else {
-                $model = $model->orderBy($orderBy, $sortedBy);
+                $model = $this->parserFieldsOrderBy($model, $orderBySplit[0], $sortedBy);
             }
         }
 
@@ -169,6 +143,53 @@ class RequestCriteria implements CriteriaInterface
             $model = $model->withCount($withCount);
         }
 
+        return $model;
+    }
+
+    /**
+     * @param $model
+     * @param $orderBy
+     * @param $sortedBy
+     * @return mixed
+     */
+    protected function parserFieldsOrderBy($model, $orderBy, $sortedBy)
+    {
+        $split = explode('|', $orderBy);
+        if(count($split) > 1) {
+            /*
+             * ex.
+             * products|description -> join products on current_table.product_id = products.id order by description
+             *
+             * products:custom_id|products.description -> join products on current_table.custom_id = products.id order
+             * by products.description (in case both tables have same column name)
+             */
+            $table = $model->getModel()->getTable();
+            $sortTable = $split[0];
+            $sortColumn = $split[1];
+
+            $split = explode(':', $sortTable);
+            if(count($split) > 1) {
+                $sortTable = $split[0];
+                $keyName = $table.'.'.$split[1];
+            } else {
+                /*
+                 * If you do not define which column to use as a joining column on current table, it will
+                 * use a singular of a join table appended with _id
+                 *
+                 * ex.
+                 * products -> product_id
+                 */
+                $prefix = Str::singular($sortTable);
+                $keyName = $table.'.'.$prefix.'_id';
+            }
+
+            $model = $model
+                ->leftJoin($sortTable, $keyName, '=', $sortTable.'.id')
+                ->orderBy($sortColumn, $sortedBy)
+                ->addSelect($table.'.*');
+        } else {
+            $model = $model->orderBy($orderBy, $sortedBy);
+        }
         return $model;
     }
 
