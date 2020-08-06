@@ -100,6 +100,7 @@ php artisan vendor:publish --provider "Prettus\Repository\Providers\RepositorySe
 - update(array $attributes, $id)
 - updateOrCreate(array $attributes, array $values = [])
 - delete($id)
+- forceDelete($id)
 - deleteWhere(array $where)
 - orderBy($column, $direction = 'asc');
 - with(array $relations);
@@ -429,6 +430,12 @@ Delete entry in Repository
 
 ```php
 $this->repository->delete($id)
+```
+
+Force delete entry in Repository
+
+```php
+$this->repository->forceDelete($id)
 ```
 
 Delete entry in Repository by multiple fields

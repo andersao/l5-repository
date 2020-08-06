@@ -754,6 +754,35 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
+     * Force a hard delete on a soft deleted model to a entity in repository by id
+     *
+     * @param $id
+     *
+     * @return int
+     */
+    public function forceDelete($id)
+    {
+        $this->applyScope();
+
+        $temporarySkipPresenter = $this->skipPresenter;
+        $this->skipPresenter(true);
+
+        $model = $this->find($id);
+        $originalModel = clone $model;
+
+        $this->skipPresenter($temporarySkipPresenter);
+        $this->resetModel();
+
+        event(new RepositoryEntityDeleting($this, $model));
+
+        $deleted = $model->forceDelete();
+
+        event(new RepositoryEntityDeleted($this, $originalModel));
+
+        return $deleted;
+    }
+
+    /**
      * Delete multiple entities by given criteria.
      *
      * @param array $where
