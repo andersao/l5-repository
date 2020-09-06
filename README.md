@@ -760,6 +760,58 @@ ORDER BY posts.title
 ...
 ```
 
+Sorting multiple columns same sortedBy
+
+`http://prettus.local/users?orderBy=name;created_at&sortedBy=desc`
+
+Result will have something like this
+
+```json
+   [
+       {
+           "id": 1,
+           "name": "Laravel",
+           "created_at": "-0001-11-29 00:00:00"
+       },
+       {
+           "id": 3,
+           "name": "Laravel",
+           "created_at": "-0001-11-28 00:00:00"
+       },
+       {
+           "id": 2,
+           "name": "John Doe",
+           "created_at": "-0001-11-30 00:00:00"
+       }
+   ]
+```
+
+
+Sorting multiple columns difference sortedBy
+
+`http://prettus.local/users?orderBy=name;created_at&sortedBy=desc;asc`
+
+Result will have something like this
+
+```json
+   [
+       {
+           "id": 3,
+           "name": "Laravel",
+           "created_at": "-0001-11-28 00:00:00"
+       },
+       {
+           "id": 1,
+           "name": "Laravel",
+           "created_at": "-0001-11-29 00:00:00"
+       },
+       {
+           "id": 2,
+           "name": "John Doe",
+           "created_at": "-0001-11-30 00:00:00"
+       }
+   ]
+```
 
 Add relationship
 

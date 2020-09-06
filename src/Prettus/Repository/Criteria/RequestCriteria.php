@@ -1,8 +1,6 @@
 <?php
-
 namespace Prettus\Repository\Criteria;
 
-use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -12,7 +10,6 @@ use Prettus\Repository\Contracts\RepositoryInterface;
 
 /**
  * Class RequestCriteria
- *
  * @package Prettus\Repository\Criteria
  * @author Anderson Andrade <contato@andersonandra.de>
  */
@@ -32,8 +29,8 @@ class RequestCriteria implements CriteriaInterface
     /**
      * Apply criteria in query repository
      *
-     * @param  Builder|Model  $model
-     * @param  RepositoryInterface  $repository
+     * @param         Builder|Model     $model
+     * @param RepositoryInterface $repository
      *
      * @return mixed
      * @throws \Exception
@@ -52,114 +49,79 @@ class RequestCriteria implements CriteriaInterface
         $sortedBy = !empty($sortedBy) ? $sortedBy : 'asc';
 
         if ($search && is_array($fieldsSearchable) && count($fieldsSearchable)) {
-            $searchFields = is_array($searchFields) || is_null($searchFields) ? $searchFields : explode(
-                ';',
-                $searchFields
-            );
+
+            $searchFields = is_array($searchFields) || is_null($searchFields) ? $searchFields : explode(';', $searchFields);
             $fields = $this->parserFieldsSearch($fieldsSearchable, $searchFields);
             $isFirstField = true;
             $searchData = $this->parserSearchData($search);
             $search = $this->parserSearchValue($search);
             $modelForceAndWhere = strtolower($searchJoin) === 'and';
 
-            $model = $model->where(
-                function ($query) use ($fields, $search, $searchData, $isFirstField, $modelForceAndWhere) {
-                    /** @var Builder $query */
+            $model = $model->where(function ($query) use ($fields, $search, $searchData, $isFirstField, $modelForceAndWhere) {
+                /** @var Builder $query */
 
-                    foreach ($fields as $field => $condition) {
-                        if (is_numeric($field)) {
-                            $field = $condition;
-                            $condition = "=";
+                foreach ($fields as $field => $condition) {
+
+                    if (is_numeric($field)) {
+                        $field = $condition;
+                        $condition = "=";
+                    }
+
+                    $value = null;
+
+                    $condition = trim(strtolower($condition));
+
+                    if (isset($searchData[$field])) {
+                        $value = ($condition == "like" || $condition == "ilike") ? "%{$searchData[$field]}%" : $searchData[$field];
+                    } else {
+                        if (!is_null($search)) {
+                            $value = ($condition == "like" || $condition == "ilike") ? "%{$search}%" : $search;
                         }
+                    }
 
-                        $value = null;
-
-                        $condition = trim(strtolower($condition));
-
-                        if (isset($searchData[$field])) {
-                            $value = ($condition == "like" || $condition == "ilike") ? "%{$searchData[$field]}%" : $searchData[$field];
-                        } else {
-                            if (!is_null($search)) {
-                                $value = ($condition == "like" || $condition == "ilike") ? "%{$search}%" : $search;
+                    $relation = null;
+                    if(stripos($field, '.')) {
+                        $explode = explode('.', $field);
+                        $field = array_pop($explode);
+                        $relation = implode('.', $explode);
+                    }
+                    $modelTableName = $query->getModel()->getTable();
+                    if ( $isFirstField || $modelForceAndWhere ) {
+                        if (!is_null($value)) {
+                            if(!is_null($relation)) {
+                                $query->whereHas($relation, function($query) use($field,$condition,$value) {
+                                    $query->where($field,$condition,$value);
+                                });
+                            } else {
+                                $query->where($modelTableName.'.'.$field,$condition,$value);
                             }
+                            $isFirstField = false;
                         }
-
-                        $relation = null;
-                        if (stripos($field, '.')) {
-                            $explode = explode('.', $field);
-                            $field = array_pop($explode);
-                            $relation = implode('.', $explode);
-                        }
-                        $modelTableName = $query->getModel()->getTable();
-                        if ($isFirstField || $modelForceAndWhere) {
-                            if (!is_null($value)) {
-                                if (!is_null($relation)) {
-                                    $query->whereHas(
-                                        $relation,
-                                        function ($query) use ($field, $condition, $value) {
-                                            $query->where($field, $condition, $value);
-                                        }
-                                    );
-                                } else {
-                                    $query->where($modelTableName.'.'.$field, $condition, $value);
-                                }
-                                $isFirstField = false;
-                            }
-                        } else {
-                            if (!is_null($value)) {
-                                if (!is_null($relation)) {
-                                    $query->orWhereHas(
-                                        $relation,
-                                        function ($query) use ($field, $condition, $value) {
-                                            $query->where($field, $condition, $value);
-                                        }
-                                    );
-                                } else {
-                                    $query->orWhere($modelTableName.'.'.$field, $condition, $value);
-                                }
+                    } else {
+                        if (!is_null($value)) {
+                            if(!is_null($relation)) {
+                                $query->orWhereHas($relation, function($query) use($field,$condition,$value) {
+                                    $query->where($field,$condition,$value);
+                                });
+                            } else {
+                                $query->orWhere($modelTableName.'.'.$field, $condition, $value);
                             }
                         }
                     }
                 }
-            );
+            });
         }
 
         if (isset($orderBy) && !empty($orderBy)) {
-            $split = explode('|', $orderBy);
-            if (count($split) > 1) {
-                /*
-                 * ex.
-                 * products|description -> join products on current_table.product_id = products.id order by description
-                 *
-                 * products:custom_id|products.description -> join products on current_table.custom_id = products.id order
-                 * by products.description (in case both tables have same column name)
-                 */
-                $table = $model->getModel()->getTable();
-                $sortTable = $split[0];
-                $sortColumn = $split[1];
-
-                $split = explode(':', $sortTable);
-                if (count($split) > 1) {
-                    $sortTable = $split[0];
-                    $keyName = $table.'.'.$split[1];
-                } else {
-                    /*
-                     * If you do not define which column to use as a joining column on current table, it will
-                     * use a singular of a join table appended with _id
-                     *
-                     * ex.
-                     * products -> product_id
-                     */
-                    $prefix = Str::singular($sortTable);
-                    $keyName = $table.'.'.$prefix.'_id';
+            $orderBySplit = explode(';', $orderBy);
+            if(count($orderBySplit) > 1) {
+                $sortedBySplit = explode(';', $sortedBy);
+                foreach ($orderBySplit as $orderBySplitItemKey => $orderBySplitItem) {
+                    $sortedBy = isset($sortedBySplit[$orderBySplitItemKey]) ? $sortedBySplit[$orderBySplitItemKey] : $sortedBySplit[0];
+                    $model = $this->parserFieldsOrderBy($model, $orderBySplitItem, $sortedBy);
                 }
-
-                $model = $model
-                    ->leftJoin($sortTable, $keyName, '=', $sortTable.'.id')
-                    ->orderBy($sortColumn, $sortedBy)
-                    ->addSelect($table.'.*');
             } else {
-                $model = $model->orderBy($orderBy, $sortedBy);
+                $model = $this->parserFieldsOrderBy($model, $orderBySplit[0], $sortedBy);
             }
         }
 
@@ -185,6 +147,53 @@ class RequestCriteria implements CriteriaInterface
     }
 
     /**
+     * @param $model
+     * @param $orderBy
+     * @param $sortedBy
+     * @return mixed
+     */
+    protected function parserFieldsOrderBy($model, $orderBy, $sortedBy)
+    {
+        $split = explode('|', $orderBy);
+        if(count($split) > 1) {
+            /*
+             * ex.
+             * products|description -> join products on current_table.product_id = products.id order by description
+             *
+             * products:custom_id|products.description -> join products on current_table.custom_id = products.id order
+             * by products.description (in case both tables have same column name)
+             */
+            $table = $model->getModel()->getTable();
+            $sortTable = $split[0];
+            $sortColumn = $split[1];
+
+            $split = explode(':', $sortTable);
+            if(count($split) > 1) {
+                $sortTable = $split[0];
+                $keyName = $table.'.'.$split[1];
+            } else {
+                /*
+                 * If you do not define which column to use as a joining column on current table, it will
+                 * use a singular of a join table appended with _id
+                 *
+                 * ex.
+                 * products -> product_id
+                 */
+                $prefix = Str::singular($sortTable);
+                $keyName = $table.'.'.$prefix.'_id';
+            }
+
+            $model = $model
+                ->leftJoin($sortTable, $keyName, '=', $sortTable.'.id')
+                ->orderBy($sortColumn, $sortedBy)
+                ->addSelect($table.'.*');
+        } else {
+            $model = $model->orderBy($orderBy, $sortedBy);
+        }
+        return $model;
+    }
+
+    /**
      * @param $search
      *
      * @return array
@@ -200,7 +209,7 @@ class RequestCriteria implements CriteriaInterface
                 try {
                     list($field, $value) = explode(':', $row);
                     $searchData[$field] = $value;
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     //Surround offset error
                 }
             }
@@ -216,6 +225,7 @@ class RequestCriteria implements CriteriaInterface
      */
     protected function parserSearchValue($search)
     {
+
         if (stripos($search, ';') || stripos($search, ':')) {
             $values = explode(';', $search);
             foreach ($values as $value) {
@@ -235,13 +245,10 @@ class RequestCriteria implements CriteriaInterface
     protected function parserFieldsSearch(array $fields = [], array $searchFields = null)
     {
         if (!is_null($searchFields) && count($searchFields)) {
-            $acceptedConditions = config(
-                'repository.criteria.acceptedConditions',
-                [
-                    '=',
-                    'like',
-                ]
-            );
+            $acceptedConditions = config('repository.criteria.acceptedConditions', [
+                '=',
+                'like'
+            ]);
             $originalFields = $fields;
             $fields = [];
 
@@ -271,10 +278,9 @@ class RequestCriteria implements CriteriaInterface
             }
 
             if (count($fields) == 0) {
-                throw new Exception(
-                    trans('repository::criteria.fields_not_accepted', ['field' => implode(',', $searchFields)])
-                );
+                throw new \Exception(trans('repository::criteria.fields_not_accepted', ['field' => implode(',', $searchFields)]));
             }
+
         }
 
         return $fields;
