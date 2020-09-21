@@ -1,7 +1,13 @@
 {
   "name": "prettus/l5-repository",
-  "description": "Laravel 5 - Repositories to  the database layer",
-  "keywords": ["laravel", "repository", "eloquent", "model", "cache"],
+  "description": "Laravel 5|6|7|8 - Repositories to  the database layer",
+  "keywords": [
+    "laravel",
+    "repository",
+    "eloquent",
+    "model",
+    "cache"
+  ],
   "license": "MIT",
   "authors": [
     {
@@ -20,15 +26,15 @@
     "docs": "http://andersao.github.io/l5-repository"
   },
   "require": {
-    "illuminate/http": "~5.0|~6.0|~7.0",
-    "illuminate/config": "~5.0|~6.0|~7.0",
-    "illuminate/support": "~5.0|~6.0|~7.0",
-    "illuminate/database": "~5.0|~6.0|~7.0",
-    "illuminate/pagination": "~5.0|~6.0|~7.0",
-    "illuminate/console": "~5.0|~6.0|~7.0",
-    "illuminate/filesystem": "~5.0|~6.0|~7.0",
+    "illuminate/http": "~5.0|~6.0|~7.0|^8.0",
+    "illuminate/config": "~5.0|~6.0|~7.0|^8.0",
+    "illuminate/support": "~5.0|~6.0|~7.0|^8.0",
+    "illuminate/database": "~5.0|~6.0|~7.0|^8.0",
+    "illuminate/pagination": "~5.0|~6.0|~7.0|^8.0",
+    "illuminate/console": "~5.0|~6.0|~7.0|^8.0",
+    "illuminate/filesystem": "~5.0|~6.0|~7.0|^8.0",
     "prettus/laravel-validation": "~1.1|~1.2",
-    "illuminate/validation": "~5.0|~6.0|~7.0"
+    "illuminate/validation": "~5.0|~6.0|~7.0|^8.0"
   },
   "autoload": {
     "psr-4": {
