@@ -621,9 +621,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             // to make sure data type are same because validator may need to use
             // this data to compare with data that fetch from database.
             if ($this->versionCompare($this->app->version(), "5.2.*", ">")) {
-                $attributes = $this->model->newInstance()->forceFill($attributes)->makeVisible($this->model->getHidden())->toArray();
+                $attributes = $this->model->newInstance()->fill($attributes)->makeVisible($this->model->getHidden())->toArray();
             } else {
-                $model = $this->model->newInstance()->forceFill($attributes);
+                $model = $this->model->newInstance()->fill($attributes);
                 $model->makeVisible($this->model->getHidden());
                 $attributes = $model->toArray();
             }
@@ -661,9 +661,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             // to make sure data type are same because validator may need to use
             // this data to compare with data that fetch from database.
             if ($this->versionCompare($this->app->version(), "5.2.*", ">")) {
-                $attributes = $this->model->newInstance()->forceFill($attributes)->makeVisible($this->model->getHidden())->toArray();
+                $attributes = $this->model->newInstance()->fill($attributes)->makeVisible($this->model->getHidden())->toArray();
             } else {
-                $model = $this->model->newInstance()->forceFill($attributes);
+                $model = $this->model->newInstance()->fill($attributes);
                 $model->makeVisible($this->model->getHidden());
                 $attributes = $model->toArray();
             }
