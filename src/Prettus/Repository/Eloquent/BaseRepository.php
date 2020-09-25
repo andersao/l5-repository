@@ -17,6 +17,8 @@ use Prettus\Repository\Events\RepositoryEntityCreated;
 use Prettus\Repository\Events\RepositoryEntityCreating;
 use Prettus\Repository\Events\RepositoryEntityDeleted;
 use Prettus\Repository\Events\RepositoryEntityDeleting;
+use Prettus\Repository\Events\RepositoryEntityForceDeleted;
+use Prettus\Repository\Events\RepositoryEntityForceDeleting;
 use Prettus\Repository\Events\RepositoryEntityUpdated;
 use Prettus\Repository\Events\RepositoryEntityUpdating;
 use Prettus\Repository\Exceptions\RepositoryException;
@@ -773,11 +775,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->skipPresenter($temporarySkipPresenter);
         $this->resetModel();
 
-        event(new RepositoryEntityDeleting($this, $model));
+        event(new RepositoryEntityForceDeleting($this, $model));
 
         $deleted = $model->forceDelete();
 
-        event(new RepositoryEntityDeleted($this, $originalModel));
+        event(new RepositoryEntityForceDeleted($this, $originalModel));
 
         return $deleted;
     }
