@@ -30,6 +30,9 @@ class EventServiceProvider extends ServiceProvider
         'Prettus\Repository\Events\RepositoryEntityForceDeleted' => [
             'Prettus\Repository\Listeners\CleanCacheRepository',
         ],
+        'Prettus\Repository\Events\RepositoryEntityRestored' => [
+            'Prettus\Repository\Listeners\CleanCacheRepository',
+        ],
     ];
 
     /**
