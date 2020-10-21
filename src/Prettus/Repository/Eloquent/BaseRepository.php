@@ -532,10 +532,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      *
      * @param array $where
      * @param array $columns
+     * @param boolean $resetModel
      *
      * @return mixed
      */
-    public function findWhere(array $where, $columns = ['*'])
+    public function findWhere(array $where, $columns = ['*'], $resetModel = true)
     {
         $this->applyCriteria();
         $this->applyScope();
@@ -543,6 +544,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->applyConditions($where);
 
         $model = $this->model->get($columns);
+
+        if (!$resetModel){
+            return $this;
+        }
+
         $this->resetModel();
 
         return $this->parserResult($model);
