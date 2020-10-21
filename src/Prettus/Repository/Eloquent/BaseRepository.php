@@ -14,8 +14,11 @@ use Prettus\Repository\Contracts\PresenterInterface;
 use Prettus\Repository\Contracts\RepositoryCriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 use Prettus\Repository\Events\RepositoryEntityCreated;
+use Prettus\Repository\Events\RepositoryEntityCreating;
 use Prettus\Repository\Events\RepositoryEntityDeleted;
+use Prettus\Repository\Events\RepositoryEntityDeleting;
 use Prettus\Repository\Events\RepositoryEntityUpdated;
+use Prettus\Repository\Events\RepositoryEntityUpdating;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Repository\Traits\ComparesVersionsTrait;
 use Prettus\Validator\Contracts\ValidatorInterface;
@@ -138,7 +141,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function validator()
     {
-
         if (isset($this->rules) && !is_null($this->rules) && is_array($this->rules) && !empty($this->rules)) {
             if (class_exists('Prettus\Validator\LaravelValidator')) {
                 $validator = app('Prettus\Validator\LaravelValidator');
@@ -348,7 +350,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->applyCriteria();
         $this->applyScope();
 
-        if($where) {
+        if ($where) {
             $this->applyConditions($where);
         }
 
@@ -436,7 +438,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         return $this->parserResult($model);
     }
-    
+
     /**
      * Set the "limit" value of the query.
      *
@@ -457,7 +459,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Retrieve all data of repository, paginated
      *
-     * @param null $limit
+     * @param null|int $limit
      * @param array $columns
      * @param string $method
      *
@@ -478,7 +480,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Retrieve all data of repository, simple paginated
      *
-     * @param null $limit
+     * @param null|int $limit
      * @param array $columns
      *
      * @return mixed
@@ -622,12 +624,14 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
                 $attributes = $this->model->newInstance()->forceFill($attributes)->makeVisible($this->model->getHidden())->toArray();
             } else {
                 $model = $this->model->newInstance()->forceFill($attributes);
-                $model->addVisible($this->model->getHidden());
+                $model->makeVisible($this->model->getHidden());
                 $attributes = $model->toArray();
             }
 
             $this->validator->with($attributes)->passesOrFail(ValidatorInterface::RULE_CREATE);
         }
+
+        event(new RepositoryEntityCreating($this, $attributes));
 
         $model = $this->model->newInstance($attributes);
         $model->save();
@@ -660,7 +664,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
                 $attributes = $this->model->newInstance()->forceFill($attributes)->makeVisible($this->model->getHidden())->toArray();
             } else {
                 $model = $this->model->newInstance()->forceFill($attributes);
-                $model->addVisible($this->model->getHidden());
+                $model->makeVisible($this->model->getHidden());
                 $attributes = $model->toArray();
             }
 
@@ -672,6 +676,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->skipPresenter(true);
 
         $model = $this->model->findOrFail($id);
+
+        event(new RepositoryEntityUpdating($this, $model));
+
         $model->fill($attributes);
         $model->save();
 
@@ -705,6 +712,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         $this->skipPresenter(true);
 
+        event(new RepositoryEntityCreating($this, $attributes));
+
         $model = $this->model->updateOrCreate($attributes, $values);
 
         $this->skipPresenter($temporarySkipPresenter);
@@ -735,6 +744,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->skipPresenter($temporarySkipPresenter);
         $this->resetModel();
 
+        event(new RepositoryEntityDeleting($this, $model));
+
         $deleted = $model->delete();
 
         event(new RepositoryEntityDeleted($this, $originalModel));
@@ -757,6 +768,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->skipPresenter(true);
 
         $this->applyConditions($where);
+
+        event(new RepositoryEntityDeleting($this, $this->model->getModel()));
 
         $deleted = $this->model->delete();
 
@@ -989,7 +1002,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     protected function applyCriteria()
     {
-
         if ($this->skipCriteria === true) {
             return $this;
         }
@@ -1067,5 +1079,34 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         }
 
         return $result;
+    }
+
+    /**
+     * Trigger static method calls to the model
+     *
+     * @param $method
+     * @param $arguments
+     *
+     * @return mixed
+     */
+    public static function __callStatic($method, $arguments)
+    {
+        return call_user_func_array([new static(), $method], $arguments);
+    }
+
+    /**
+     * Trigger method calls to the model
+     *
+     * @param string $method
+     * @param array  $arguments
+     *
+     * @return mixed
+     */
+    public function __call($method, $arguments)
+    {
+        $this->applyCriteria();
+        $this->applyScope();
+
+        return call_user_func_array([$this->model, $method], $arguments);
     }
 }

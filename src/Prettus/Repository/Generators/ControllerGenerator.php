@@ -1,6 +1,8 @@
 <?php
 namespace Prettus\Repository\Generators;
+
 use Illuminate\Support\Str;
+
 /**
  * Class ControllerGenerator
  * @package Prettus\Repository\Generators
