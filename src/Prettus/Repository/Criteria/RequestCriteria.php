@@ -72,7 +72,16 @@ class RequestCriteria implements CriteriaInterface
                     $condition = trim(strtolower($condition));
 
                     if (isset($searchData[$field])) {
-                        $value = ($condition == "like" || $condition == "ilike") ? "%{$searchData[$field]}%" : $searchData[$field];
+                        $searchValues = $searchData[$field];
+                        if(is_array($searchValues)){
+                            //if we have an array of search values we need to keep them as array
+                            foreach($searchValues as $searchValue){
+                                $value[] = ($condition == "like" || $condition == "ilike") ? "%{$searchValue}%" : $searchValue;
+                            }
+                        } else {
+                            //searchValues contains a single string value
+                            $value = ($condition == "like" || $condition == "ilike") ? "%{$searchValues}%" : $searchValues;
+                        }
                     } else {
                         if (!is_null($search)) {
                             $value = ($condition == "like" || $condition == "ilike") ? "%{$search}%" : $search;
@@ -90,10 +99,28 @@ class RequestCriteria implements CriteriaInterface
                         if (!is_null($value)) {
                             if(!is_null($relation)) {
                                 $query->whereHas($relation, function($query) use($field,$condition,$value) {
-                                    $query->where($field,$condition,$value);
+                                    if(is_array($value)){
+                                        //if we have an array we want to search by multiple values for the same field
+                                        $query->where(function($query) use ($field,$condition, $value) {
+                                            foreach ($value as $val){
+                                                $query->orWhere($field,$condition,$val);
+                                            }
+                                        });
+                                    } else {
+                                        $query->where($field,$condition,$value);
+                                    }
                                 });
                             } else {
-                                $query->where($modelTableName.'.'.$field,$condition,$value);
+                                if(is_array($value)){
+                                    //if we have an array we want to search multiple values for the same field
+                                    $query->where(function($query) use ($modelTableName, $field,$condition, $value) {
+                                        foreach ($value as $val){
+                                            $query->orWhere($modelTableName . '.' . $field, $condition, $val);
+                                        }
+                                    });
+                                } else {
+                                    $query->where($modelTableName.'.'.$field,$condition,$value);
+                                }
                             }
                             $isFirstField = false;
                         }
@@ -101,10 +128,26 @@ class RequestCriteria implements CriteriaInterface
                         if (!is_null($value)) {
                             if(!is_null($relation)) {
                                 $query->orWhereHas($relation, function($query) use($field,$condition,$value) {
-                                    $query->where($field,$condition,$value);
+                                    if(is_array($value)){
+                                        //if we have an array we want to search multiple values for the same field
+                                        $query->where(function($query) use($field,$condition,$value) {
+                                            foreach ($value as $val){
+                                                $query->orWhere($field,$condition,$val);
+                                            }
+                                        });
+                                    } else {
+                                        $query->where($field,$condition,$value);
+                                    }
                                 });
                             } else {
-                                $query->orWhere($modelTableName.'.'.$field, $condition, $value);
+                                //if we have an array we want to search multiple values for the same field
+                                if(is_array($value)){
+                                    foreach ($value as $val){
+                                        $query->orWhere($modelTableName.'.'.$field, $condition, $value);
+                                    }
+                                } else {
+                                    $query->orWhere($modelTableName.'.'.$field, $condition, $value);
+                                }
                             }
                         }
                     }
@@ -207,7 +250,17 @@ class RequestCriteria implements CriteriaInterface
 
             foreach ($fields as $row) {
                 try {
-                    list($field, $value) = explode(':', $row);
+                    $fieldAndValues = explode(':', $row);
+                    //check if we have more than one (field search) value
+                    //first item in array is field name string
+                    if(count($fieldAndValues) > 2){
+                        $field = array_shift($fieldAndValues);
+                        //what remains are multiple search values in array
+                        $value = $fieldAndValues;
+                    } else {
+                        //if we only have field name and one search value just set them
+                        list($field, $value) = $fieldAndValues;
+                    }
                     $searchData[$field] = $value;
                 } catch (\Exception $e) {
                     //Surround offset error
