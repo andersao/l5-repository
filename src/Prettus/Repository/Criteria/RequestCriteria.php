@@ -90,10 +90,18 @@ class RequestCriteria implements CriteriaInterface
                         if (!is_null($value)) {
                             if(!is_null($relation)) {
                                 $query->whereHas($relation, function($query) use($field,$condition,$value) {
-                                    $query->where($field,$condition,$value);
+                                    if($condition === 'in'){
+                                        $query->whereIn($field,explode(',',$value));
+                                    }else{
+                                        $query->where($field,$condition,$value);
+                                    }
                                 });
                             } else {
-                                $query->where($modelTableName.'.'.$field,$condition,$value);
+                                if($condition === 'in'){
+                                    $query->whereIn($modelTableName.'.'.$field,explode(',',$value));
+                                }else{
+                                    $query->where($modelTableName.'.'.$field,$condition,$value);
+                                }
                             }
                             $isFirstField = false;
                         }
@@ -101,10 +109,18 @@ class RequestCriteria implements CriteriaInterface
                         if (!is_null($value)) {
                             if(!is_null($relation)) {
                                 $query->orWhereHas($relation, function($query) use($field,$condition,$value) {
-                                    $query->where($field,$condition,$value);
+                                    if($condition === 'in'){
+                                        $query->whereIn($field,explode(',',$value));
+                                    }else{
+                                        $query->where($field,$condition,$value);
+                                    }
                                 });
                             } else {
-                                $query->orWhere($modelTableName.'.'.$field, $condition, $value);
+                                if($condition === 'in'){
+                                    $query->orWhereIn($modelTableName.'.'.$field, explode(',',$value));
+                                }else{
+                                    $query->orWhere($modelTableName.'.'.$field, $condition, $value);
+                                }
                             }
                         }
                     }
