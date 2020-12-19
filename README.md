@@ -446,7 +446,7 @@ $this->repository->deleteWhere([
 #### Using the command
 
 ```terminal
-php artisan make:criteria My
+php artisan make:criteria MyCriteria
 ```
 
 Criteria are a way to change the repository of the query by applying specific conditions according to your needs. You can add multiple Criteria in your repository.
