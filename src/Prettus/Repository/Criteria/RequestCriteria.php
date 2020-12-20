@@ -74,7 +74,7 @@ class RequestCriteria implements CriteriaInterface
                     if (isset($searchData[$field])) {
                         $value = ($condition == "like" || $condition == "ilike") ? "%{$searchData[$field]}%" : $searchData[$field];
                     } else {
-                        if (!is_null($search)) {
+                        if (!is_null($search) && $condition !== 'in') {
                             $value = ($condition == "like" || $condition == "ilike") ? "%{$search}%" : $search;
                         }
                     }
@@ -85,20 +85,26 @@ class RequestCriteria implements CriteriaInterface
                         $field = array_pop($explode);
                         $relation = implode('.', $explode);
                     }
+                    if($condition === 'in'){
+                        $value = explode(',',$value);
+                        if( trim($value[0]) === "" || $field == $value[0]){
+                            $value = null;
+                        }
+                    }
                     $modelTableName = $query->getModel()->getTable();
                     if ( $isFirstField || $modelForceAndWhere ) {
                         if (!is_null($value)) {
                             if(!is_null($relation)) {
                                 $query->whereHas($relation, function($query) use($field,$condition,$value) {
                                     if($condition === 'in'){
-                                        $query->whereIn($field,explode(',',$value));
+                                        $query->whereIn($field,$value);
                                     }else{
                                         $query->where($field,$condition,$value);
                                     }
                                 });
                             } else {
                                 if($condition === 'in'){
-                                    $query->whereIn($modelTableName.'.'.$field,explode(',',$value));
+                                    $query->whereIn($modelTableName.'.'.$field,$value);
                                 }else{
                                     $query->where($modelTableName.'.'.$field,$condition,$value);
                                 }
@@ -110,14 +116,14 @@ class RequestCriteria implements CriteriaInterface
                             if(!is_null($relation)) {
                                 $query->orWhereHas($relation, function($query) use($field,$condition,$value) {
                                     if($condition === 'in'){
-                                        $query->whereIn($field,explode(',',$value));
+                                        $query->whereIn($field,$value);
                                     }else{
                                         $query->where($field,$condition,$value);
                                     }
                                 });
                             } else {
                                 if($condition === 'in'){
-                                    $query->orWhereIn($modelTableName.'.'.$field, explode(',',$value));
+                                    $query->orWhereIn($modelTableName.'.'.$field, $value);
                                 }else{
                                     $query->orWhere($modelTableName.'.'.$field, $condition, $value);
                                 }
