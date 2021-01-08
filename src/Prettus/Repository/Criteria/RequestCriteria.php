@@ -190,9 +190,16 @@ class RequestCriteria implements CriteriaInterface
             $sortColumn = $split[1];
 
             $split = explode(':', $sortTable);
-            if(count($split) > 1) {
+            $localKey = '.id';
+            if (count($split) > 1) {
                 $sortTable = $split[0];
+
+                $commaExp = explode(',', $split[1]);
                 $keyName = $table.'.'.$split[1];
+                if (count($commaExp) > 1) {
+                    $keyName = $table.'.'.$commaExp[0];
+                    $localKey = '.'.$commaExp[1];
+                }
             } else {
                 /*
                  * If you do not define which column to use as a joining column on current table, it will
@@ -206,7 +213,7 @@ class RequestCriteria implements CriteriaInterface
             }
 
             $model = $model
-                ->leftJoin($sortTable, $keyName, '=', $sortTable.'.id')
+                ->leftJoin($sortTable, $keyName, '=', $sortTable.$localKey)
                 ->orderBy($sortColumn, $sortedBy)
                 ->addSelect($table.'.*');
         } else {

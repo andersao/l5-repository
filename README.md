@@ -760,6 +760,18 @@ ORDER BY posts.title
 ...
 ```
 
+`http://prettus.local/users?orderBy=posts:custom_id,other_id|posts.title&sortedBy=desc`
+
+Query will have something like this
+
+```sql
+...
+INNER JOIN posts ON users.custom_id = posts.other_id
+...
+ORDER BY posts.title
+...
+```
+
 Sorting multiple columns same sortedBy
 
 `http://prettus.local/users?orderBy=name;created_at&sortedBy=desc`
