@@ -1,8 +1,6 @@
 <?php
 namespace Prettus\Repository\Generators;
 
-use Illuminate\Support\Facades\Log;
-
 /**
  * Class BindingsGenerator
  * @package Prettus\Repository\Generators

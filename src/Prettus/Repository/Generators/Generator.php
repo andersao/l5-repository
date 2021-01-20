@@ -224,7 +224,7 @@ abstract class Generator
      *
      * @return string
      */
-    public function getConfigGeneratorClassPath($class, $directoryPath = false, $module = null)
+    public function getConfigGeneratorClassPath($class, $directoryPath = false)
     {
         switch ($class) {
             case ('models' === $class):

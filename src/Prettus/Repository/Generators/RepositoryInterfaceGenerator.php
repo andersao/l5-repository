@@ -2,7 +2,6 @@
 
 namespace Prettus\Repository\Generators;
 
-use Illuminate\Support\Facades\Log;
 use Prettus\Repository\Generators\Migrations\SchemaParser;
 
 /**
@@ -27,7 +26,6 @@ class RepositoryInterfaceGenerator extends Generator
      */
     public function getRootNamespace()
     {
-        Log::info($this->module);
         return parent::getRootNamespace() . parent::getConfigGeneratorClassPath(($pathConfigNode ?? $this->getPathConfigNode())) . '\\Contracts';
     }
 
