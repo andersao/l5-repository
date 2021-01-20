@@ -56,8 +56,9 @@ class TransformerCommand extends Command
     {
         try {
             (new TransformerGenerator([
-                'name' => $this->argument('name'),
-                'force' => $this->option('force'),
+                'name'      => $this->argument('name'),
+                'module'    => $this->argument('module'),
+                'force'     => $this->option('force'),
             ]))->run();
             $this->info("Transformer created successfully.");
         } catch (FileAlreadyExistsException $e) {
@@ -82,6 +83,12 @@ class TransformerCommand extends Command
                 'The name of model for which the transformer is being generated.',
                 null
             ],
+            [
+                'module',
+                InputArgument::OPTIONAL,
+                'The module name for kind of the modular project and creating files on each module',
+                null
+            ]
         ];
     }
 

@@ -29,7 +29,7 @@ class MigrationGenerator extends Generator
      */
     public function getBasePath()
     {
-        return base_path() . '/database/migrations/';
+        return config('repository.generator.basePath', app()->path());
     }
 
 
@@ -40,7 +40,7 @@ class MigrationGenerator extends Generator
      */
     public function getPath()
     {
-        return $this->getBasePath() . $this->getFileName() . '.php';
+        return $this->getBasePath() . '/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) . '/' . $this->getFileName() . '.php';
     }
 
 
@@ -51,7 +51,7 @@ class MigrationGenerator extends Generator
      */
     public function getPathConfigNode()
     {
-        return '';
+        return 'migrations';
     }
 
 
@@ -73,6 +73,10 @@ class MigrationGenerator extends Generator
      */
     public function getMigrationName()
     {
+        if ($this->structure == 'modular' && $this->module){
+            return strtolower($this->module) . "_" . strtolower($this->name);
+        }
+
         return strtolower($this->name);
     }
 
@@ -118,6 +122,10 @@ class MigrationGenerator extends Generator
     public function getStub()
     {
         $parser = $this->getNameParser();
+        $table_name = $parser->getTable();
+        if ($this->structure == 'modular' && $this->module){
+            $table_name = strtolower($this->module) . "_" . $parser->getTable();
+        }
 
         $action = $parser->getAction();
         switch ($action) {
@@ -128,7 +136,7 @@ class MigrationGenerator extends Generator
                 $file = 'change';
                 $replacements = [
                     'class'       => $this->getClass(),
-                    'table'       => $parser->getTable(),
+                    'table'       => $table_name,
                     'fields_up'   => $this->getSchemaParser()->up(),
                     'fields_down' => $this->getSchemaParser()->down(),
                 ];
@@ -140,7 +148,7 @@ class MigrationGenerator extends Generator
                 $file = 'change';
                 $replacements = [
                     'class'       => $this->getClass(),
-                    'table'       => $parser->getTable(),
+                    'table'       => $table_name,
                     'fields_down' => $this->getSchemaParser()->up(),
                     'fields_up'   => $this->getSchemaParser()->down(),
                 ];
@@ -149,7 +157,7 @@ class MigrationGenerator extends Generator
                 $file = 'create';
                 $replacements = [
                     'class'  => $this->getClass(),
-                    'table'  => $parser->getTable(),
+                    'table'  => $table_name,
                     'fields' => $this->getSchemaParser()->up(),
                 ];
                 break;

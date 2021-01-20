@@ -50,7 +50,7 @@ class PresenterGenerator extends Generator
             "\\",
             '/'
         ], '\\', $transformer);
-        echo $transformer;
+//        echo $transformer;
 
         return array_merge(parent::getReplacements(), [
             'transformer' => $transformer

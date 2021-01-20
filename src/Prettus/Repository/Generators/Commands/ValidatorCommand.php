@@ -56,9 +56,10 @@ class ValidatorCommand extends Command
     {
         try {
             (new ValidatorGenerator([
-                'name' => $this->argument('name'),
-                'rules' => $this->option('rules'),
-                'force' => $this->option('force'),
+                'name'      => $this->argument('name'),
+                'module'    => $this->argument('module'),
+                'rules'     => $this->option('rules'),
+                'force'     => $this->option('force'),
             ]))->run();
             $this->info("Validator created successfully.");
         } catch (FileAlreadyExistsException $e) {
@@ -83,6 +84,12 @@ class ValidatorCommand extends Command
                 'The name of model for which the validator is being generated.',
                 null
             ],
+            [
+                'module',
+                InputArgument::OPTIONAL,
+                'The module name for kind of the modular project and creating files on each module',
+                null
+            ]
         ];
     }
 

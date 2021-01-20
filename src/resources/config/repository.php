@@ -223,11 +223,13 @@ return [
     ],
     /*
     |--------------------------------------------------------------------------
-    | Generator Config
+    | Generator Config: for default structure
     |--------------------------------------------------------------------------
     |
     */
     'generator'  => [
+        'structure'     => 'default',   // modular, default
+        'modules'       => [],
         'basePath'      => app()->path(),
         'rootNamespace' => 'App\\',
         'stubsOverridePath' => app()->path(),
@@ -242,5 +244,47 @@ return [
             'provider'     => 'RepositoryServiceProvider',
             'criteria'     => 'Criteria'
         ]
-    ]
+    ],
+    /*
+    |--------------------------------------------------------------------------
+    | Generator Config: for modular structure
+    |--------------------------------------------------------------------------
+    |   IF THE TYPE IS = 'default' THE MODULES VALUE IS AN EMPTY ARRAY,
+    |   IF THE TYPE IS = 'modular' YOU CAN ADD LIST OF THE MODULES AS AN ARRAY
+    |
+    */
+//    'generator'  => [
+//        'structure'     => 'modular',   // modular, default
+//        'package'       => 'nwidart',   // if you use the nwidart or another package, add the name of the package and the package's commands.
+//        'modules'       => [
+//            'Core',
+//            'User',
+//        ],
+//        'packageCommands' => [
+//            'nwidart' => [
+//                'controllers' => 'module:make-controller',
+//                'requests'   => 'module:make-request',
+//                'models' => 'module:make-model',
+//            ]
+//        ],
+//        'ORM'   => 'eloquent',
+//
+//        'basePath'      => base_path('Modules'),
+//        'rootNamespace' => 'Modules\\',
+//        'moduleNamespace' => 'Modules\\',           // if you use the modular structure you should add this attribute
+//        'stubsOverridePath' => app()->path(),
+//        'provider'      => app()->path() . "/Providers/",
+//        'paths'         => [
+//            'models'       => 'Entities',
+//            'repositories' => 'Repositories',
+//            'interfaces'   => 'Repositories',
+//            'transformers' => 'Transformers',
+//            'presenters'   => 'Presenters',
+//            'validators'   => 'Validators',
+//            'controllers'  => 'Http/Controllers',
+//            'criteria'     => 'Criteria',
+//            'migrations'   => '/Database/Migrations/',     // when you have all the migration files in default path, remove this
+//        ],
+//    ],
+
 ];
