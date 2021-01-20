@@ -64,8 +64,7 @@ class BindingsCommand extends Command
             // generate repository service provider
             if (!file_exists($bindingGenerator->getPath())) {
                 $this->call('make:provider', [
-                    'name' => $bindingGenerator->getConfigGeneratorClassPath($bindingGenerator->getPathConfigNode()),
-                    'module' => $this->argument('module'),
+                    'name' => 'RepositoryServiceProvider',
                 ]);
                 // placeholder to mark the place in file where to prepend repository bindings
                 $provider = File::get($bindingGenerator->getPath());
