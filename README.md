@@ -446,7 +446,7 @@ $this->repository->deleteWhere([
 #### Using the command
 
 ```terminal
-php artisan make:criteria My
+php artisan make:criteria MyCriteria
 ```
 
 Criteria are a way to change the repository of the query by applying specific conditions according to your needs. You can add multiple Criteria in your repository.
@@ -755,6 +755,18 @@ Query will have something like this
 ```sql
 ...
 INNER JOIN posts ON users.custom_id = posts.id
+...
+ORDER BY posts.title
+...
+```
+
+`http://prettus.local/users?orderBy=posts:custom_id,other_id|posts.title&sortedBy=desc`
+
+Query will have something like this
+
+```sql
+...
+INNER JOIN posts ON users.custom_id = posts.other_id
 ...
 ORDER BY posts.title
 ...
