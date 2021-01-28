@@ -829,7 +829,47 @@ Add relationship
 
 `http://prettus.local/users?with=groups`
 
+Between filter
 
+`http://prettus.local/product?search=price:100,500&searchFields=price:between`
+
+Result will have something like this
+
+```json
+   [
+       {
+           "id": 3,
+           "price": "150",
+           "created_at": "-0001-11-28 00:00:00"
+       },
+       {
+           "id": 1,
+           "price": "300",
+           "created_at": "-0001-11-29 00:00:00"
+       },
+       {
+           "id": 2,
+           "price": "450",
+           "created_at": "-0001-11-30 00:00:00"
+       }
+   ]
+```
+
+WhereIn filter 
+
+`http://prettus.local/product?search=price:300,500&searchFields=price:in`
+
+Result will have something like this
+
+```json
+   [
+       {
+           "id": 1,
+           "price": "300",
+           "created_at": "-0001-11-29 00:00:00"
+       }
+   ]
+```
 
 #### Overwrite params name
 
