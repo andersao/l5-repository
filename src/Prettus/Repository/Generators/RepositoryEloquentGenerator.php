@@ -11,12 +11,11 @@ use Prettus\Repository\Generators\Migrations\SchemaParser;
 class RepositoryEloquentGenerator extends Generator
 {
 
-    /**
-     * Get stub name.
-     *
-     * @var string
-     */
-    protected $stub = 'repository/eloquent';
+    public function getStubName()
+    {
+        $this->stub = 'repository/' . strtolower($this->ORM);
+        return $this->stub;
+    }
 
     /**
      * Get root namespace.
@@ -25,7 +24,7 @@ class RepositoryEloquentGenerator extends Generator
      */
     public function getRootNamespace()
     {
-        return parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode());
+        return parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode()) . "\\" . $this->getORM();
     }
 
     /**
@@ -45,7 +44,9 @@ class RepositoryEloquentGenerator extends Generator
      */
     public function getPath()
     {
-        return $this->getBasePath() . '/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) . '/' . $this->getName() . 'RepositoryEloquent.php';
+        $get_orm = $this->getORM();
+        return $this->getBasePath() . '/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) .
+             "/{$get_orm}/" . $this->getName() . "Repository{$get_orm}.php";
     }
 
     /**
@@ -65,7 +66,7 @@ class RepositoryEloquentGenerator extends Generator
      */
     public function getReplacements()
     {
-        $repository = parent::getRootNamespace() . parent::getConfigGeneratorClassPath('interfaces') . '\\' . $this->name . 'Repository;';
+        $repository = parent::getRootNamespace() . parent::getConfigGeneratorClassPath('interfaces') . '\\Contracts\\' . $this->name . 'RepositoryInterface;';
         $repository = str_replace([
             "\\",
             '/'

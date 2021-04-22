@@ -63,9 +63,10 @@ class TransformerGenerator extends Generator
     public function getReplacements()
     {
         $modelGenerator = new ModelGenerator([
-            'name' => $this->name
+            'name' => $this->name,
+            'module' => $this->module,
         ]);
-        $model = $modelGenerator->getRootNamespace() . '\\' . $modelGenerator->getName();
+        $model = $modelGenerator->getRootNamespace()  . '\\' . $modelGenerator->getName();
         $model = str_replace([
             "\\",
             '/'
