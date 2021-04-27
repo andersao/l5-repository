@@ -184,6 +184,15 @@ interface RepositoryInterface
     public function delete($id);
 
     /**
+     * Force a hard delete on a soft deleted model to a entity in repository by id
+     *
+     * @param $id
+     *
+     * @return int
+     */
+    public function forceDelete($id);
+
+    /**
      * Order collection by a given column
      *
      * @param string $column
