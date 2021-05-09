@@ -1,3 +1,5 @@
 .idea/
+.vscode/
+.phpunit.result.cache
 composer.phar
 vendor/

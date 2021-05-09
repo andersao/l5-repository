@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Presenters;
+
+use App\Transformers\FooTransformer;
+use Prettus\Repository\Presenter\FractalPresenter;
+
+/**
+ * Class FooPresenter.
+ *
+ * @package namespace App\Presenters;
+ */
+class FooPresenter extends FractalPresenter
+{
+    /**
+     * Transformer
+     *
+     * @return \League\Fractal\TransformerAbstract
+     */
+    public function getTransformer()
+    {
+        return new FooTransformer();
+    }
+}
