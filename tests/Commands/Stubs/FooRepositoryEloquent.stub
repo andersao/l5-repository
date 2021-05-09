@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Repositories;
+
+use Prettus\Repository\Eloquent\BaseRepository;
+use Prettus\Repository\Criteria\RequestCriteria;
+use App\Repositories\FooRepository;
+use App\Entities\Foo;
+use App\Validators\FooValidator;
+
+/**
+ * Class FooRepositoryEloquent.
+ *
+ * @package namespace App\Repositories;
+ */
+class FooRepositoryEloquent extends BaseRepository implements FooRepository
+{
+    /**
+     * Specify Model class name
+     *
+     * @return string
+     */
+    public function model()
+    {
+        return Foo::class;
+    }
+
+    
+
+    /**
+     * Boot up the repository, pushing criteria
+     */
+    public function boot()
+    {
+        $this->pushCriteria(app(RequestCriteria::class));
+    }
+    
+}
