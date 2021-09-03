@@ -51,9 +51,9 @@ class RequestCriteria implements CriteriaInterface
         if ($search && is_array($fieldsSearchable) && count($fieldsSearchable)) {
 
             $searchFields = is_array($searchFields) || is_null($searchFields) ? $searchFields : explode(';', $searchFields);
-            $fields = $this->parserFieldsSearch($fieldsSearchable, $searchFields);
             $isFirstField = true;
             $searchData = $this->parserSearchData($search);
+            $fields = $this->parserFieldsSearch($fieldsSearchable, $searchFields, array_keys($searchData));
             $search = $this->parserSearchValue($search);
             $modelForceAndWhere = strtolower($searchJoin) === 'and';
 
@@ -284,8 +284,7 @@ class RequestCriteria implements CriteriaInterface
         return $search;
     }
 
-
-    protected function parserFieldsSearch(array $fields = [], array $searchFields = null)
+    protected function parserFieldsSearch(array $fields = [], array $searchFields = null, array $dataKeys = null)
     {
         if (!is_null($searchFields) && count($searchFields)) {
             $acceptedConditions = config('repository.criteria.acceptedConditions', [
@@ -308,6 +307,10 @@ class RequestCriteria implements CriteriaInterface
                         $searchFields[$index] = $field;
                     }
                 }
+            }
+
+            if (!is_null($dataKeys) && count($dataKeys)) {
+                $searchFields = array_unique(array_merge($dataKeys, $searchFields));
             }
 
             foreach ($originalFields as $field => $condition) {
