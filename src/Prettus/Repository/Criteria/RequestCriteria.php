@@ -50,19 +50,23 @@ class RequestCriteria implements CriteriaInterface
 
         if ($search && is_array($fieldsSearchable) && count($fieldsSearchable)) {
 
-            $fieldsSearchable = $this->fullFieldsSearchable($fieldsSearchable);
             $searchFields = is_array($searchFields) || is_null($searchFields) ? $searchFields : explode(';', $searchFields);
-            $fields = $this->parserFieldsSearch($fieldsSearchable, $searchFields);
             $isFirstField = true;
             $searchData = $this->parserSearchData($search);
+            $fields = $this->parserFieldsSearch($fieldsSearchable, $searchFields, array_keys($searchData));
             $search = $this->parserSearchValue($search);
             $modelForceAndWhere = strtolower($searchJoin) === 'and';
-            $fields = $this->fullFieldsSearch($fieldsSearchable, $fields, $searchData, $search);
 
             $model = $model->where(function ($query) use ($fields, $search, $searchData, $isFirstField, $modelForceAndWhere) {
                 /** @var Builder $query */
 
                 foreach ($fields as $field => $condition) {
+
+                    if (is_numeric($field)) {
+                        $field = $condition;
+                        $condition = "=";
+                    }
+
                     $value = null;
 
                     $condition = trim(strtolower($condition));
@@ -280,8 +284,7 @@ class RequestCriteria implements CriteriaInterface
         return $search;
     }
 
-
-    protected function parserFieldsSearch(array $fields = [], array $searchFields = null)
+    protected function parserFieldsSearch(array $fields = [], array $searchFields = null, array $dataKeys = null)
     {
         if (!is_null($searchFields) && count($searchFields)) {
             $acceptedConditions = config('repository.criteria.acceptedConditions', [
@@ -306,7 +309,15 @@ class RequestCriteria implements CriteriaInterface
                 }
             }
 
+            if (!is_null($dataKeys) && count($dataKeys)) {
+                $searchFields = array_unique(array_merge($dataKeys, $searchFields));
+            }
+
             foreach ($originalFields as $field => $condition) {
+                if (is_numeric($field)) {
+                    $field = $condition;
+                    $condition = "=";
+                }
                 if (in_array($field, $searchFields)) {
                     $fields[$field] = $condition;
                 }
@@ -316,60 +327,6 @@ class RequestCriteria implements CriteriaInterface
                 throw new \Exception(trans('repository::criteria.fields_not_accepted', ['field' => implode(',', $searchFields)]));
             }
 
-        }
-
-        return $fields;
-    }
-
-    /**
-     * get fullFieldsSearch
-     * 
-     * case: searchFields = ['id' => '=', 'quantity' => '='], search = ['id' => 10, 'quantity' => 150, 'type' => 'order']
-     * In the above case, the request will not search for "type". My requirement is to search all "search params".
-     * Here is my workaround.
-     * 
-     * @param $fieldsSearchable
-     * @param $fields
-     * @param $searchData
-     * @param $search
-     * 
-     * @return array
-     */
-    protected function fullFieldsSearch(array $fieldsSearchable, array $fields = [], array $searchData = [], $search = null)
-    {
-        if (is_null($search)) {
-            $diff_keys = array_diff_key($searchData, $fields);
-
-            foreach ($diff_keys as $field => $value) {
-                if (array_key_exists($field, $fieldsSearchable)) {
-                    $fields[$field] = $fieldsSearchable[$field];
-                }
-            }
-        }
-
-        return $fields;
-    }
-
-    /**
-     * get fullFieldsSearchable
-     * 
-     * ex.
-     * ['id', 'quantity' => '='] -> ['id' => '=', 'quantity' => '=']
-     * 
-     * @param $fieldsSearchable
-     *
-     * @return array
-     */
-    protected function fullFieldsSearchable(array $fieldsSearchable)
-    {
-        $fields = [];
-
-        foreach ($fieldsSearchable as $field => $condition) {
-            if (is_numeric($field)) {
-                $field = $condition;
-                $condition = "=";
-            }
-            $fields[$field] = $condition;
         }
 
         return $fields;
