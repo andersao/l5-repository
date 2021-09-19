@@ -691,6 +691,10 @@ or
 ]
 ```
 
+You can use params "search" without full params "searchFields".
+
+`http://prettus.local/users?search=id:2;age:17;email:john@gmail.com&searchFields='id':=`
+
 By default RequestCriteria makes its queries using the **OR** comparison operator for each query parameter.
 `http://prettus.local/users?search=age:17;email:john@gmail.com`
 
