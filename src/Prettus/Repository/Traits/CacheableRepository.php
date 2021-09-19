@@ -186,6 +186,13 @@ trait CacheableRepository
     {
         $cacheMinutes = isset($this->cacheMinutes) ? $this->cacheMinutes : config('repository.cache.minutes', 30);
 
+        /**
+         * https://laravel.com/docs/5.8/upgrade#cache-ttl-in-seconds
+         */
+        if ($this->versionCompare($this->app->version(), "5.7.*", ">")) { 
+            $cacheMinutes = $cacheMinutes * 60;
+        }
+
         return $cacheMinutes;
     }
 
