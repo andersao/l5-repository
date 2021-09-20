@@ -127,7 +127,7 @@ php artisan vendor:publish --provider "Prettus\Repository\Providers\RepositorySe
 - setCacheRepository(CacheRepository $repository)
 - getCacheRepository()
 - getCacheKey($method, $args = null)
-- getCacheMinutes()
+- getCacheTime()
 - skipCache($status = true)
 
 ### Prettus\Repository\Contracts\PresenterInterface
