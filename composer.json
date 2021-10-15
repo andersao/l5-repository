@@ -36,10 +36,24 @@
     "prettus/laravel-validation": "~1.1|~1.2",
     "illuminate/validation": "~5.0|~6.0|~7.0|^8.0"
   },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5",
+    "orchestra/testbench": "^6.0"
+  },
   "autoload": {
     "psr-4": {
       "Prettus\\Repository\\": "src/Prettus/Repository/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Prettus\\Repository\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+      "test": "vendor/bin/phpunit",
+      "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
   },
   "config": {
     "preferred-install": "dist"
