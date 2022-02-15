@@ -33,7 +33,7 @@
     "illuminate/pagination": "~5.0|~6.0|~7.0|^8.0|^9.0",
     "illuminate/console": "~5.0|~6.0|~7.0|^8.0|^9.0",
     "illuminate/filesystem": "~5.0|~6.0|~7.0|^8.0|^9.0",
-    "prettus/laravel-validation": "~1.1|~1.2",
+    "prettus/laravel-validation": "~1.1|~1.2|dev-laravel-9",
     "illuminate/validation": "~5.0|~6.0|~7.0|^8.0|^9.0"
   },
   "autoload": {
