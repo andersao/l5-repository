@@ -67,7 +67,7 @@ class CacheKeys
      */
     public static function getFileKeys()
     {
-        $file = storage_path(Config::get('cache.stores.file.path') . self::$storeFile);
+        $file = storage_path(Config::get('cache.stores.file.path', 'framework/cache/') . self::$storeFile);
 
         return $file;
     }
