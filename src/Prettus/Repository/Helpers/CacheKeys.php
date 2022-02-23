@@ -2,6 +2,8 @@
 
 namespace Prettus\Repository\Helpers;
 
+use Illuminate\Support\Facades\Config;
+
 /**
  * Class CacheKeys
  * @package Prettus\Repository\Helpers
@@ -65,7 +67,7 @@ class CacheKeys
      */
     public static function getFileKeys()
     {
-        $file = storage_path("framework/cache/" . self::$storeFile);
+        $file = storage_path(Config::get('cache.stores.file.path') . self::$storeFile);
 
         return $file;
     }
