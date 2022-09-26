@@ -146,6 +146,11 @@ class RequestCriteria implements CriteriaInterface
                     }
                 }
             });
+        } else {
+            // Make sure every result is builder.
+            $model = $model->where(function ($query) {
+                return $query;
+            });
         }
 
         if (isset($orderBy) && !empty($orderBy)) {
