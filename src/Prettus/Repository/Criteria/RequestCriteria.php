@@ -69,6 +69,13 @@ class RequestCriteria implements CriteriaInterface
 
                     $value = null;
 
+                    // patch for morph relationship query
+                    if (is_array($condition)) {
+                        $types = $condition['types'];
+                        $relationType = $condition['relationType'];
+                        $condition = $condition['condition'];
+                    }
+
                     $condition = trim(strtolower($condition));
 
                     if (isset($searchData[$field])) {
@@ -101,7 +108,7 @@ class RequestCriteria implements CriteriaInterface
                     if ( $isFirstField || $modelForceAndWhere ) {
                         if (!is_null($value)) {
                             if(!is_null($relation)) {
-                                $query->whereHas($relation, function($query) use($field,$condition,$value) {
+                                $callback = function($query) use($field,$condition,$value) {
                                     if($condition === 'in'){
                                         $query->whereIn($field,$value);
                                     }elseif($condition === 'between'){
@@ -109,7 +116,13 @@ class RequestCriteria implements CriteriaInterface
                                     }else{
                                         $query->where($field,$condition,$value);
                                     }
-                                });
+                                };
+
+                                if (!is_null($relationType) && $relationType == 'morph') {
+                                    $query->whereHasMorph($relation, $types, $callback);
+                                } else {
+                                    $query->whereHas($relation, $callback);
+                                }
                             } else {
                                 if($condition === 'in'){
                                     $query->whereIn($modelTableName.'.'.$field,$value);
@@ -124,7 +137,7 @@ class RequestCriteria implements CriteriaInterface
                     } else {
                         if (!is_null($value)) {
                             if(!is_null($relation)) {
-                                $query->orWhereHas($relation, function($query) use($field,$condition,$value) {
+                                $callback = function($query) use($field,$condition,$value) {
                                     if($condition === 'in'){
                                         $query->whereIn($field,$value);
                                     }elseif($condition === 'between'){
@@ -132,7 +145,13 @@ class RequestCriteria implements CriteriaInterface
                                     }else{
                                         $query->where($field,$condition,$value);
                                     }
-                                });
+                                };
+
+                                if (!is_null($relationType) && $relationType == 'morph') {
+                                    $query->orWhereHasMorph($relation, $types, $callback);
+                                } else {
+                                    $query->orWhereHas($relation, $callback);
+                                }
                             } else {
                                 if($condition === 'in'){
                                     $query->orWhereIn($modelTableName.'.'.$field, $value);
