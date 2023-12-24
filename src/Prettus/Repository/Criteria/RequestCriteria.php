@@ -102,12 +102,13 @@ class RequestCriteria implements CriteriaInterface
                         if (!is_null($value)) {
                             if(!is_null($relation)) {
                                 $query->whereHas($relation, function($query) use($field,$condition,$value) {
+                                    $modelTableName = $query->getModel()->getTable();
                                     if($condition === 'in'){
-                                        $query->whereIn($field,$value);
+                                        $query->whereIn($$modelTableName.'.'.$field,$value);
                                     }elseif($condition === 'between'){
-                                        $query->whereBetween($field,$value);
+                                        $query->whereBetween($$modelTableName.'.'.$field,$value);
                                     }else{
-                                        $query->where($field,$condition,$value);
+                                        $query->where($$modelTableName.'.'.$field,$condition,$value);
                                     }
                                 });
                             } else {
