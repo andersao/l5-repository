@@ -1,4 +1,5 @@
 <?php
+
 namespace Prettus\Repository\Providers;
 
 use Illuminate\Support\ServiceProvider;
@@ -18,14 +19,20 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         'Prettus\Repository\Events\RepositoryEntityCreated' => [
-            'Prettus\Repository\Listeners\CleanCacheRepository'
+            'Prettus\Repository\Listeners\CleanCacheRepository',
         ],
         'Prettus\Repository\Events\RepositoryEntityUpdated' => [
-            'Prettus\Repository\Listeners\CleanCacheRepository'
+            'Prettus\Repository\Listeners\CleanCacheRepository',
         ],
         'Prettus\Repository\Events\RepositoryEntityDeleted' => [
-            'Prettus\Repository\Listeners\CleanCacheRepository'
-        ]
+            'Prettus\Repository\Listeners\CleanCacheRepository',
+        ],
+        'Prettus\Repository\Events\RepositoryEntityForceDeleted' => [
+            'Prettus\Repository\Listeners\CleanCacheRepository',
+        ],
+        'Prettus\Repository\Events\RepositoryEntityRestored' => [
+            'Prettus\Repository\Listeners\CleanCacheRepository',
+        ],
     ];
 
     /**

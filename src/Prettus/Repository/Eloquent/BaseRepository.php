@@ -18,6 +18,10 @@ use Prettus\Repository\Events\RepositoryEntityCreated;
 use Prettus\Repository\Events\RepositoryEntityCreating;
 use Prettus\Repository\Events\RepositoryEntityDeleted;
 use Prettus\Repository\Events\RepositoryEntityDeleting;
+use Prettus\Repository\Events\RepositoryEntityForceDeleted;
+use Prettus\Repository\Events\RepositoryEntityForceDeleting;
+use Prettus\Repository\Events\RepositoryEntityRestored;
+use Prettus\Repository\Events\RepositoryEntityRestoring;
 use Prettus\Repository\Events\RepositoryEntityUpdated;
 use Prettus\Repository\Events\RepositoryEntityUpdating;
 use Prettus\Repository\Exceptions\RepositoryException;
@@ -768,6 +772,63 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         event(new RepositoryEntityDeleted($this, $originalModel));
 
         return $deleted;
+    }
+
+    /**
+     * Force a hard delete on a soft deleted model to a entity in repository by id
+     *
+     * @param $id
+     *
+     * @return int
+     */
+    public function forceDelete($id)
+    {
+        $this->applyScope();
+
+        $temporarySkipPresenter = $this->skipPresenter;
+        $this->skipPresenter(true);
+
+        $model = $this->find($id);
+        $originalModel = clone $model;
+
+        $this->skipPresenter($temporarySkipPresenter);
+        $this->resetModel();
+
+        event(new RepositoryEntityForceDeleting($this, $model));
+
+        $deleted = $model->forceDelete();
+
+        event(new RepositoryEntityForceDeleted($this, $originalModel));
+
+        return $deleted;
+    }
+
+    /**
+     * Restore a deleted entity in a soft deleted model in the repository by id
+     *
+     * @param $id
+     *
+     * @return int
+     */
+    public function restore($id)
+    {
+        $this->applyScope();
+
+        $temporarySkipPresenter = $this->skipPresenter;
+        $this->skipPresenter(true);
+
+        $model = $this->model->withTrashed()->findOrFail($id);
+
+        $this->skipPresenter($temporarySkipPresenter);
+        $this->resetModel();
+
+        event(new RepositoryEntityRestoring($this, $model));
+
+        $restored = $model->restore();
+
+        event(new RepositoryEntityRestored($this, $model));
+
+        return $restored;
     }
 
     /**
