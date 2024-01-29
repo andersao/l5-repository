@@ -9,7 +9,7 @@ currently being supported with security updates.
 | ------- | ------------------ |
 | 10.0.x   | :white_check_mark: |
 | 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
+| 5.0.x   | :white_check_mark: |
 
 ## Reporting a Vulnerability
 
@@ -22,11 +22,11 @@ To report a security vulnerability, please follow these steps:
 3. Implement the necessary changes to address the vulnerability.
 4. Submit a Pull Request (PR) to the main repository.
 
-### Pull Request Template
+## Pull Request Template
 
 When submitting a PR to report a security vulnerability, please use the following template to provide necessary information:
 
-### Security Vulnerability Report
+## Security Vulnerability Report
 
 ### Vulnerability Details
 
@@ -42,15 +42,15 @@ Provide detailed steps to reproduce the vulnerability.
 **4. Impact:**
 Explain the potential impact of the vulnerability.
 
-### Proposed Fix
+## Proposed Fix
 
 Describe the changes made to address the vulnerability and any additional information that might be relevant.
 
-### Additional Information
+## Additional Information
 
 Any other information you believe is important for our security team to know.
 
-### Contact Information
+## Contact Information
 
 Please provide a way for our security team to contact you if further clarification or information is needed.
 
