@@ -199,7 +199,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
-     * @param null $presenter
+     * @param null|PresenterInterface $presenter
      *
      * @return PresenterInterface
      * @throws RepositoryException
