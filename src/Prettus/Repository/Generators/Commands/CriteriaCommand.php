@@ -56,6 +56,7 @@ class CriteriaCommand extends Command
         try {
             (new CriteriaGenerator([
                 'name' => $this->argument('name'),
+                'module'  => $this->argument('module'),
                 'force' => $this->option('force'),
             ]))->run();
 
@@ -80,6 +81,12 @@ class CriteriaCommand extends Command
                 'The name of class being generated.',
                 null
             ],
+            [
+                'module',
+                InputArgument::OPTIONAL,
+                'The module name for kind of the modular project and creating files on each module',
+                null
+            ]
         ];
     }
 

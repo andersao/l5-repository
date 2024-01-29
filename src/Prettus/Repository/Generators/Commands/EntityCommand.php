@@ -54,6 +54,7 @@ class EntityCommand extends Command
         if ($this->confirm('Would you like to create a Presenter? [y|N]')) {
             $this->call('make:presenter', [
                 'name'    => $this->argument('name'),
+                'module'  => $this->argument('module'),
                 '--force' => $this->option('force'),
             ]);
         }
@@ -66,24 +67,23 @@ class EntityCommand extends Command
         if ($validator == 'yes') {
             $this->call('make:validator', [
                 'name'    => $this->argument('name'),
+                'module'  => $this->argument('module'),
                 '--rules' => $this->option('rules'),
                 '--force' => $this->option('force'),
             ]);
         }
 
         if ($this->confirm('Would you like to create a Controller? [y|N]')) {
-
-            $resource_args = [
-                'name'    => $this->argument('name')
-            ];
-
-            // Generate a controller resource
             $controller_command = ((float) app()->version() >= 5.5  ? 'make:rest-controller' : 'make:resource');
-            $this->call($controller_command, $resource_args);
+            $this->call($controller_command, [
+                'name'    => $this->argument('name'),
+                'module'  => $this->argument('module'),
+            ]);
         }
 
         $this->call('make:repository', [
             'name'        => $this->argument('name'),
+            'module'      => $this->argument('module'),
             '--fillable'  => $this->option('fillable'),
             '--rules'     => $this->option('rules'),
             '--validator' => $validator,
@@ -92,6 +92,7 @@ class EntityCommand extends Command
 
         $this->call('make:bindings', [
             'name'    => $this->argument('name'),
+            'module'  => $this->argument('module'),
             '--force' => $this->option('force')
         ]);
     }
@@ -111,6 +112,12 @@ class EntityCommand extends Command
                 'The name of class being generated.',
                 null
             ],
+            [
+                'module',
+                InputArgument::OPTIONAL,
+                'The module name for kind of the modular project and creating files on each module',
+                null
+            ]
         ];
     }
 

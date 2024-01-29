@@ -3,8 +3,8 @@
 $NAMESPACE$
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 
-use $APPNAME$Http\Requests;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
 use $APPNAME$Http\Requests\$CLASS$CreateRequest;
