@@ -13,8 +13,44 @@ currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+At l5-repository, we take the security of our users seriously. If you discover any security vulnerabilities within our package, we appreciate your cooperation in responsibly disclosing the issue.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+To report a security vulnerability, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch in your fork to work on the fix.
+3. Implement the necessary changes to address the vulnerability.
+4. Submit a Pull Request (PR) to the main repository.
+
+### Pull Request Template
+
+When submitting a PR to report a security vulnerability, please use the following template to provide necessary information:
+
+### Security Vulnerability Report
+
+### Vulnerability Details
+
+**1. Description:**
+Briefly describe the security vulnerability.
+
+**2. Affected Component:**
+Specify the affected component or module.
+
+**3. Steps to Reproduce:**
+Provide detailed steps to reproduce the vulnerability.
+
+**4. Impact:**
+Explain the potential impact of the vulnerability.
+
+### Proposed Fix
+
+Describe the changes made to address the vulnerability and any additional information that might be relevant.
+
+### Additional Information
+
+Any other information you believe is important for our security team to know.
+
+### Contact Information
+
+Please provide a way for our security team to contact you if further clarification or information is needed.
+
