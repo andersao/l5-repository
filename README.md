@@ -399,7 +399,7 @@ $posts = $this->repository->findWhere([
     ['columnName4','IN',['value1','value2']], //whereIn
     ['columnName5','NOTIN',['value1','value2']], //whereNotIn
     ['columnName6','EXIST',''], //whereExists
-    
+
     //HAS, HASMORPH, DOESNTHAVE, DOESNTHAVEMORPH
     ['columnName7','HAS',function($query){}], //whereHas
 
@@ -707,34 +707,9 @@ In order for it to query using the **AND**, pass the *searchJoin* parameter as s
 
 `http://prettus.local/users?search=age:17;email:john@gmail.com&searchJoin=and`
 
-
-
-
-
-Filtering fields
-
-`http://prettus.local/users?filter=id;name`
-
-```json
-[
-    {
-        "id": 1,
-        "name": "John Doe"
-    },
-    {
-        "id": 2,
-        "name": "Lorem Ipsum"
-    },
-    {
-        "id": 3,
-        "name": "Laravel"
-    }
-]
-```
-
 Sorting the results
 
-`http://prettus.local/users?filter=id;name&orderBy=id&sortedBy=desc`
+`http://prettus.local/users?orderBy=id&sortedBy=desc`
 
 ```json
 [

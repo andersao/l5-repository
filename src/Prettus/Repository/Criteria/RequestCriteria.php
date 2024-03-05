@@ -40,7 +40,6 @@ class RequestCriteria implements CriteriaInterface
         $fieldsSearchable = $repository->getFieldsSearchable();
         $search = $this->request->get(config('repository.criteria.params.search', 'search'), null);
         $searchFields = $this->request->get(config('repository.criteria.params.searchFields', 'searchFields'), null);
-        $filter = $this->request->get(config('repository.criteria.params.filter', 'filter'), null);
         $orderBy = $this->request->get(config('repository.criteria.params.orderBy', 'orderBy'), null);
         $sortedBy = $this->request->get(config('repository.criteria.params.sortedBy', 'sortedBy'), 'asc');
         $with = $this->request->get(config('repository.criteria.params.with', 'with'), null);
@@ -159,14 +158,6 @@ class RequestCriteria implements CriteriaInterface
             } else {
                 $model = $this->parserFieldsOrderBy($model, $orderBySplit[0], $sortedBy);
             }
-        }
-
-        if (isset($filter) && !empty($filter)) {
-            if (is_string($filter)) {
-                $filter = explode(';', $filter);
-            }
-
-            $model = $model->select($filter);
         }
 
         if ($with) {

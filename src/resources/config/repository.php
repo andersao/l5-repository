@@ -190,10 +190,6 @@ return [
         |    http://prettus.local/?search=lorem&searchFields=name:like;email
         |    http://prettus.local/?search=lorem&searchFields=name:like
         |
-        | - filter : Fields that must be returned to the response object
-        |   Ex:
-        |   http://prettus.local/?search=lorem&filter=id,name
-        |
         | - orderBy : Order By
         |   Ex:
         |   http://prettus.local/?search=lorem&orderBy=id
@@ -213,7 +209,6 @@ return [
         'params'             => [
             'search'       => 'search',
             'searchFields' => 'searchFields',
-            'filter'       => 'filter',
             'orderBy'      => 'orderBy',
             'sortedBy'     => 'sortedBy',
             'with'         => 'with',
