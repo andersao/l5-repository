@@ -100,7 +100,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->criteria = new Collection();
         $this->makeModel();
         $this->makePresenter();
-        $this->makeValidator();
+//        $this->makeValidator();
         $this->boot();
     }
 
@@ -672,7 +672,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
                 $attributes = $model->toArray();
             }
 
-            $this->validator->with($attributes)->passesOrFail(ValidatorInterface::RULE_CREATE);
+            if (!is_null($this->validator)) {
+                $this->validator->with($attributes)->passesOrFail(ValidatorInterface::RULE_CREATE);
+            }
         }
 
         event(new RepositoryEntityCreating($this, $attributes));
@@ -715,7 +717,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
                 $attributes = $model->toArray();
             }
 
-            $this->validator->with($attributes)->setId($id)->passesOrFail(ValidatorInterface::RULE_UPDATE);
+            if (!is_null($this->validator)) {
+                $this->validator->with($attributes)->setId($id)->passesOrFail(ValidatorInterface::RULE_UPDATE);
+            }
         }
 
         $temporarySkipPresenter = $this->skipPresenter;

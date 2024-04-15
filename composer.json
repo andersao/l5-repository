@@ -1,60 +1,58 @@
 {
-  "name": "prettus/l5-repository",
-  "description": "Laravel 5|6|7|8|9|10 - Repositories to  the database layer",
-  "keywords": [
-    "laravel",
-    "repository",
-    "eloquent",
-    "model",
-    "cache"
-  ],
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Anderson Andrade",
-      "homepage": "http://andersonandra.de",
-      "email": "contato@andersonandra.de",
-      "role": "Developer"
-    }
-  ],
-  "homepage": "http://andersao.github.io/l5-repository",
-  "support": {
-    "email": "contato@andersonandra.de",
-    "issues":"https://github.com/andersao/l5-repository/issues",
-    "wiki":"https://github.com/andersao/l5-repository",
-    "source":"https://github.com/andersao/l5-repository",
-    "docs": "http://andersao.github.io/l5-repository"
-  },
-  "require": {
-    "illuminate/http": "~5.0|~6.0|~7.0|^8.0|^9.0|^10.0",
-    "illuminate/config": "~5.0|~6.0|~7.0|^8.0|^9.0|^10.0",
-    "illuminate/support": "~5.0|~6.0|~7.0|^8.0|^9.0|^10.0",
-    "illuminate/database": "~5.0|~6.0|~7.0|^8.0|^9.0|^10.0",
-    "illuminate/pagination": "~5.0|~6.0|~7.0|^8.0|^9.0|^10.0",
-    "illuminate/console": "~5.0|~6.0|~7.0|^8.0|^9.0|^10.0",
-    "illuminate/filesystem": "~5.0|~6.0|~7.0|^8.0|^9.0|^10.0",
-    "prettus/laravel-validation": "~1.1|~1.2|~1.3|~1.4",
-    "illuminate/validation": "~5.0|~6.0|~7.0|^8.0|^9.0|^10.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "Prettus\\Repository\\": "src/Prettus/Repository/"
-    }
-  },
-  "config": {
-    "preferred-install": "dist"
-  },
-  "suggest": {
-    "league/fractal": "Required to use the Fractal Presenter (0.12.*).",
-    "robclancy/presenter": "Required to use the Presenter Model (1.3.*)",
-    "prettus/laravel-validation": "Required to provide easy validation with the repository (1.1.*)"
-  },
-  "extra": {
-    "laravel": {
-      "providers": [
-        "Prettus\\Repository\\Providers\\RepositoryServiceProvider"
-      ]
-    }
-  },
-  "minimum-stability": "stable"
+    "name": "vinkev/l5-repository",
+    "description": "Laravel 5|6|7|8|9|10|11 - Repositories to  the database layer",
+    "keywords": [
+        "laravel",
+        "repository",
+        "eloquent",
+        "model",
+        "cache"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Anderson Andrade",
+            "homepage": "http://andersonandra.de",
+            "email": "contato@andersonandra.de",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "http://andersao.github.io/l5-repository",
+    "support": {
+        "email": "contato@andersonandra.de",
+        "issues": "https://github.com/andersao/l5-repository/issues",
+        "wiki": "https://github.com/andersao/l5-repository",
+        "source": "https://github.com/andersao/l5-repository",
+        "docs": "http://andersao.github.io/l5-repository"
+    },
+    "require": {
+        "illuminate/http": "~5.0|~6.0|~7.0|^8.0|^9.0|^10.0|^11.0",
+        "illuminate/config": "~5.0|~6.0|~7.0|^8.0|^9.0|^10.0|^11.0",
+        "illuminate/support": "~5.0|~6.0|~7.0|^8.0|^9.0|^10.0|^11.0",
+        "illuminate/database": "~5.0|~6.0|~7.0|^8.0|^9.0|^10.0|^11.0",
+        "illuminate/pagination": "~5.0|~6.0|~7.0|^8.0|^9.0|^10.0|^11.0",
+        "illuminate/console": "~5.0|~6.0|~7.0|^8.0|^9.0|^10.0|^11.0",
+        "illuminate/filesystem": "~5.0|~6.0|~7.0|^8.0|^9.0|^10.0|^11.0",
+        "illuminate/validation": "~5.0|~6.0|~7.0|^8.0|^9.0|^10.0|^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Prettus\\Repository\\": "src/Prettus/Repository/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist"
+    },
+    "suggest": {
+        "league/fractal": "Required to use the Fractal Presenter (0.12.*).",
+        "robclancy/presenter": "Required to use the Presenter Model (1.3.*)"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Prettus\\Repository\\Providers\\RepositoryServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable"
 }
