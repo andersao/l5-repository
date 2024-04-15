@@ -240,7 +240,9 @@ return [
             'validators'   => 'Validators',
             'controllers'  => 'Http/Controllers',
             'provider'     => 'RepositoryServiceProvider',
-            'criteria'     => 'Criteria'
+            'criteria'     => 'Criteria',
+            'memoize'      => 'Traits/Memoize/Repository',
+
         ]
     ]
 ];

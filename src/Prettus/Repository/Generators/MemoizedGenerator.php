@@ -4,23 +4,13 @@ namespace Prettus\Repository\Generators;
 
 class MemoizedGenerator extends Generator
 {
+
     /**
      * Get stub name.
      *
-     * @return string
+     * @var string
      */
-    public function getStub(): string
-    {
-        $path = config('repository.generator.stubsOverridePath');
-
-        $stub = file_get_contents($path . '/Stubs/Repository/memoized.stub');
-
-        return str_replace(
-            ['{{ repositoryNamespace }}', '{{ repositoryName }}', '{{ lcfirstRepositoryName }}', '{{ memoizedName }}'],
-            ['App\Traits\Repository\Memoized', $this->setRepository(), $this->setRepositoryLcFirst(), $this->setMemoized()],
-            $stub
-        );
-    }
+    protected $stub = 'repository/memoized';
 
     /**
      * Get base path of destination file.
@@ -29,7 +19,7 @@ class MemoizedGenerator extends Generator
      */
     public function getBasePath()
     {
-        return base_path() . '/app/Traits/Repository/Memoized/';
+        return config('repository.generator.basePath', app()->path());
     }
 
     /**
@@ -39,7 +29,7 @@ class MemoizedGenerator extends Generator
      */
     public function getPath()
     {
-        return $this->getBasePath() . $this->getFileName() . '.php';
+        return $this->getBasePath() . '/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) . '/' . $this->getFileName() . '.php';
     }
 
     /**
@@ -49,7 +39,7 @@ class MemoizedGenerator extends Generator
      */
     public function getPathConfigNode()
     {
-        return '';
+        return 'memoized';
     }
 
     /**
@@ -59,7 +49,7 @@ class MemoizedGenerator extends Generator
      */
     public function getRootNamespace()
     {
-        return '';
+        return parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode());
     }
 
     /**
@@ -69,30 +59,40 @@ class MemoizedGenerator extends Generator
      */
     public function getFileName()
     {
-        return $this->name . 'RepositoryMemoized';
+        return $this->getName() . 'RepositoryMemoized';
     }
 
     /**
-     * set Memoized.
+     * Get array replacements.
+     *
+     * @return array
      */
-    private function setMemoized()
+    public function getReplacements()
     {
-        return $this->name . 'RepositoryMemoized';
+
+        return array_merge(parent::getReplacements(), [
+            'repository'    => $this->getRepository(),
+            'lcfirst_class' => lcfirst($this->getClass()),
+
+        ]);
     }
 
     /**
-     * set Repository.
+     * Gets repository full class name
+     *
+     * @return string
      */
-    private function setRepository()
+    public function getRepository()
     {
-        return $this->name . 'Repository';
-    }
+        $repositoryGenerator = new RepositoryInterfaceGenerator([
+            'name' => $this->name,
+        ]);
 
-    /**
-     * set RepositoryLcFirst.
-     */
-    private function setRepositoryLcFirst(): string
-    {
-        return lcfirst($this->setRepository());
+        $repository = $repositoryGenerator->getRootNamespace() . '\\' . $repositoryGenerator->getName();
+
+        return str_replace([
+                "\\",
+                '/',
+            ], '\\', $repository) . 'Repository';
     }
 }
