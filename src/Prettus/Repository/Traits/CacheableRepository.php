@@ -2,16 +2,16 @@
 
 namespace Prettus\Repository\Traits;
 
+use Exception;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Prettus\Repository\Contracts\CriteriaInterface;
-use Prettus\Repository\Helpers\CacheKeys;
 use ReflectionObject;
-use Exception;
 
 /**
  * Class CacheableRepository
+ *
  * @package Prettus\Repository\Traits
- * @author Anderson Andrade <contato@andersonandra.de>
+ * @author  Anderson Andrade <contato@andersonandra.de>
  */
 trait CacheableRepository
 {
@@ -68,8 +68,8 @@ trait CacheableRepository
      */
     public function isSkippedCache()
     {
-        $skipped = isset($this->cacheSkip) ? $this->cacheSkip : false;
-        $request = app('Illuminate\Http\Request');
+        $skipped        = isset($this->cacheSkip) ? $this->cacheSkip : false;
+        $request        = app('Illuminate\Http\Request');
         $skipCacheParam = config('repository.cache.params.skipCache', 'skipCache');
 
         if ($request->has($skipCacheParam) && $request->get($skipCacheParam)) {
@@ -92,7 +92,7 @@ trait CacheableRepository
             return false;
         }
 
-        $cacheOnly = isset($this->cacheOnly) ? $this->cacheOnly : config('repository.cache.allowed.only', null);
+        $cacheOnly   = isset($this->cacheOnly) ? $this->cacheOnly : config('repository.cache.allowed.only', null);
         $cacheExcept = isset($this->cacheExcept) ? $this->cacheExcept : config('repository.cache.allowed.except', null);
 
         if (is_array($cacheOnly)) {
@@ -120,15 +120,20 @@ trait CacheableRepository
      */
     public function getCacheKey($method, $args = null)
     {
+        if (!$this->model instanceof \Jenssegers\Mongodb\Eloquent\Builder) {
+            $query = $this->model->getQuery();
+            $args  = array_merge($args, [
+                [
+                    $query->getBindings(),
+                    $query->toSql(),
+                ],
+            ]);
+        }
 
-        $request = app('Illuminate\Http\Request');
-        $args = serialize($args);
+        $args     = serialize($args);
         $criteria = $this->serializeCriteria();
-        $key = sprintf('%s@%s-%s', get_called_class(), $method, md5($args . $criteria . $request->fullUrl()));
 
-        CacheKeys::putKey(get_called_class(), $key);
-
-        return $key;
+        return sprintf('%s@%s-%s', get_called_class(), $method, md5($args . $criteria));
 
     }
 
@@ -151,10 +156,11 @@ trait CacheableRepository
     /**
      * Serialize single criterion with customized serialization of Closures.
      *
-     * @param  \Prettus\Repository\Contracts\CriteriaInterface $criterion
-     * @return \Prettus\Repository\Contracts\CriteriaInterface|array
+     * @param \Prettus\Repository\Contracts\CriteriaInterface $criterion
      *
      * @throws \Exception
+     * @return \Prettus\Repository\Contracts\CriteriaInterface|array
+     *
      */
     protected function serializeCriterion($criterion)
     {
@@ -173,19 +179,28 @@ trait CacheableRepository
 
             return [
                 'hash' => md5((string) $r),
-                'properties' => $r->getProperties(),
             ];
         }
     }
 
     /**
-     * Get cache minutes
+     * Get cache time
+     *
+     * Return minutes: version < 5.8
+     * Return seconds: version >= 5.8
      *
      * @return int
      */
-    public function getCacheMinutes()
+    public function getCacheTime()
     {
         $cacheMinutes = isset($this->cacheMinutes) ? $this->cacheMinutes : config('repository.cache.minutes', 30);
+
+        /**
+         * https://laravel.com/docs/5.8/upgrade#cache-ttl-in-seconds
+         */
+        if ($this->versionCompare($this->app->version(), "5.7.*", ">")) {
+            return $cacheMinutes * 60;
+        }
 
         return $cacheMinutes;
     }
@@ -203,22 +218,23 @@ trait CacheableRepository
             return parent::all($columns);
         }
 
-        $key = $this->getCacheKey('all', func_get_args());
-        $minutes = $this->getCacheMinutes();
-        $value = $this->getCacheRepository()->remember($key, $minutes, function () use ($columns) {
+        $key     = $this->getCacheKey('all', func_get_args());
+        $seconds = $this->getCacheTime();
+        $value   = $this->getCacheRepository()->tags([get_called_class()])->remember($key, $seconds, function () use ($columns) {
             return parent::all($columns);
         });
 
         $this->resetModel();
         $this->resetScope();
+
         return $value;
     }
 
     /**
      * Retrieve all data of repository, paginated
      *
-     * @param null  $limit
-     * @param array $columns
+     * @param null   $limit
+     * @param array  $columns
      * @param string $method
      *
      * @return mixed
@@ -231,13 +247,14 @@ trait CacheableRepository
 
         $key = $this->getCacheKey('paginate', func_get_args());
 
-        $minutes = $this->getCacheMinutes();
-        $value = $this->getCacheRepository()->remember($key, $minutes, function () use ($limit, $columns, $method) {
+        $seconds = $this->getCacheTime();
+        $value   = $this->getCacheRepository()->tags([get_called_class()])->remember($key, $seconds, function () use ($limit, $columns, $method) {
             return parent::paginate($limit, $columns, $method);
         });
 
         $this->resetModel();
         $this->resetScope();
+
         return $value;
     }
 
@@ -255,14 +272,15 @@ trait CacheableRepository
             return parent::find($id, $columns);
         }
 
-        $key = $this->getCacheKey('find', func_get_args());
-        $minutes = $this->getCacheMinutes();
-        $value = $this->getCacheRepository()->remember($key, $minutes, function () use ($id, $columns) {
+        $key     = $this->getCacheKey('find', func_get_args());
+        $seconds = $this->getCacheTime();
+        $value   = $this->getCacheRepository()->tags([get_called_class()])->remember($key, $seconds, function () use ($id, $columns) {
             return parent::find($id, $columns);
         });
 
         $this->resetModel();
         $this->resetScope();
+
         return $value;
     }
 
@@ -281,14 +299,15 @@ trait CacheableRepository
             return parent::findByField($field, $value, $columns);
         }
 
-        $key = $this->getCacheKey('findByField', func_get_args());
-        $minutes = $this->getCacheMinutes();
-        $value = $this->getCacheRepository()->remember($key, $minutes, function () use ($field, $value, $columns) {
+        $key     = $this->getCacheKey('findByField', func_get_args());
+        $seconds = $this->getCacheTime();
+        $value   = $this->getCacheRepository()->tags([get_called_class()])->remember($key, $seconds, function () use ($field, $value, $columns) {
             return parent::findByField($field, $value, $columns);
         });
 
         $this->resetModel();
         $this->resetScope();
+
         return $value;
     }
 
@@ -306,14 +325,15 @@ trait CacheableRepository
             return parent::findWhere($where, $columns);
         }
 
-        $key = $this->getCacheKey('findWhere', func_get_args());
-        $minutes = $this->getCacheMinutes();
-        $value = $this->getCacheRepository()->remember($key, $minutes, function () use ($where, $columns) {
+        $key     = $this->getCacheKey('findWhere', func_get_args());
+        $seconds = $this->getCacheTime();
+        $value   = $this->getCacheRepository()->tags([get_called_class()])->remember($key, $seconds, function () use ($where, $columns) {
             return parent::findWhere($where, $columns);
         });
 
         $this->resetModel();
         $this->resetScope();
+
         return $value;
     }
 
@@ -330,14 +350,15 @@ trait CacheableRepository
             return parent::getByCriteria($criteria);
         }
 
-        $key = $this->getCacheKey('getByCriteria', func_get_args());
-        $minutes = $this->getCacheMinutes();
-        $value = $this->getCacheRepository()->remember($key, $minutes, function () use ($criteria) {
+        $key     = $this->getCacheKey('getByCriteria', func_get_args());
+        $seconds = $this->getCacheTime();
+        $value   = $this->getCacheRepository()->tags([get_called_class()])->remember($key, $seconds, function () use ($criteria) {
             return parent::getByCriteria($criteria);
         });
 
         $this->resetModel();
         $this->resetScope();
+
         return $value;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Prettus\Repository\Eloquent;
 
 use Closure;
@@ -9,14 +10,18 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Laravel\SerializableClosure\SerializableClosure;
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\Presentable;
 use Prettus\Repository\Contracts\PresenterInterface;
 use Prettus\Repository\Contracts\RepositoryCriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 use Prettus\Repository\Events\RepositoryEntityCreated;
+use Prettus\Repository\Events\RepositoryEntityCreating;
 use Prettus\Repository\Events\RepositoryEntityDeleted;
+use Prettus\Repository\Events\RepositoryEntityDeleting;
 use Prettus\Repository\Events\RepositoryEntityUpdated;
+use Prettus\Repository\Events\RepositoryEntityUpdating;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Repository\Traits\ComparesVersionsTrait;
 use Prettus\Validator\Contracts\ValidatorInterface;
@@ -24,8 +29,9 @@ use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
  * Class BaseRepository
+ *
  * @package Prettus\Repository\Eloquent
- * @author Anderson Andrade <contato@andersonandra.de>
+ * @author  Anderson Andrade <contato@andersonandra.de>
  */
 abstract class BaseRepository implements RepositoryInterface, RepositoryCriteriaInterface
 {
@@ -94,7 +100,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->criteria = new Collection();
         $this->makeModel();
         $this->makePresenter();
-        $this->makeValidator();
+//        $this->makeValidator();
         $this->boot();
     }
 
@@ -104,6 +110,16 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function boot()
     {
         //
+    }
+
+    /**
+     * Returns the current Model instance
+     *
+     * @return Model
+     */
+    public function getModel()
+    {
+        return $this->model;
     }
 
     /**
@@ -139,7 +155,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function validator()
     {
-
         if (isset($this->rules) && !is_null($this->rules) && is_array($this->rules) && !empty($this->rules)) {
             if (class_exists('Prettus\Validator\LaravelValidator')) {
                 $validator = app('Prettus\Validator\LaravelValidator');
@@ -258,7 +273,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Retrieve data array for populate field select
      *
-     * @param string $column
+     * @param string      $column
      * @param string|null $key
      *
      * @return \Illuminate\Support\Collection|array
@@ -273,7 +288,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Retrieve data array for populate field select
      * Compatible with Laravel 5.3
-     * @param string $column
+     *
+     * @param string      $column
      * @param string|null $key
      *
      * @return \Illuminate\Support\Collection|array
@@ -288,10 +304,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Sync relations
      *
-     * @param $id
-     * @param $relation
-     * @param $attributes
+     * @param      $id
+     * @param      $relation
+     * @param      $attributes
      * @param bool $detaching
+     *
      * @return mixed
      */
     public function sync($id, $relation, $attributes, $detaching = true)
@@ -305,6 +322,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * @param $id
      * @param $relation
      * @param $attributes
+     *
      * @return mixed
      */
     public function syncWithoutDetaching($id, $relation, $attributes)
@@ -368,6 +386,28 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
+     * Count results of repository
+     *
+     * @param array  $where
+     * @param string $columns
+     *
+     * @return int
+     */
+    public function count(array $where = [], $columns = '*')
+    {
+        if ($where) {
+            $this->applyConditions($where);
+        }
+
+        $result = $this->model->count($columns);
+
+        $this->resetModel();
+        $this->resetScope();
+
+        return $result;
+    }
+
+    /**
      * Alias of All method
      *
      * @param array $columns
@@ -378,7 +418,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         return $this->all($columns);
     }
-
 
     /**
      * Retrieve first data of repository
@@ -446,11 +485,27 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
+     * Retrieve data of repository with limit applied
+     *
+     * @param int   $limit
+     * @param array $columns
+     *
+     * @return mixed
+     */
+    public function limit($limit, $columns = ['*'])
+    {
+        // Shortcut to all with `limit` applied on query via `take`
+        $this->take($limit);
+
+        return $this->all($columns);
+    }
+
+    /**
      * Retrieve all data of repository, paginated
      *
-     * @param null $limit
-     * @param array $columns
-     * @param string $method
+     * @param null|int $limit
+     * @param array    $columns
+     * @param string   $method
      *
      * @return mixed
      */
@@ -469,8 +524,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Retrieve all data of repository, simple paginated
      *
-     * @param null $limit
-     * @param array $columns
+     * @param null|int $limit
+     * @param array    $columns
      *
      * @return mixed
      */
@@ -576,13 +631,32 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
-     * Save a new entity in repository
+     * Find data by between values in one field
      *
-     * @throws ValidatorException
+     * @param       $field
+     * @param array $values
+     * @param array $columns
+     *
+     * @return mixed
+     */
+    public function findWhereBetween($field, array $values, $columns = ['*'])
+    {
+        $this->applyCriteria();
+        $this->applyScope();
+        $model = $this->model->whereBetween($field, $values)->get($columns);
+        $this->resetModel();
+
+        return $this->parserResult($model);
+    }
+
+    /**
+     * Save a new entity in repository
      *
      * @param array $attributes
      *
      * @return mixed
+     * @throws ValidatorException
+     *
      */
     public function create(array $attributes)
     {
@@ -590,16 +664,20 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             // we should pass data that has been casts by the model
             // to make sure data type are same because validator may need to use
             // this data to compare with data that fetch from database.
-            if( $this->versionCompare($this->app->version(), "5.2.*", ">") ){
+            if ($this->versionCompare($this->app->version(), "5.2.*", ">")) {
                 $attributes = $this->model->newInstance()->forceFill($attributes)->makeVisible($this->model->getHidden())->toArray();
-            }else{
+            } else {
                 $model = $this->model->newInstance()->forceFill($attributes);
-                $model->addVisible($this->model->getHidden());
+                $model->makeVisible($this->model->getHidden());
                 $attributes = $model->toArray();
             }
 
-            $this->validator->with($attributes)->passesOrFail(ValidatorInterface::RULE_CREATE);
+            if (!is_null($this->validator)) {
+                $this->validator->with($attributes)->passesOrFail(ValidatorInterface::RULE_CREATE);
+            }
         }
+
+        event(new RepositoryEntityCreating($this, $attributes));
 
         $model = $this->model->newInstance($attributes);
         $model->save();
@@ -613,12 +691,12 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Update a entity in repository by id
      *
-     * @throws ValidatorException
-     *
      * @param array $attributes
      * @param       $id
      *
      * @return mixed
+     * @throws ValidatorException
+     *
      */
     public function update(array $attributes, $id)
     {
@@ -628,15 +706,20 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             // we should pass data that has been casts by the model
             // to make sure data type are same because validator may need to use
             // this data to compare with data that fetch from database.
-            if( $this->versionCompare($this->app->version(), "5.2.*", ">") ){
-                $attributes = $this->model->newInstance()->forceFill($attributes)->makeVisible($this->model->getHidden())->toArray();
-            }else{
-                $model = $this->model->newInstance()->forceFill($attributes);
-                $model->addVisible($this->model->getHidden());
+            $model = $this->model->newInstance();
+            $model->setRawAttributes([]);
+            $model->setAppends([]);
+            if ($this->versionCompare($this->app->version(), "5.2.*", ">")) {
+                $attributes = $model->forceFill($attributes)->makeVisible($this->model->getHidden())->toArray();
+            } else {
+                $model->forceFill($attributes);
+                $model->makeVisible($this->model->getHidden());
                 $attributes = $model->toArray();
             }
 
-            $this->validator->with($attributes)->setId($id)->passesOrFail(ValidatorInterface::RULE_UPDATE);
+            if (!is_null($this->validator)) {
+                $this->validator->with($attributes)->setId($id)->passesOrFail(ValidatorInterface::RULE_UPDATE);
+            }
         }
 
         $temporarySkipPresenter = $this->skipPresenter;
@@ -644,6 +727,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->skipPresenter(true);
 
         $model = $this->model->findOrFail($id);
+
+        event(new RepositoryEntityUpdating($this, $model));
+
         $model->fill($attributes);
         $model->save();
 
@@ -658,24 +744,26 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Update or Create an entity in repository
      *
-     * @throws ValidatorException
-     *
      * @param array $attributes
      * @param array $values
      *
      * @return mixed
+     * @throws ValidatorException
+     *
      */
     public function updateOrCreate(array $attributes, array $values = [])
     {
         $this->applyScope();
 
         if (!is_null($this->validator)) {
-            $this->validator->with($attributes)->passesOrFail(ValidatorInterface::RULE_UPDATE);
+            $this->validator->with(array_merge($attributes, $values))->passesOrFail(ValidatorInterface::RULE_CREATE);
         }
 
         $temporarySkipPresenter = $this->skipPresenter;
 
         $this->skipPresenter(true);
+
+        event(new RepositoryEntityCreating($this, $attributes));
 
         $model = $this->model->updateOrCreate($attributes, $values);
 
@@ -707,6 +795,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->skipPresenter($temporarySkipPresenter);
         $this->resetModel();
 
+        event(new RepositoryEntityDeleting($this, $model));
+
         $deleted = $model->delete();
 
         event(new RepositoryEntityDeleted($this, $originalModel));
@@ -729,6 +819,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->skipPresenter(true);
 
         $this->applyConditions($where);
+
+        event(new RepositoryEntityDeleting($this, $this->model->getModel()));
 
         $deleted = $this->model->delete();
 
@@ -771,7 +863,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Add subselect queries to count the relations.
      *
-     * @param  mixed $relations
+     * @param mixed $relations
+     *
      * @return $this
      */
     public function withCount($relations)
@@ -783,7 +876,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     /**
      * Load relation with closure
      *
-     * @param string $relation
+     * @param string  $relation
      * @param closure $closure
      *
      * @return $this
@@ -809,9 +902,32 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         return $this;
     }
 
+    /**
+     * Set the "orderBy" value of the query.
+     *
+     * @param mixed  $column
+     * @param string $direction
+     *
+     * @return $this
+     */
     public function orderBy($column, $direction = 'asc')
     {
         $this->model = $this->model->orderBy($column, $direction);
+
+        return $this;
+    }
+
+    /**
+     * Set the "limit" value of the query.
+     *
+     * @param int $limit
+     *
+     * @return $this
+     */
+    public function take($limit)
+    {
+        // Internally `take` is an alias to `limit`
+        $this->model = $this->model->limit($limit);
 
         return $this;
     }
@@ -961,7 +1077,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     protected function applyCriteria()
     {
-
         if ($this->skipCriteria === true) {
             return $this;
         }
@@ -983,17 +1098,181 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * Applies the given where conditions to the model.
      *
      * @param array $where
+     *
+     * @throws RepositoryException
+     *
      * @return void
      */
     protected function applyConditions(array $where)
     {
         foreach ($where as $field => $value) {
-            if (is_array($value)) {
-                list($field, $condition, $val) = $value;
-                $this->model = $this->model->where($field, $condition, $val);
-            } else {
+            if (!is_array($value)) {
                 $this->model = $this->model->where($field, '=', $value);
+
+                continue;
             }
+
+            [$field, $condition, $value, $bindings] = array_pad($value, 4, []);
+            // smooth input
+            $condition = preg_replace('/\s\s+/', ' ', trim($condition));
+
+            // split to get operator, syntax: "DATE >", "DATE =", "DAY <"
+            $operators = explode(' ', $condition);
+            $operator  = '=';
+            if (count($operators) > 1) {
+                $condition = $operators[0];
+                $operator  = $operators[1];
+            }
+
+            if ($value instanceof SerializableClosure) {
+                $value = $value->getClosure();
+            }
+
+            $this->applyModelCondition($condition, $field, $operator, $value, $bindings);
+        }
+    }
+
+    /**
+     * @param string $condition
+     * @param string $field
+     * @param string $operator
+     * @param        $value
+     * @param array  $bindings
+     *
+     * @return void
+     */
+    protected function applyModelCondition(string $condition, string $field, string $operator, $value, array $bindings)
+    {
+        $modelConditions = [
+            'LIKE'              => function ($field, $operator, $value) {
+                $this->model = $this->model->where($field, 'LIKE', $value);
+            },
+            'NOTLIKE'           => function ($field, $operator, $value) {
+                $this->model = $this->model->where($field, 'NOT LIKE', $value);
+            },
+            'IN'                => function ($field, $operator, $value) {
+                $this->guardArrayValue($value);
+                $this->model = $this->model->whereIn($field, $value);
+            },
+            'NOTIN'             => function ($field, $operator, $value) {
+                $this->guardArrayValue($value);
+                $this->model = $this->model->whereNotIn($field, $value);
+            },
+            'DATE'              => function ($field, $operator, $value) {
+                $this->model = $this->model->whereDate($field, $operator, $value);
+            },
+            'DAY'               => function ($field, $operator, $value) {
+                $this->model = $this->model->whereDay($field, $operator, $value);
+            },
+            'MONTH'             => function ($field, $operator, $value) {
+                $this->model = $this->model->whereMonth($field, $operator, $value);
+            },
+            'YEAR'              => function ($field, $operator, $value) {
+                $this->model = $this->model->whereYear($field, $operator, $value);
+            },
+            'EXISTS'            => function ($field, $operator, $value) {
+                $this->guardClosureValue($value);
+                $this->model = $this->model->whereExists($value);
+            },
+            'HAS'               => function ($field, $operator, $value) {
+                $this->guardClosureValue($value);
+                $this->model = $this->model->whereHas($field, $value);
+            },
+            'ORHAS'             => function ($field, $operator, $value) {
+                $this->guardClosureValue($value);
+                $this->model = $this->model->orWhereHas($field, $value);
+            },
+            'HASMORPH'          => function ($field, $operator, $value) {
+                $this->guardClosureValue($value);
+                $this->model = $this->model->whereHasMorph($field, $operator, $value);
+            },
+            'ORHASMORPH'        => function ($field, $operator, $value) {
+                $this->guardClosureValue($value);
+                $this->model = $this->model->orWhereHasMorph($field, $operator, $value);
+            },
+            'DOESNTHAVE'        => function ($field, $operator, $value) {
+                $this->guardClosureValue($value);
+                $this->model = $this->model->whereDoesntHave($field, $value);
+            },
+            'ORDOESNTHAVE'      => function ($field, $operator, $value) {
+                $this->guardClosureValue($value);
+                $this->model = $this->model->orWhereDoesntHave($field, $value);
+            },
+            'DOESNTHAVEMORPH'   => function ($field, $operator, $value) {
+                $this->model = $this->model->whereDoesntHaveMorph($field, $value);
+            },
+            'ORDOESNTHAVEMORPH' => function ($field, $operator, $value) {
+                $this->model = $this->model->orWhereDoesntHaveMorph($field, $value);
+            },
+            'BETWEEN'           => function ($field, $operator, $value) {
+                $this->guardArrayValue($value);
+                $this->model = $this->model->whereBetween($field, $value);
+            },
+            'BETWEENCOLUMNS'    => function ($field, $operator, $value) {
+                $this->guardArrayValue($value);
+                $this->model = $this->model->whereBetweenColumns($field, $value);
+            },
+            'NOTBETWEEN'        => function ($field, $operator, $value) {
+                $this->guardArrayValue($value);
+                $this->model = $this->model->whereNotBetween($field, $value);
+            },
+            'NOTBETWEENCOLUMNS' => function ($field, $operator, $value) {
+                $this->guardArrayValue($value);
+                $this->model = $this->model->whereNotBetweenColumns($field, $value);
+            },
+            'JSONCONTAINS'      => function ($field, $operator, $value) {
+                $this->model = $this->model->whereJsonContains($field, $value);
+            },
+            'JSONLENGTH'        => function ($field, $operator, $value) {
+                $this->model = $this->model->whereJsonLength($field, $operator, $value);
+            },
+            'RAW'               => function ($field, $operator, $value, $bindings) {
+                $this->model = $this->model->whereRaw($value, $bindings);
+            },
+        ];
+
+        array_key_exists($condition, $modelConditions) ? call_user_func_array($modelConditions[$condition], [$field, $operator, $value, $bindings]) : $this->getModelDefaultCondition($field, $condition, $value);
+    }
+
+
+    /**
+     * @param string $field
+     * @param string $condition
+     * @param        $value
+     *
+     * @return void
+     */
+    protected function getModelDefaultCondition(string $field, string $condition, $value)
+    {
+        $this->model = $this->model->where($field, $condition, $value);
+    }
+
+
+    /**
+     * @param $value
+     *
+     * @throws RepositoryException
+     *
+     * @return void
+     */
+    private function guardArrayValue($value)
+    {
+        if (!is_array($value)) {
+            throw new RepositoryException("Input {$value} mus be an array");
+        }
+    }
+
+    /**
+     * @param $value
+     *
+     * @throws RepositoryException
+     *
+     * @return void
+     */
+    private function guardClosureValue($value)
+    {
+        if (!($value instanceof Closure)) {
+            throw new RepositoryException("Input {$value} must be closure function");
         }
     }
 
@@ -1029,7 +1308,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
                     return $model;
                 });
-            } elseif ($result instanceof Presentable) {
+            } else if ($result instanceof Presentable) {
                 $result = $result->setPresenter($this->presenter);
             }
 
@@ -1039,5 +1318,55 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         }
 
         return $result;
+    }
+
+    /**
+     * Trigger static method calls to the model
+     *
+     * @param $method
+     * @param $arguments
+     *
+     * @return mixed
+     */
+    public static function __callStatic($method, $arguments)
+    {
+        return call_user_func_array([new static(), $method], $arguments);
+    }
+
+    /**
+     * Trigger method calls to the model
+     *
+     * @param string $method
+     * @param array  $arguments
+     *
+     * @return mixed
+     */
+    public function __call($method, $arguments)
+    {
+        $this->applyCriteria();
+        $this->applyScope();
+
+        return call_user_func_array([$this->model, $method], $arguments);
+    }
+
+    /**
+     * @param array $where
+     *
+     * @return int
+     */
+    public function mongoAggregateCount(array $where = []): int
+    {
+        $result = $this->raw()->aggregate([
+            [
+                '$match' => $where,
+            ],
+            [
+                '$count' => 'count',
+            ],
+        ]);
+
+        $result = $result->toArray();
+
+        return count($result) ? $result[0]->count : 0;
     }
 }

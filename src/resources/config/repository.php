@@ -169,7 +169,8 @@ return [
         */
         'acceptedConditions' => [
             '=',
-            'like'
+            'like',
+            'in'
         ],
         /*
         |--------------------------------------------------------------------------
@@ -216,7 +217,8 @@ return [
             'orderBy'      => 'orderBy',
             'sortedBy'     => 'sortedBy',
             'with'         => 'with',
-            'searchJoin'   => 'searchJoin'
+            'searchJoin'   => 'searchJoin',
+            'withCount'    => 'withCount'
         ]
     ],
     /*

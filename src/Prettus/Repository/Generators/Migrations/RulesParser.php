@@ -2,6 +2,7 @@
 namespace Prettus\Repository\Generators\Migrations;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Arr;
 
 /**
  * Class RulesParser
@@ -82,7 +83,7 @@ class RulesParser implements Arrayable
      */
     public function getColumn($rules)
     {
-        return array_first(explode('=>', $rules), function ($key, $value) {
+        return Arr::first(explode('=>', $rules), function ($key, $value) {
             return $value;
         });
     }
