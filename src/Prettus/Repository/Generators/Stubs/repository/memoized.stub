@@ -1,0 +1,18 @@
+<?php
+
+namespace {{ repositoryNamespace }};
+
+use App\Repositories\{{ repositoryName }};
+
+trait {{ memoizedName }}
+{
+    protected {{ repositoryName }} ${{ lcfirstRepositoryName }};
+
+    /**
+     * @return {{ repositoryName }}
+     */
+    protected function {{ lcfirstRepositoryName }}(): {{ repositoryName }}
+    {
+        return $this->{{ lcfirstRepositoryName }} ??= app({{ repositoryName }}::class);
+    }
+}
