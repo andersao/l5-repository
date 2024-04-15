@@ -5,6 +5,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Prettus\Repository\Generators\FileAlreadyExistsException;
+use Prettus\Repository\Generators\MemoizedGenerator;
 use Prettus\Repository\Generators\MigrationGenerator;
 use Prettus\Repository\Generators\ModelGenerator;
 use Prettus\Repository\Generators\RepositoryEloquentGenerator;
@@ -84,6 +85,16 @@ class RepositoryCommand extends Command
 
         if (!$this->option('skip-model')) {
             $this->generators->push($modelGenerator);
+        }
+
+        $memoizedGenerator = new MemoizedGenerator([
+            'name'     => $this->argument('name'),
+            'fillable' => $this->option('fillable'),
+            'force'    => $this->option('force'),
+        ]);
+
+        if (!$this->option('skip-memoized')) {
+            $this->generators->push($memoizedGenerator);
         }
 
         $this->generators->push(new RepositoryInterfaceGenerator([
@@ -184,6 +195,13 @@ class RepositoryCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'Skip the creation of a model.',
+                null,
+            ],
+            [
+                'skip-memoized',
+                null,
+                InputOption::VALUE_NONE,
+                'Skip the creation of a memoized file.',
                 null,
             ],
         ];
