@@ -7,8 +7,9 @@ use Illuminate\Support\Str;
 
 /**
  * Class Generator
+ *
  * @package Prettus\Repository\Generators
- * @author Anderson Andrade <contato@andersonandra.de>
+ * @author  Anderson Andrade <contato@andersonandra.de>
  */
 abstract class Generator
 {
@@ -43,7 +44,7 @@ abstract class Generator
     public function __construct(array $options = [])
     {
         $this->filesystem = new Filesystem;
-        $this->options = $options;
+        $this->options    = $options;
     }
 
 
@@ -82,7 +83,7 @@ abstract class Generator
     {
         $path = config('repository.generator.stubsOverridePath', __DIR__);
 
-        if(!file_exists($path . '/Stubs/' . $this->stub . '.stub')){
+        if (!file_exists($path . '/Stubs/' . $this->stub . '.stub')) {
             $path = __DIR__;
         }
 
@@ -100,7 +101,7 @@ abstract class Generator
         return [
             'class'          => $this->getClass(),
             'namespace'      => $this->getNamespace(),
-            'root_namespace' => $this->getRootNamespace()
+            'root_namespace' => $this->getRootNamespace(),
         ];
     }
 
@@ -146,7 +147,7 @@ abstract class Generator
     }
 
 
-   /**
+    /**
      * Get application namespace
      *
      * @return string
@@ -227,6 +228,9 @@ abstract class Generator
             case ('criteria' === $class):
                 $path = config('repository.generator.paths.criteria', 'Criteria');
                 break;
+            case ('memoized' === $class):
+                $path = config('repository.generator.paths.memoized', 'Traits\Repository\Memoized');
+                break;
             default:
                 $path = '';
         }
@@ -277,8 +281,8 @@ abstract class Generator
     /**
      * Run the generator.
      *
-     * @return int
      * @throws FileAlreadyExistsException
+     * @return int
      */
     public function run()
     {
@@ -308,7 +312,7 @@ abstract class Generator
     /**
      * Determinte whether the given key exist in options array.
      *
-     * @param  string $key
+     * @param string $key
      *
      * @return boolean
      */
@@ -321,8 +325,8 @@ abstract class Generator
     /**
      * Get value from options by given key.
      *
-     * @param  string      $key
-     * @param  string|null $default
+     * @param string      $key
+     * @param string|null $default
      *
      * @return string
      */
@@ -339,8 +343,8 @@ abstract class Generator
     /**
      * Helper method for "getOption".
      *
-     * @param  string      $key
-     * @param  string|null $default
+     * @param string      $key
+     * @param string|null $default
      *
      * @return string
      */
@@ -353,7 +357,7 @@ abstract class Generator
     /**
      * Handle call to __get method.
      *
-     * @param  string $key
+     * @param string $key
      *
      * @return string|mixed
      */

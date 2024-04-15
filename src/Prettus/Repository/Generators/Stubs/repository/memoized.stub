@@ -1,18 +1,18 @@
 <?php
 
-namespace {{ repositoryNamespace }};
+$NAMESPACE$
 
-use App\Repositories\{{ repositoryName }};
+use $REPOSITORY$;
 
-trait {{ memoizedName }}
+trait $CLASS$RepositoryMemoized
 {
-    protected {{ repositoryName }} ${{ lcfirstRepositoryName }};
+    protected $CLASS$Repository $$LCFIRST_CLASS$Repository;
 
     /**
-     * @return {{ repositoryName }}
+     * @return $CLASS$Repository
      */
-    protected function {{ lcfirstRepositoryName }}(): {{ repositoryName }}
+    protected function $LCFIRST_CLASS$Repository(): $CLASS$Repository
     {
-        return $this->{{ lcfirstRepositoryName }} ??= app({{ repositoryName }}::class);
+        return $this->$LCFIRST_CLASS$Repository ??= app($CLASS$Repository::class);
     }
 }
