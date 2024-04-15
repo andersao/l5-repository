@@ -10,6 +10,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Laravel\SerializableClosure\SerializableClosure;
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\Presentable;
 use Prettus\Repository\Contracts\PresenterInterface;
@@ -1094,92 +1095,180 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      *
      * @param array $where
      *
+     * @throws RepositoryException
+     *
      * @return void
      */
     protected function applyConditions(array $where)
     {
         foreach ($where as $field => $value) {
-            if (is_array($value)) {
-                list($field, $condition, $val) = $value;
-                //smooth input
-                $condition = preg_replace('/\s\s+/', ' ', trim($condition));
-
-                //split to get operator, syntax: "DATE >", "DATE =", "DAY <"
-                $operator = explode(' ', $condition);
-                if (count($operator) > 1) {
-                    $condition = $operator[0];
-                    $operator = $operator[1];
-                } else $operator = null;
-                switch (strtoupper($condition)) {
-                    case 'IN':
-                        if (!is_array($val)) throw new RepositoryException("Input {$val} mus be an array");
-                        $this->model = $this->model->whereIn($field, $val);
-                        break;
-                    case 'NOTIN':
-                        if (!is_array($val)) throw new RepositoryException("Input {$val} mus be an array");
-                        $this->model = $this->model->whereNotIn($field, $val);
-                        break;
-                    case 'DATE':
-                        if (!$operator) $operator = '=';
-                        $this->model = $this->model->whereDate($field, $operator, $val);
-                        break;
-                    case 'DAY':
-                        if (!$operator) $operator = '=';
-                        $this->model = $this->model->whereDay($field, $operator, $val);
-                        break;
-                    case 'MONTH':
-                        if (!$operator) $operator = '=';
-                        $this->model = $this->model->whereMonth($field, $operator, $val);
-                        break;
-                    case 'YEAR':
-                        if (!$operator) $operator = '=';
-                        $this->model = $this->model->whereYear($field, $operator, $val);
-                        break;
-                    case 'EXISTS':
-                        if (!($val instanceof Closure)) throw new RepositoryException("Input {$val} must be closure function");
-                        $this->model = $this->model->whereExists($val);
-                        break;
-                    case 'HAS':
-                        if (!($val instanceof Closure)) throw new RepositoryException("Input {$val} must be closure function");
-                        $this->model = $this->model->whereHas($field, $val);
-                        break;
-                    case 'HASMORPH':
-                        if (!($val instanceof Closure)) throw new RepositoryException("Input {$val} must be closure function");
-                        $this->model = $this->model->whereHasMorph($field, $val);
-                        break;
-                    case 'DOESNTHAVE':
-                        if (!($val instanceof Closure)) throw new RepositoryException("Input {$val} must be closure function");
-                        $this->model = $this->model->whereDoesntHave($field, $val);
-                        break;
-                    case 'DOESNTHAVEMORPH':
-                        if (!($val instanceof Closure)) throw new RepositoryException("Input {$val} must be closure function");
-                        $this->model = $this->model->whereDoesntHaveMorph($field, $val);
-                        break;
-                    case 'BETWEEN':
-                        if (!is_array($val)) throw new RepositoryException("Input {$val} mus be an array");
-                        $this->model = $this->model->whereBetween($field, $val);
-                        break;
-                    case 'BETWEENCOLUMNS':
-                        if (!is_array($val)) throw new RepositoryException("Input {$val} mus be an array");
-                        $this->model = $this->model->whereBetweenColumns($field, $val);
-                        break;
-                    case 'NOTBETWEEN':
-                        if (!is_array($val)) throw new RepositoryException("Input {$val} mus be an array");
-                        $this->model = $this->model->whereNotBetween($field, $val);
-                        break;
-                    case 'NOTBETWEENCOLUMNS':
-                        if (!is_array($val)) throw new RepositoryException("Input {$val} mus be an array");
-                        $this->model = $this->model->whereNotBetweenColumns($field, $val);
-                        break;
-                    case 'RAW':
-                        $this->model = $this->model->whereRaw($val);
-                        break;
-                    default:
-                        $this->model = $this->model->where($field, $condition, $val);
-                }
-            } else {
+            if (!is_array($value)) {
                 $this->model = $this->model->where($field, '=', $value);
+
+                continue;
             }
+
+            [$field, $condition, $value, $bindings] = array_pad($value, 4, []);
+            // smooth input
+            $condition = preg_replace('/\s\s+/', ' ', trim($condition));
+
+            // split to get operator, syntax: "DATE >", "DATE =", "DAY <"
+            $operators = explode(' ', $condition);
+            $operator  = '=';
+            if (count($operators) > 1) {
+                $condition = $operators[0];
+                $operator  = $operators[1];
+            }
+
+            if ($value instanceof SerializableClosure) {
+                $value = $value->getClosure();
+            }
+
+            $this->applyModelCondition($condition, $field, $operator, $value, $bindings);
+        }
+    }
+
+    /**
+     * @param string $condition
+     * @param string $field
+     * @param string $operator
+     * @param        $value
+     * @param array  $bindings
+     *
+     * @return void
+     */
+    protected function applyModelCondition(string $condition, string $field, string $operator, $value, array $bindings)
+    {
+        $modelConditions = [
+            'LIKE'              => function ($field, $operator, $value) {
+                $this->model = $this->model->where($field, 'LIKE', $value);
+            },
+            'NOTLIKE'           => function ($field, $operator, $value) {
+                $this->model = $this->model->where($field, 'NOT LIKE', $value);
+            },
+            'IN'                => function ($field, $operator, $value) {
+                $this->guardArrayValue($value);
+                $this->model = $this->model->whereIn($field, $value);
+            },
+            'NOTIN'             => function ($field, $operator, $value) {
+                $this->guardArrayValue($value);
+                $this->model = $this->model->whereNotIn($field, $value);
+            },
+            'DATE'              => function ($field, $operator, $value) {
+                $this->model = $this->model->whereDate($field, $operator, $value);
+            },
+            'DAY'               => function ($field, $operator, $value) {
+                $this->model = $this->model->whereDay($field, $operator, $value);
+            },
+            'MONTH'             => function ($field, $operator, $value) {
+                $this->model = $this->model->whereMonth($field, $operator, $value);
+            },
+            'YEAR'              => function ($field, $operator, $value) {
+                $this->model = $this->model->whereYear($field, $operator, $value);
+            },
+            'EXISTS'            => function ($field, $operator, $value) {
+                $this->guardClosureValue($value);
+                $this->model = $this->model->whereExists($value);
+            },
+            'HAS'               => function ($field, $operator, $value) {
+                $this->guardClosureValue($value);
+                $this->model = $this->model->whereHas($field, $value);
+            },
+            'ORHAS'             => function ($field, $operator, $value) {
+                $this->guardClosureValue($value);
+                $this->model = $this->model->orWhereHas($field, $value);
+            },
+            'HASMORPH'          => function ($field, $operator, $value) {
+                $this->guardClosureValue($value);
+                $this->model = $this->model->whereHasMorph($field, $operator, $value);
+            },
+            'ORHASMORPH'        => function ($field, $operator, $value) {
+                $this->guardClosureValue($value);
+                $this->model = $this->model->orWhereHasMorph($field, $operator, $value);
+            },
+            'DOESNTHAVE'        => function ($field, $operator, $value) {
+                $this->guardClosureValue($value);
+                $this->model = $this->model->whereDoesntHave($field, $value);
+            },
+            'ORDOESNTHAVE'      => function ($field, $operator, $value) {
+                $this->guardClosureValue($value);
+                $this->model = $this->model->orWhereDoesntHave($field, $value);
+            },
+            'DOESNTHAVEMORPH'   => function ($field, $operator, $value) {
+                $this->model = $this->model->whereDoesntHaveMorph($field, $value);
+            },
+            'ORDOESNTHAVEMORPH' => function ($field, $operator, $value) {
+                $this->model = $this->model->orWhereDoesntHaveMorph($field, $value);
+            },
+            'BETWEEN'           => function ($field, $operator, $value) {
+                $this->guardArrayValue($value);
+                $this->model = $this->model->whereBetween($field, $value);
+            },
+            'BETWEENCOLUMNS'    => function ($field, $operator, $value) {
+                $this->guardArrayValue($value);
+                $this->model = $this->model->whereBetweenColumns($field, $value);
+            },
+            'NOTBETWEEN'        => function ($field, $operator, $value) {
+                $this->guardArrayValue($value);
+                $this->model = $this->model->whereNotBetween($field, $value);
+            },
+            'NOTBETWEENCOLUMNS' => function ($field, $operator, $value) {
+                $this->guardArrayValue($value);
+                $this->model = $this->model->whereNotBetweenColumns($field, $value);
+            },
+            'JSONCONTAINS'      => function ($field, $operator, $value) {
+                $this->model = $this->model->whereJsonContains($field, $value);
+            },
+            'JSONLENGTH'        => function ($field, $operator, $value) {
+                $this->model = $this->model->whereJsonLength($field, $operator, $value);
+            },
+            'RAW'               => function ($field, $operator, $value, $bindings) {
+                $this->model = $this->model->whereRaw($value, $bindings);
+            },
+        ];
+
+        array_key_exists($condition, $modelConditions) ? call_user_func_array($modelConditions[$condition], [$field, $operator, $value, $bindings]) : $this->getModelDefaultCondition($field, $condition, $value);
+    }
+
+
+    /**
+     * @param string $field
+     * @param string $condition
+     * @param        $value
+     *
+     * @return void
+     */
+    protected function getModelDefaultCondition(string $field, string $condition, $value)
+    {
+        $this->model = $this->model->where($field, $condition, $value);
+    }
+
+
+    /**
+     * @param $value
+     *
+     * @throws RepositoryException
+     *
+     * @return void
+     */
+    private function guardArrayValue($value)
+    {
+        if (!is_array($value)) {
+            throw new RepositoryException("Input {$value} mus be an array");
+        }
+    }
+
+    /**
+     * @param $value
+     *
+     * @throws RepositoryException
+     *
+     * @return void
+     */
+    private function guardClosureValue($value)
+    {
+        if (!($value instanceof Closure)) {
+            throw new RepositoryException("Input {$value} must be closure function");
         }
     }
 
@@ -1254,5 +1343,26 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->applyScope();
 
         return call_user_func_array([$this->model, $method], $arguments);
+    }
+
+    /**
+     * @param array $where
+     *
+     * @return int
+     */
+    public function mongoAggregateCount(array $where = []): int
+    {
+        $result = $this->raw()->aggregate([
+            [
+                '$match' => $where,
+            ],
+            [
+                '$count' => 'count',
+            ],
+        ]);
+
+        $result = $result->toArray();
+
+        return count($result) ? $result[0]->count : 0;
     }
 }
