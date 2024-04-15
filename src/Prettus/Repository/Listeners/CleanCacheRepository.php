@@ -3,17 +3,15 @@
 namespace Prettus\Repository\Listeners;
 
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
-use Prettus\Repository\Contracts\RepositoryInterface;
 use Prettus\Repository\Events\RepositoryEventBase;
-use Prettus\Repository\Helpers\CacheKeys;
 
 /**
  * Class CleanCacheRepository
+ *
  * @package Prettus\Repository\Listeners
- * @author Anderson Andrade <contato@andersonandra.de>
+ * @author  Anderson Andrade <contato@andersonandra.de>
  */
 class CleanCacheRepository
 {
@@ -24,19 +22,19 @@ class CleanCacheRepository
     protected $cache = null;
 
     /**
-     * @var RepositoryInterface
+     * @var string|null
      */
-    protected $repository = null;
+    protected ?string $repositoryClass = null;
 
     /**
-     * @var Model
+     * @var Model|null
      */
-    protected $model = null;
+    protected ?Model $model = null;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $action = null;
+    protected ?string $action = null;
 
     /**
      *
@@ -55,18 +53,12 @@ class CleanCacheRepository
             $cleanEnabled = config("repository.cache.clean.enabled", true);
 
             if ($cleanEnabled) {
-                $this->repository = $event->getRepository();
-                $this->model = $event->getModel();
-                $this->action = $event->getAction();
+                $this->repositoryClass = $event->getRepositoryClass();
+                $this->model           = $event->getModel();
+                $this->action          = $event->getAction();
 
                 if (config("repository.cache.clean.on.{$this->action}", true)) {
-                    $cacheKeys = CacheKeys::getKeys(get_class($this->repository));
-
-                    if (is_array($cacheKeys)) {
-                        foreach ($cacheKeys as $key) {
-                            $this->cache->forget($key);
-                        }
-                    }
+                    $this->cache->tags([$this->repositoryClass])->flush();
                 }
             }
         } catch (\Exception $e) {

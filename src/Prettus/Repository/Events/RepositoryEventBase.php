@@ -12,32 +12,32 @@ use Prettus\Repository\Contracts\RepositoryInterface;
 abstract class RepositoryEventBase
 {
     /**
-     * @var Model
+     * @var Model|null
      */
-    protected $model;
-
-    /**
-     * @var RepositoryInterface
-     */
-    protected $repository;
+    protected ?Model $model;
 
     /**
      * @var string
      */
-    protected $action;
+    protected string $repositoryClass;
+
+    /**
+     * @var string
+     */
+    protected string $action;
 
     /**
      * @param RepositoryInterface $repository
-     * @param Model               $model
+     * @param Model|null               $model
      */
-    public function __construct(RepositoryInterface $repository, Model $model = null)
+    public function __construct(RepositoryInterface $repository, ?Model $model = null)
     {
-        $this->repository = $repository;
+        $this->repositoryClass = get_class($repository);
         $this->model = $model;
     }
 
     /**
-     * @return Model|array
+     * @return Model|null
      */
     public function getModel()
     {
@@ -45,11 +45,11 @@ abstract class RepositoryEventBase
     }
 
     /**
-     * @return RepositoryInterface
+     * @return string
      */
-    public function getRepository()
+    public function getRepositoryClass()
     {
-        return $this->repository;
+        return $this->repositoryClass;
     }
 
     /**
