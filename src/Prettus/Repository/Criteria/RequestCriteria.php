@@ -4,6 +4,7 @@ namespace Prettus\Repository\Criteria;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
@@ -43,15 +44,16 @@ class RequestCriteria implements CriteriaInterface
         $orderBy = $this->request->get(config('repository.criteria.params.orderBy', 'orderBy'), null);
         $sortedBy = $this->request->get(config('repository.criteria.params.sortedBy', 'sortedBy'), 'asc');
         $with = $this->request->get(config('repository.criteria.params.with', 'with'), null);
+        $withCount = $this->request->get(config('repository.criteria.params.withCount', 'withCount'), null);
         $searchJoin = $this->request->get(config('repository.criteria.params.searchJoin', 'searchJoin'), null);
         $sortedBy = !empty($sortedBy) ? $sortedBy : 'asc';
 
         if ($search && is_array($fieldsSearchable) && count($fieldsSearchable)) {
 
             $searchFields = is_array($searchFields) || is_null($searchFields) ? $searchFields : explode(';', $searchFields);
-            $fields = $this->parserFieldsSearch($fieldsSearchable, $searchFields);
             $isFirstField = true;
             $searchData = $this->parserSearchData($search);
+            $fields = $this->parserFieldsSearch($fieldsSearchable, $searchFields, array_keys($searchData));
             $search = $this->parserSearchValue($search);
             $modelForceAndWhere = strtolower($searchJoin) === 'and';
 
@@ -72,7 +74,7 @@ class RequestCriteria implements CriteriaInterface
                     if (isset($searchData[$field])) {
                         $value = ($condition == "like" || $condition == "ilike") ? "%{$searchData[$field]}%" : $searchData[$field];
                     } else {
-                        if (!is_null($search)) {
+                        if (!is_null($search) && !in_array($condition,['in','between'])) {
                             $value = ($condition == "like" || $condition == "ilike") ? "%{$search}%" : $search;
                         }
                     }
@@ -83,15 +85,39 @@ class RequestCriteria implements CriteriaInterface
                         $field = array_pop($explode);
                         $relation = implode('.', $explode);
                     }
+                    if($condition === 'in'){
+                        $value = explode(',',$value);
+                        if( trim($value[0]) === "" || $field == $value[0]){
+                            $value = null;
+                        }
+                    }
+                    if($condition === 'between'){
+                        $value = explode(',',$value);
+                        if(count($value) < 2){
+                            $value = null;
+                        }
+                    }
                     $modelTableName = $query->getModel()->getTable();
                     if ( $isFirstField || $modelForceAndWhere ) {
                         if (!is_null($value)) {
                             if(!is_null($relation)) {
                                 $query->whereHas($relation, function($query) use($field,$condition,$value) {
-                                    $query->where($field,$condition,$value);
+                                    if($condition === 'in'){
+                                        $query->whereIn($field,$value);
+                                    }elseif($condition === 'between'){
+                                        $query->whereBetween($field,$value);
+                                    }else{
+                                        $query->where($field,$condition,$value);
+                                    }
                                 });
                             } else {
-                                $query->where($modelTableName.'.'.$field,$condition,$value);
+                                if($condition === 'in'){
+                                    $query->whereIn($modelTableName.'.'.$field,$value);
+                                }elseif($condition === 'between'){
+                                    $query->whereBetween($modelTableName.'.'.$field,$value);
+                                }else{
+                                    $query->where($modelTableName.'.'.$field,$condition,$value);
+                                }
                             }
                             $isFirstField = false;
                         }
@@ -99,10 +125,22 @@ class RequestCriteria implements CriteriaInterface
                         if (!is_null($value)) {
                             if(!is_null($relation)) {
                                 $query->orWhereHas($relation, function($query) use($field,$condition,$value) {
-                                    $query->where($field,$condition,$value);
+                                    if($condition === 'in'){
+                                        $query->whereIn($field,$value);
+                                    }elseif($condition === 'between'){
+                                        $query->whereBetween($field, $value);
+                                    }else{
+                                        $query->where($field,$condition,$value);
+                                    }
                                 });
                             } else {
-                                $query->orWhere($modelTableName.'.'.$field, $condition, $value);
+                                if($condition === 'in'){
+                                    $query->orWhereIn($modelTableName.'.'.$field, $value);
+                                }elseif($condition === 'between'){
+                                    $query->whereBetween($modelTableName.'.'.$field,$value);
+                                }else{
+                                    $query->orWhere($modelTableName.'.'.$field, $condition, $value);
+                                }
                             }
                         }
                     }
@@ -111,41 +149,15 @@ class RequestCriteria implements CriteriaInterface
         }
 
         if (isset($orderBy) && !empty($orderBy)) {
-            $split = explode('|', $orderBy);
-            if(count($split) > 1) {
-                /*
-                 * ex.
-                 * products|description -> join products on current_table.product_id = products.id order by description
-                 *
-                 * products:custom_id|products.description -> join products on current_table.custom_id = products.id order
-                 * by products.description (in case both tables have same column name)
-                 */
-                $table = $model->getModel()->getTable();
-                $sortTable = $split[0];
-                $sortColumn = $split[1];
-
-                $split = explode(':', $sortTable);
-                if(count($split) > 1) {
-                    $sortTable = $split[0];
-                    $keyName = $table.'.'.$split[1];
-                } else {
-                    /*
-                     * If you do not define which column to use as a joining column on current table, it will
-                     * use a singular of a join table appended with _id
-                     *
-                     * ex.
-                     * products -> product_id
-                     */
-                    $prefix = str_singular($sortTable);
-                    $keyName = $table.'.'.$prefix.'_id';
+            $orderBySplit = explode(';', $orderBy);
+            if(count($orderBySplit) > 1) {
+                $sortedBySplit = explode(';', $sortedBy);
+                foreach ($orderBySplit as $orderBySplitItemKey => $orderBySplitItem) {
+                    $sortedBy = isset($sortedBySplit[$orderBySplitItemKey]) ? $sortedBySplit[$orderBySplitItemKey] : $sortedBySplit[0];
+                    $model = $this->parserFieldsOrderBy($model, $orderBySplitItem, $sortedBy);
                 }
-
-                $model = $model
-                    ->leftJoin($sortTable, $keyName, '=', $sortTable.'.id')
-                    ->orderBy($sortColumn, $sortedBy)
-                    ->addSelect($table.'.*');
             } else {
-                $model = $model->orderBy($orderBy, $sortedBy);
+                $model = $this->parserFieldsOrderBy($model, $orderBySplit[0], $sortedBy);
             }
         }
 
@@ -162,6 +174,65 @@ class RequestCriteria implements CriteriaInterface
             $model = $model->with($with);
         }
 
+        if ($withCount) {
+            $withCount = explode(';', $withCount);
+            $model = $model->withCount($withCount);
+        }
+
+        return $model;
+    }
+
+    /**
+     * @param $model
+     * @param $orderBy
+     * @param $sortedBy
+     * @return mixed
+     */
+    protected function parserFieldsOrderBy($model, $orderBy, $sortedBy)
+    {
+        $split = explode('|', $orderBy);
+        if(count($split) > 1) {
+            /*
+             * ex.
+             * products|description -> join products on current_table.product_id = products.id order by description
+             *
+             * products:custom_id|products.description -> join products on current_table.custom_id = products.id order
+             * by products.description (in case both tables have same column name)
+             */
+            $table = $model->getModel()->getTable();
+            $sortTable = $split[0];
+            $sortColumn = $split[1];
+
+            $split = explode(':', $sortTable);
+            $localKey = '.id';
+            if (count($split) > 1) {
+                $sortTable = $split[0];
+
+                $commaExp = explode(',', $split[1]);
+                $keyName = $table.'.'.$split[1];
+                if (count($commaExp) > 1) {
+                    $keyName = $table.'.'.$commaExp[0];
+                    $localKey = '.'.$commaExp[1];
+                }
+            } else {
+                /*
+                 * If you do not define which column to use as a joining column on current table, it will
+                 * use a singular of a join table appended with _id
+                 *
+                 * ex.
+                 * products -> product_id
+                 */
+                $prefix = Str::singular($sortTable);
+                $keyName = $table.'.'.$prefix.'_id';
+            }
+
+            $model = $model
+                ->leftJoin($sortTable, $keyName, '=', $sortTable.$localKey)
+                ->orderBy($sortColumn, $sortedBy)
+                ->addSelect($table.'.*');
+        } else {
+            $model = $model->orderBy($orderBy, $sortedBy);
+        }
         return $model;
     }
 
@@ -213,8 +284,7 @@ class RequestCriteria implements CriteriaInterface
         return $search;
     }
 
-
-    protected function parserFieldsSearch(array $fields = [], array $searchFields = null)
+    protected function parserFieldsSearch(array $fields = [], array $searchFields = null, array $dataKeys = null)
     {
         if (!is_null($searchFields) && count($searchFields)) {
             $acceptedConditions = config('repository.criteria.acceptedConditions', [
@@ -237,6 +307,10 @@ class RequestCriteria implements CriteriaInterface
                         $searchFields[$index] = $field;
                     }
                 }
+            }
+
+            if (!is_null($dataKeys) && count($dataKeys)) {
+                $searchFields = array_unique(array_merge($dataKeys, $searchFields));
             }
 
             foreach ($originalFields as $field => $condition) {
