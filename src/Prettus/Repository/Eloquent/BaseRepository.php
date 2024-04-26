@@ -677,7 +677,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             }
         }
 
-        event(new RepositoryEntityCreating($this, $attributes));
+        event(new RepositoryEntityCreating($this, null, $attributes));
 
         $model = $this->model->newInstance($attributes);
         $model->save();
@@ -763,7 +763,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         $this->skipPresenter(true);
 
-        event(new RepositoryEntityCreating($this, $attributes));
+        event(new RepositoryEntityCreating($this, null, $attributes));
 
         $model = $this->model->updateOrCreate($attributes, $values);
 

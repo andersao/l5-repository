@@ -11,5 +11,5 @@ class RepositoryEntityUpdating extends RepositoryEventBase
     /**
      * @var string
      */
-    protected $action = "updating";
+    protected string $action = "updating";
 }
