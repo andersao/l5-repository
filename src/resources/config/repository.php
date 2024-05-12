@@ -97,15 +97,15 @@ return [
               | Actions in Repository
               |--------------------------------------------------------------------------
               |
-              | create : Clear Cache on create Entry in repository
-              | update : Clear Cache on update Entry in repository
-              | delete : Clear Cache on delete Entry in repository
+              | created : Clear Cache on create Entry in repository
+              | updated : Clear Cache on update Entry in repository
+              | deleted : Clear Cache on delete Entry in repository
               |
               */
             'on'      => [
-                'create' => true,
-                'update' => true,
-                'delete' => true,
+                'created' => true,
+                'updated' => true,
+                'deleted' => true,
             ]
         ],
 
