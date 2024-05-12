@@ -38,7 +38,7 @@ class RequestCriteria implements CriteriaInterface
     public function apply($model, RepositoryInterface $repository)
     {
         $fieldsSearchable = $repository->getFieldsSearchable();
-        $search = $this->request->get(config('repository.criteria.params.search', 'search'), null);
+        $search = urldecode($this->request->get(config('repository.criteria.params.search', 'search'), null));
         $searchFields = $this->request->get(config('repository.criteria.params.searchFields', 'searchFields'), null);
         $filter = $this->request->get(config('repository.criteria.params.filter', 'filter'), null);
         $orderBy = $this->request->get(config('repository.criteria.params.orderBy', 'orderBy'), null);
