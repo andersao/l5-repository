@@ -1,4 +1,5 @@
 <?php
+
 namespace Prettus\Repository\Generators\Commands;
 
 use Illuminate\Console\Command;
@@ -42,17 +43,18 @@ class ControllerCommand extends Command
      */
     public function __construct()
     {
-        $this->name = ((float) app()->version() >= 5.5  ? 'make:rest-controller' : 'make:resource');
+        $this->name = ((float)app()->version() >= 5.5 ? 'make:rest-controller' : 'make:resource');
         parent::__construct();
     }
 
     /**
      * Execute the command.
      *
-     * @see fire()
      * @return void
+     * @see fire()
      */
-    public function handle(){
+    public function handle()
+    {
         $this->laravel->call([$this, 'fire'], func_get_args());
     }
 
@@ -64,18 +66,39 @@ class ControllerCommand extends Command
     public function fire()
     {
         try {
-            // Generate create request for controller
-            $this->call('make:request', [
-                'name' => $this->argument('name') . 'CreateRequest'
-            ]);
 
+            $available_package = config("repository.generator.package");
+            $package_commands = config("repository.generator.packageCommands");
+            $commands = "make:request";
+
+            $create_arguments = [
+                'name' => $this->argument('name') . 'CreateRequest',
+            ];
+            $update_arguments = [
+                'name' => $this->argument('name') . 'UpdateRequest',
+            ];
+
+            if (!is_null($available_package) && trim($available_package) != '' &&
+                !empty($package_commands) && $this->argument('module') &&
+                $package_commands[$available_package]['requests']) {
+
+                $commands = $package_commands[$available_package]['requests'];
+                $create_arguments = array_merge($create_arguments,[
+                    'module' => $this->argument('module'),
+                ]);
+                $update_arguments = array_merge($update_arguments,[
+                    'module' => $this->argument('module'),
+                ]);
+            }
+
+            // Generate create request for controller
+            $this->call($commands, $create_arguments);
             // Generate update request for controller
-            $this->call('make:request', [
-                'name' => $this->argument('name') . 'UpdateRequest'
-            ]);
+            $this->call($commands, $update_arguments);
 
             (new ControllerGenerator([
                 'name' => $this->argument('name'),
+                'module' => $this->argument('module'),
                 'force' => $this->option('force'),
             ]))->run();
 
@@ -103,6 +126,12 @@ class ControllerCommand extends Command
                 'The name of model for which the controller is being generated.',
                 null
             ],
+            [
+                'module',
+                InputArgument::OPTIONAL,
+                'The module name for kind of the modular project and creating files on each module',
+                null
+            ]
         ];
     }
 

@@ -9,7 +9,7 @@ use Prettus\Repository\Contracts\RepositoryInterface;
  *
  * @package $NAMESPACE$
  */
-interface $CLASS$Repository extends RepositoryInterface
+interface $CLASS$RepositoryInterface extends RepositoryInterface
 {
     //
 }

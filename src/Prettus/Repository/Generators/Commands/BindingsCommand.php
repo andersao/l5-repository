@@ -58,12 +58,13 @@ class BindingsCommand extends Command
         try {
             $bindingGenerator = new BindingsGenerator([
                 'name' => $this->argument('name'),
+                'module' => $this->argument('module'),
                 'force' => $this->option('force'),
             ]);
             // generate repository service provider
             if (!file_exists($bindingGenerator->getPath())) {
                 $this->call('make:provider', [
-                    'name' => $bindingGenerator->getConfigGeneratorClassPath($bindingGenerator->getPathConfigNode()),
+                    'name' => 'RepositoryServiceProvider',
                 ]);
                 // placeholder to mark the place in file where to prepend repository bindings
                 $provider = File::get($bindingGenerator->getPath());
@@ -96,6 +97,12 @@ class BindingsCommand extends Command
                 'The name of model for which the controller is being generated.',
                 null
             ],
+            [
+                'module',
+                InputArgument::OPTIONAL,
+                'The module name for kind of the modular project and creating files on each module',
+                null
+            ]
         ];
     }
 

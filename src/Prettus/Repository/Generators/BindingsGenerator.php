@@ -24,8 +24,6 @@ class BindingsGenerator extends Generator
 
     public function run()
     {
-
-
         // Add entity repository binding to the repository service provider
         $provider = \File::get($this->getPath());
         $repositoryInterface = '\\' . $this->getRepository() . "::class";
@@ -40,7 +38,8 @@ class BindingsGenerator extends Generator
      */
     public function getPath()
     {
-        return $this->getBasePath() . '/Providers/' . parent::getConfigGeneratorClassPath($this->getPathConfigNode(), true) . '.php';
+        $default_path = app()->path() . "/Providers/";
+        return config("repository.generator.provider", $default_path) . '/RepositoryServiceProvider.php';
     }
 
     /**
@@ -50,7 +49,7 @@ class BindingsGenerator extends Generator
      */
     public function getBasePath()
     {
-        return config('repository.generator.basePath', app()->path());
+        return app()->path();
     }
 
     /**
@@ -60,7 +59,7 @@ class BindingsGenerator extends Generator
      */
     public function getPathConfigNode()
     {
-        return 'provider';
+        return '';
     }
 
     /**
@@ -72,14 +71,14 @@ class BindingsGenerator extends Generator
     {
         $repositoryGenerator = new RepositoryInterfaceGenerator([
             'name' => $this->name,
+            'module' => $this->module,
         ]);
 
         $repository = $repositoryGenerator->getRootNamespace() . '\\' . $repositoryGenerator->getName();
-
         return str_replace([
             "\\",
             '/'
-        ], '\\', $repository) . 'Repository';
+        ], '\\', $repository) . 'RepositoryInterface';
     }
 
     /**
@@ -91,14 +90,14 @@ class BindingsGenerator extends Generator
     {
         $repositoryGenerator = new RepositoryEloquentGenerator([
             'name' => $this->name,
+            'module' => $this->module,
         ]);
 
         $repository = $repositoryGenerator->getRootNamespace() . '\\' . $repositoryGenerator->getName();
-
         return str_replace([
             "\\",
             '/'
-        ], '\\', $repository) . 'RepositoryEloquent';
+        ], '\\', $repository) . ('Repository' . $this->getORM());
     }
 
     /**
@@ -108,7 +107,12 @@ class BindingsGenerator extends Generator
      */
     public function getRootNamespace()
     {
-        return parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode());
+        $default_namespace = app()->getNamespace() . "\Providers";
+        return str_replace([
+            "\\",
+            '/'
+        ], '\\', config("repository.generator.provider", $default_namespace));
+//        return parent::getRootNamespace() . parent::getConfigGeneratorClassPath($this->getPathConfigNode());
     }
 
     /**
@@ -118,7 +122,6 @@ class BindingsGenerator extends Generator
      */
     public function getReplacements()
     {
-
         return array_merge(parent::getReplacements(), [
             'repository' => $this->getRepository(),
             'eloquent' => $this->getEloquentRepository(),

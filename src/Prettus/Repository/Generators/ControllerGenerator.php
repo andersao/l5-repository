@@ -65,7 +65,6 @@ class ControllerGenerator extends Generator
      */
     public function getControllerName()
     {
-
         return ucfirst($this->getPluralName());
     }
 
@@ -76,7 +75,6 @@ class ControllerGenerator extends Generator
      */
     public function getPluralName()
     {
-
         return Str::plural(lcfirst(ucwords($this->getClass())));
     }
 
@@ -87,7 +85,6 @@ class ControllerGenerator extends Generator
      */
     public function getReplacements()
     {
-
         return array_merge(parent::getReplacements(), [
             'controller' => $this->getControllerName(),
             'plural'     => $this->getPluralName(),
@@ -117,6 +114,7 @@ class ControllerGenerator extends Generator
     {
         $validatorGenerator = new ValidatorGenerator([
             'name' => $this->name,
+            'module' => $this->module,
         ]);
 
         $validator = $validatorGenerator->getRootNamespace() . '\\' . $validatorGenerator->getName();
@@ -137,6 +135,7 @@ class ControllerGenerator extends Generator
     {
         $repositoryGenerator = new RepositoryInterfaceGenerator([
             'name' => $this->name,
+            'module' => $this->module,
         ]);
 
         $repository = $repositoryGenerator->getRootNamespace() . '\\' . $repositoryGenerator->getName();
@@ -144,6 +143,6 @@ class ControllerGenerator extends Generator
         return 'use ' . str_replace([
             "\\",
             '/'
-        ], '\\', $repository) . 'Repository;';
+        ], '\\', $repository) . 'RepositoryInterface;';
     }
 }
