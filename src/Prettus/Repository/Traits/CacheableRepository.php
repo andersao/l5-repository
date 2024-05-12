@@ -124,7 +124,7 @@ trait CacheableRepository
         $args  = array_merge($args, [
             [
                 $query->getBindings(),
-                !$this->model instanceof \MongoDB\Laravel\Eloquent\Model ? $query->toSql() : $query->toMql(),
+                !$query instanceof \MongoDB\Laravel\Query\Builder ? $query->toSql() : $query->toMql(),
             ],
         ]);
 
