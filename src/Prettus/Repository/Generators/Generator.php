@@ -231,7 +231,7 @@ abstract class Generator
             case ('memoized' === $class):
                 $path = config('repository.generator.paths.memoized', 'Traits\Repository\Memoized');
                 break;
-            default:J
+            default:
                 $path = '';
         }
 
