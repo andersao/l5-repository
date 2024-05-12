@@ -120,15 +120,13 @@ trait CacheableRepository
      */
     public function getCacheKey($method, $args = null)
     {
-        if (!$this->model instanceof \Jenssegers\Mongodb\Eloquent\Builder) {
-            $query = $this->model->getQuery();
-            $args  = array_merge($args, [
-                [
-                    $query->getBindings(),
-                    $query->toSql(),
-                ],
-            ]);
-        }
+        $query = $this->model->getQuery();
+        $args  = array_merge($args, [
+            [
+                $query->getBindings(),
+                !$this->model instanceof \MongoDB\Laravel\Eloquent\Model ? $query->toSql() : $query->toMql(),
+            ],
+        ]);
 
         $args     = serialize($args);
         $criteria = $this->serializeCriteria();
