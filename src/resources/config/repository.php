@@ -168,9 +168,16 @@ return [
         |
         */
         'acceptedConditions' => [
+            '>=',
+            '<=',
+            '>',
+            '<',
             '=',
             'like',
-            'in'
+            'in',
+            'between',
+            'null',
+            'not_null',
         ],
         /*
         |--------------------------------------------------------------------------
@@ -218,7 +225,8 @@ return [
             'sortedBy'     => 'sortedBy',
             'with'         => 'with',
             'searchJoin'   => 'searchJoin',
-            'withCount'    => 'withCount'
+            'withCount'    => 'withCount',
+            'scopes' => 'scopes',
         ]
     ],
     /*
