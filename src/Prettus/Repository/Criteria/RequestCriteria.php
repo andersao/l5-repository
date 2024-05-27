@@ -69,6 +69,9 @@ class ApiRequestCriteria extends RequestCriteria
                             $value = null;
                         }
                     }
+                    if (in_array($condition, ['null', 'not_null'])) {
+                        $value = '';
+                    }
                     $modelTableName = $query->getModel()->getTable();
                     if ($isFirstField || $modelForceAndWhere) {
                         if (! is_null($value)) {
@@ -78,6 +81,10 @@ class ApiRequestCriteria extends RequestCriteria
                                         $query->whereIn($field, $value);
                                     } elseif ($condition === 'between') {
                                         $query->whereBetween($field, $value);
+                                    } elseif ($condition === 'null') {
+                                        $query->whereNull($field);
+                                    } elseif ($condition === 'not_null') {
+                                        $query->whereNotNull($field);
                                     } else {
                                         $query->where($field, $condition, $value);
                                     }
@@ -87,6 +94,10 @@ class ApiRequestCriteria extends RequestCriteria
                                     $query->whereIn($modelTableName.'.'.$field, $value);
                                 } elseif ($condition === 'between') {
                                     $query->whereBetween($modelTableName.'.'.$field, $value);
+                                } elseif ($condition === 'null') {
+                                    $query->whereNull($modelTableName.'.'.$field);
+                                } elseif ($condition === 'not_null') {
+                                    $query->whereNotNull($modelTableName.'.'.$field);
                                 } else {
                                     $query->where($modelTableName.'.'.$field, $condition, $value);
                                 }
@@ -101,6 +112,10 @@ class ApiRequestCriteria extends RequestCriteria
                                         $query->whereIn($field, $value);
                                     } elseif ($condition === 'between') {
                                         $query->whereBetween($field, $value);
+                                    } elseif ($condition === 'null') {
+                                        $query->whereNull($field);
+                                    } elseif ($condition === 'not_null') {
+                                        $query->whereNotNull($field);
                                     } else {
                                         $query->where($field, $condition, $value);
                                     }
@@ -110,6 +125,10 @@ class ApiRequestCriteria extends RequestCriteria
                                     $query->orWhereIn($modelTableName.'.'.$field, $value);
                                 } elseif ($condition === 'between') {
                                     $query->whereBetween($modelTableName.'.'.$field, $value);
+                                } elseif ($condition === 'null') {
+                                    $query->whereNull($modelTableName.'.'.$field);
+                                } elseif ($condition === 'not_null') {
+                                    $query->whereNotNull($modelTableName.'.'.$field);
                                 } else {
                                     $query->orWhere($modelTableName.'.'.$field, $condition, $value);
                                 }
