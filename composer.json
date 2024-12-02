@@ -56,5 +56,8 @@
       ]
     }
   },
-  "minimum-stability": "stable"
+  "minimum-stability": "stable",
+  "require-dev": {
+    "rector/rector": "^1.2"
+  }
 }
