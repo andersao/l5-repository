@@ -26,6 +26,7 @@
     "docs": "http://andersao.github.io/l5-repository"
   },
   "require": {
+    "php": "^7.1",
     "illuminate/http": "~5.0|~6.0|~7.0|^8.0|^9.0|^10.0|^11.0",
     "illuminate/config": "~5.0|~6.0|~7.0|^8.0|^9.0|^10.0|^11.0",
     "illuminate/support": "~5.0|~6.0|~7.0|^8.0|^9.0|^10.0|^11.0",
