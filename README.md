@@ -101,6 +101,8 @@ php artisan vendor:publish --provider "Prettus\Repository\Providers\RepositorySe
 - updateOrCreate(array $attributes, array $values = [])
 - delete($id)
 - deleteWhere(array $where)
+- forceDelete($id)
+- restore($id)
 - orderBy($column, $direction = 'asc');
 - with(array $relations);
 - has(string $relation);
@@ -454,6 +456,18 @@ $this->repository->deleteWhere([
     'state_id'=>'10',
     'country_id'=>'15',
 ])
+```
+
+Force delete entry in Repository
+
+```php
+$this->repository->forceDelete($id)
+```
+
+Restore entry in Repository
+
+```php
+$this->repository->restore($id)
 ```
 
 ### Create a Criteria
