@@ -72,9 +72,13 @@ class RequestCriteria implements CriteriaInterface
                     $condition = trim(strtolower($condition));
 
                     if (isset($searchData[$field])) {
+                        // Escape MySQL wildcards on search
+                        $searchData[$field] = addcslashes($searchData[$field], '%_');
                         $value = ($condition == "like" || $condition == "ilike") ? "%{$searchData[$field]}%" : $searchData[$field];
                     } else {
                         if (!is_null($search) && !in_array($condition,['in','between'])) {
+                            // Escape MySQL wildcards on search
+                            $search = addcslashes($search, '%_');
                             $value = ($condition == "like" || $condition == "ilike") ? "%{$search}%" : $search;
                         }
                     }
