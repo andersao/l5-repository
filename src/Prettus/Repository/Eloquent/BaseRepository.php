@@ -1083,11 +1083,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
                 } else $operator = null;
                 switch (strtoupper($condition)) {
                     case 'IN':
-                        if (!is_array($val)) throw new RepositoryException("Input {$val} mus be an array");
+                        if (!is_array($val)) throw new RepositoryException("Input {$val} must be an array");
                         $this->model = $this->model->whereIn($field, $val);
                         break;
                     case 'NOTIN':
-                        if (!is_array($val)) throw new RepositoryException("Input {$val} mus be an array");
+                        if (!is_array($val)) throw new RepositoryException("Input {$val} must be an array");
                         $this->model = $this->model->whereNotIn($field, $val);
                         break;
                     case 'DATE':
@@ -1127,19 +1127,19 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
                         $this->model = $this->model->whereDoesntHaveMorph($field, $val);
                         break;
                     case 'BETWEEN':
-                        if (!is_array($val)) throw new RepositoryException("Input {$val} mus be an array");
+                        if (!is_array($val)) throw new RepositoryException("Input {$val} must be an array");
                         $this->model = $this->model->whereBetween($field, $val);
                         break;
                     case 'BETWEENCOLUMNS':
-                        if (!is_array($val)) throw new RepositoryException("Input {$val} mus be an array");
+                        if (!is_array($val)) throw new RepositoryException("Input {$val} must be an array");
                         $this->model = $this->model->whereBetweenColumns($field, $val);
                         break;
                     case 'NOTBETWEEN':
-                        if (!is_array($val)) throw new RepositoryException("Input {$val} mus be an array");
+                        if (!is_array($val)) throw new RepositoryException("Input {$val} must be an array");
                         $this->model = $this->model->whereNotBetween($field, $val);
                         break;
                     case 'NOTBETWEENCOLUMNS':
-                        if (!is_array($val)) throw new RepositoryException("Input {$val} mus be an array");
+                        if (!is_array($val)) throw new RepositoryException("Input {$val} must be an array");
                         $this->model = $this->model->whereNotBetweenColumns($field, $val);
                         break;
                     case 'RAW':
