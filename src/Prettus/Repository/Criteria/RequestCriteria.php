@@ -55,7 +55,7 @@ class RequestCriteria implements CriteriaInterface
             $searchData = $this->parserSearchData($search);
             $fields = $this->parserFieldsSearch($fieldsSearchable, $searchFields, array_keys($searchData));
             $search = $this->parserSearchValue($search);
-            $modelForceAndWhere = strtolower($searchJoin) === 'and';
+            $modelForceAndWhere = true;
 
             $model = $model->where(function ($query) use ($fields, $search, $searchData, $isFirstField, $modelForceAndWhere) {
                 /** @var Builder $query */
