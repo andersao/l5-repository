@@ -78,7 +78,7 @@ abstract class FractalPresenter implements PresenterInterface
         $paramIncludes = config('repository.fractal.params.include', 'include');
 
         if ($request->has($paramIncludes)) {
-            $this->fractal->parseIncludes($request->get($paramIncludes));
+            $this->fractal->parseIncludes($request->query->get($paramIncludes));
         }
 
         return $this;

@@ -38,14 +38,14 @@ class RequestCriteria implements CriteriaInterface
     public function apply($model, RepositoryInterface $repository)
     {
         $fieldsSearchable = $repository->getFieldsSearchable();
-        $search = $this->request->get(config('repository.criteria.params.search', 'search'), null);
-        $searchFields = $this->request->get(config('repository.criteria.params.searchFields', 'searchFields'), null);
-        $filter = $this->request->get(config('repository.criteria.params.filter', 'filter'), null);
-        $orderBy = $this->request->get(config('repository.criteria.params.orderBy', 'orderBy'), null);
-        $sortedBy = $this->request->get(config('repository.criteria.params.sortedBy', 'sortedBy'), 'asc');
-        $with = $this->request->get(config('repository.criteria.params.with', 'with'), null);
-        $withCount = $this->request->get(config('repository.criteria.params.withCount', 'withCount'), null);
-        $searchJoin = $this->request->get(config('repository.criteria.params.searchJoin', 'searchJoin'), null);
+        $search = $this->request->query->get(config('repository.criteria.params.search', 'search'), null);
+        $searchFields = $this->request->query->get(config('repository.criteria.params.searchFields', 'searchFields'), null);
+        $filter = $this->request->query->get(config('repository.criteria.params.filter', 'filter'), null);
+        $orderBy = $this->request->query->get(config('repository.criteria.params.orderBy', 'orderBy'), null);
+        $sortedBy = $this->request->query->get(config('repository.criteria.params.sortedBy', 'sortedBy'), 'asc');
+        $with = $this->request->query->get(config('repository.criteria.params.with', 'with'), null);
+        $withCount = $this->request->query->get(config('repository.criteria.params.withCount', 'withCount'), null);
+        $searchJoin = $this->request->query->get(config('repository.criteria.params.searchJoin', 'searchJoin'), null);
         $sortedBy = !empty($sortedBy) ? $sortedBy : 'asc';
 
         if ($search && is_array($fieldsSearchable) && count($fieldsSearchable)) {
@@ -284,7 +284,7 @@ class RequestCriteria implements CriteriaInterface
         return $search;
     }
 
-    protected function parserFieldsSearch(array $fields = [], ?array $searchFields = null, ?array $dataKeys = null)
+    protected function parserFieldsSearch(array $fields = [], array $searchFields = null, array $dataKeys = null)
     {
         if (!is_null($searchFields) && count($searchFields)) {
             $acceptedConditions = config('repository.criteria.acceptedConditions', [
