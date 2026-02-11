@@ -659,7 +659,7 @@ Request all data without filter by request
 ]
 ```
 
-Conducting research in the repository
+Examples of using search queries:
 
 `http://prettus.local/users?search=John%20Doe`
 
@@ -708,6 +708,7 @@ In order for it to query using the **AND**, pass the *searchJoin* parameter as s
 `http://prettus.local/users?search=age:17;email:john@gmail.com&searchJoin=and`
 
 
+**Notice**: "Laravel 5 Repositories" automatically converts snakeCase to camel_case in search params. For example, if you would have a field in database named "phone_number", it can be searched like this: ?search=phoneNumber:38169000000
 
 
 
@@ -757,7 +758,7 @@ Sorting through related tables
 
 `http://prettus.local/users?orderBy=posts|title&sortedBy=desc`
 
-Query will have something like this
+Database query will look something like this
 
 ```sql
 ...
@@ -769,7 +770,7 @@ ORDER BY title
 
 `http://prettus.local/users?orderBy=posts:custom_id|posts.title&sortedBy=desc`
 
-Query will have something like this
+Database query will look something like this
 
 ```sql
 ...
