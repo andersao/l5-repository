@@ -131,6 +131,19 @@ interface RepositoryInterface
      * @return mixed
      */
     public function findWhereNotIn($field, array $values, $columns = ['*']);
+    
+    /**
+     * Find the first data by multiple fields
+     *
+     * @param array $where
+     * @param array $columns
+     *
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
+     *
+     * @return mixed
+     *
+     */
+    public function firstWhere(array $where, $columns = ['*']);
 
     /**
      * Find data by between values in one field
