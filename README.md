@@ -91,6 +91,7 @@ php artisan vendor:publish --provider "Prettus\Repository\Providers\RepositorySe
 - first($columns = array('*'))
 - paginate($limit = null, $columns = ['*'])
 - find($id, $columns = ['*'])
+- findByUuid($uuid, $columns = ['*'])
 - findByField($field, $value, $columns = ['*'])
 - findWhere(array $where, $columns = ['*'])
 - findWhereIn($field, array $where, $columns = [*])
@@ -373,6 +374,12 @@ Loading the Model relationships
 
 ```php
 $post = $this->repository->with(['state'])->find($id);
+```
+
+Find by result by uuid
+
+```php
+$post = $this->repository->findByUuid($uuid);
 ```
 
 Find by result by field name
