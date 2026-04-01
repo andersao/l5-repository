@@ -280,7 +280,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     {
         $this->applyCriteria();
 
-        return $this->model->lists($column, $key);
+        // `lists()` was removed from Eloquent; `pluck()` is the modern equivalent.
+        return $this->model->pluck($column, $key);
     }
 
     /**
