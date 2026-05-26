@@ -2,10 +2,10 @@
 
 namespace Prettus\Repository\Tests;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 use Prettus\Repository\Traits\ComparesVersionsTrait;
 
-class ComparesVersionsTraitTest extends TestCase
+class ComparesVersionsTraitTest extends PHPUnitTestCase
 {
     private object $subject;
 

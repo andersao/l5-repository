@@ -2,10 +2,10 @@
 
 namespace Prettus\Repository\Tests;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 use Prettus\Repository\Traits\CacheableRepository;
 
-class CacheableRepositoryUnitTest extends TestCase
+class CacheableRepositoryUnitTest extends PHPUnitTestCase
 {
     public function test_get_cache_time_returns_seconds(): void
     {
