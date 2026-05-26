@@ -22,9 +22,20 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           coverage: none
+      - name: Validate composer.json
+        run: composer validate --strict
+      - name: Map Laravel to Testbench version
+        id: testbench
+        run: |
+          case "${{ matrix.laravel }}" in
+            "11.*") echo "version=^9.0" >> "$GITHUB_OUTPUT" ;;
+            "12.*") echo "version=^10.0" >> "$GITHUB_OUTPUT" ;;
+            "13.*") echo "version=^11.0" >> "$GITHUB_OUTPUT" ;;
+          esac
       - name: Install dependencies
         run: |
           composer require "illuminate/support:${{ matrix.laravel }}" --no-update --no-interaction
+          composer require "orchestra/testbench:${{ steps.testbench.outputs.version }}" --no-update --no-interaction --dev
           composer update --prefer-dist --no-interaction --no-progress
       - name: Run tests
         run: vendor/bin/phpunit
