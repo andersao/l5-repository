@@ -49,9 +49,8 @@
   },
   "repositories": [
     {
-      "type": "path",
-      "url": "../laravel-validator-fork",
-      "options": { "symlink": false }
+      "type": "vcs",
+      "url": "https://github.com/navneetkumar-pim-webkul/laravel-validator"
     }
   ],
   "autoload": {

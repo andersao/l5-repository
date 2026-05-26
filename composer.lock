@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "61cae49cabc6e800c789d789c6c20b2f",
+    "content-hash": "173b19d013a673dadb272de48de92712",
     "packages": [
         {
             "name": "brick/math",
@@ -2488,10 +2488,16 @@
         {
             "name": "prettus/laravel-validation",
             "version": "dev-laravel-13-support",
-            "dist": {
-                "type": "path",
-                "url": "../laravel-validator-fork",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/navneetkumar-pim-webkul/laravel-validator.git",
                 "reference": "d9d99cccce193952d1e0daf11c7281cfca9cc53a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/navneetkumar-pim-webkul/laravel-validator/zipball/d9d99cccce193952d1e0daf11c7281cfca9cc53a",
+                "reference": "d9d99cccce193952d1e0daf11c7281cfca9cc53a",
+                "shasum": ""
             },
             "require": {
                 "illuminate/support": "~5.4|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
@@ -2526,10 +2532,7 @@
                 "source": "https://github.com/andersao/laravel-validation",
                 "docs": "http://andersao.github.io/laravel-validation"
             },
-            "transport-options": {
-                "symlink": false,
-                "relative": true
-            }
+            "time": "2026-05-26T09:23:19+00:00"
         },
         {
             "name": "psr/clock",
