@@ -1326,3 +1326,9 @@ $this->repository->skipPresenter();
 
 $posts = $this->repository->all();
 ```
+
+## Laravel 13 Notes
+
+* Minimum PHP is now **8.2**.
+* If you use the cacheable repository trait, whitelist your criterion classes in `config/cache.php` `serializable_classes` — L13 disables generic deserialization by default.
+* The supported Laravel matrix is now **8 / 9 / 10 / 11 / 12 / 13**. Laravel 5–7 are no longer supported (EOL).
