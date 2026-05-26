@@ -1329,6 +1329,38 @@ $posts = $this->repository->all();
 
 ## Laravel 13 Notes
 
-* Minimum PHP is now **8.2**.
-* If you use the cacheable repository trait, whitelist your criterion classes in `config/cache.php` `serializable_classes` — L13 disables generic deserialization by default.
-* The supported Laravel matrix is now **8 / 9 / 10 / 11 / 12 / 13**. Laravel 5–7 are no longer supported (EOL).
+Version 3.0 of this package adds Laravel 13 support and raises the minimum
+PHP and Laravel versions. See [`migration-to-3.0.md`](migration-to-3.0.md) for
+a full upgrade guide.
+
+### Requirements
+
+* **PHP 8.2** or newer
+* **Laravel 8+** (Laravel 5/6/7 are no longer supported)
+
+### `cache.serializable_classes` (important)
+
+Laravel 13 disables generic deserialization of cached payloads by default. If
+you use the `CacheableRepository` trait, whitelist every Eloquent model,
+criterion class, and pagination class that flows through your repositories in
+`config/cache.php`:
+
+```php
+'serializable_classes' => [
+    Illuminate\Support\Collection::class,
+    Illuminate\Pagination\LengthAwarePaginator::class,
+    App\Repositories\Criteria\YourCriterion::class,
+    App\Models\YourEloquentModel::class,
+],
+```
+
+Without this, cached criteria collections will silently fail to unserialize on
+cache read.
+
+### Validation
+
+Validation classes (`Prettus\Validator\LaravelValidator`,
+`Prettus\Validator\Contracts\ValidatorInterface`, etc.) are now bundled inside
+this package. The external `prettus/laravel-validation` dependency was removed.
+Existing code that references the `Prettus\Validator\*` namespace continues to
+work unchanged.
