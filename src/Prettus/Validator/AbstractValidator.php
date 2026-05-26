@@ -56,7 +56,12 @@ abstract class AbstractValidator implements ValidatorInterface
      *
      * @var MessageBag
      */
-    protected $errors = array();
+    protected $errors;
+
+    public function __construct()
+    {
+        $this->errors = new MessageBag();
+    }
 
 
     /**
@@ -223,9 +228,9 @@ abstract class AbstractValidator implements ValidatorInterface
 
             foreach ($rules as $ruleIdx => $rule) {
                 // get name and parameters
-                @list($name, $params) = array_pad(explode(":", $rule), 2, null);
+                [$name, $params] = array_pad(explode(":", $rule), 2, null);
 
-                // only do someting for the unique rule
+                // only do something for the unique rule
                 if (strtolower($name) != "unique") {
                     continue; // continue in foreach loop, nothing left to do here
                 }

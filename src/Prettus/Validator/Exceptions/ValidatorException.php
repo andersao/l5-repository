@@ -21,6 +21,7 @@ class ValidatorException extends \Exception implements Jsonable, Arrayable
      */
     public function __construct(MessageBag $messageBag)
     {
+        parent::__construct('Validation failed.');
         $this->messageBag = $messageBag;
     }
 
@@ -40,8 +41,8 @@ class ValidatorException extends \Exception implements Jsonable, Arrayable
     public function toArray()
     {
         return [
-            'error'=>'validation_exception',
-            'error_description'=>$this->getMessageBag()
+            'error'             => 'validation_exception',
+            'error_description' => $this->getMessageBag()->toArray(),
         ];
     }
 

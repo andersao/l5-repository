@@ -1354,8 +1354,12 @@ criterion class, and pagination class that flows through your repositories in
 ],
 ```
 
-Without this, cached criteria collections will silently fail to unserialize on
-cache read.
+Without this, `unserialize()` will reject the cached payload and return
+`__PHP_Incomplete_Class` instances in place of your models and criteria —
+subsequent method calls on those instances will throw
+`Error: Cannot access property on incomplete class object`. Repository methods
+that read from cache will then fail at the call site, not at cache-read time,
+making the symptom easy to misdiagnose.
 
 ### Validation
 
