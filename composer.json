@@ -37,6 +37,16 @@
     "illuminate/validation": "^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
     "prettus/laravel-validation": "~1.4|~1.5|~1.6|~1.7|~1.8|dev-laravel-13-support as 1.8.0"
   },
+  "require-dev": {
+    "phpunit/phpunit": "^11.0|^12.0",
+    "orchestra/testbench": "^9.0|^10.0|^11.0",
+    "mockery/mockery": "^1.6"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Prettus\\Repository\\Tests\\": "tests/"
+    }
+  },
   "repositories": [
     {
       "type": "path",
