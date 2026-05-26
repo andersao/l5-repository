@@ -188,10 +188,10 @@ trait CacheableRepository
     }
 
     /**
-     * Get cache time
-     * 
-     * Return minutes: version < 5.8
-     * Return seconds: version >= 5.8
+     * Get cache TTL in seconds.
+     *
+     * Laravel 5.8+ standardized cache TTL on seconds. As of this release,
+     * Laravel 8 is the minimum supported version, so we always return seconds.
      *
      * @return int
      */
@@ -199,14 +199,7 @@ trait CacheableRepository
     {
         $cacheMinutes = isset($this->cacheMinutes) ? $this->cacheMinutes : config('repository.cache.minutes', 30);
 
-        /**
-         * https://laravel.com/docs/5.8/upgrade#cache-ttl-in-seconds
-         */
-        if ($this->versionCompare($this->app->version(), "5.7.*", ">")) {
-            return $cacheMinutes * 60;
-        }
-
-        return $cacheMinutes;
+        return $cacheMinutes * 60;
     }
 
     /**
