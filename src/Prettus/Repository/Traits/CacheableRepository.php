@@ -72,7 +72,7 @@ trait CacheableRepository
         $request = app('Illuminate\Http\Request');
         $skipCacheParam = config('repository.cache.params.skipCache', 'skipCache');
 
-        if ($request->has($skipCacheParam) && $request->get($skipCacheParam)) {
+        if ($request->has($skipCacheParam) && $request->query->get($skipCacheParam)) {
             $skipped = true;
         }
 
