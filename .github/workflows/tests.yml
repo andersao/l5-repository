@@ -1,0 +1,52 @@
+name: tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2', '8.3', '8.4']
+        laravel: ['11.*', '12.*', '13.*']
+        exclude:
+          - php: '8.2'
+            laravel: '13.*'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+      - name: Validate composer.json
+        run: composer validate --strict
+      - name: Map Laravel to Testbench version
+        id: testbench
+        run: |
+          case "${{ matrix.laravel }}" in
+            "11.*") echo "version=^9.0" >> "$GITHUB_OUTPUT" ;;
+            "12.*") echo "version=^10.0" >> "$GITHUB_OUTPUT" ;;
+            "13.*") echo "version=^11.0" >> "$GITHUB_OUTPUT" ;;
+          esac
+      - name: Install dependencies
+        run: |
+          composer require \
+            "illuminate/http:${{ matrix.laravel }}" \
+            "illuminate/config:${{ matrix.laravel }}" \
+            "illuminate/support:${{ matrix.laravel }}" \
+            "illuminate/database:${{ matrix.laravel }}" \
+            "illuminate/pagination:${{ matrix.laravel }}" \
+            "illuminate/console:${{ matrix.laravel }}" \
+            "illuminate/filesystem:${{ matrix.laravel }}" \
+            "illuminate/validation:${{ matrix.laravel }}" \
+            "illuminate/container:${{ matrix.laravel }}" \
+            "illuminate/contracts:${{ matrix.laravel }}" \
+            --no-update --no-interaction
+          composer require "orchestra/testbench:${{ steps.testbench.outputs.version }}" --no-update --no-interaction --dev
+          composer update --prefer-dist --no-interaction --no-progress
+      - name: Run tests
+        run: vendor/bin/phpunit

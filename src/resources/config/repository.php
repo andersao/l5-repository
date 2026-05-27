@@ -42,6 +42,10 @@ return [
     | Cache Config
     |--------------------------------------------------------------------------
     |
+    | Laravel 13 hardens cache deserialization. If you enable repository
+    | caching, whitelist your criterion classes (and Illuminate\Support\Collection)
+    | in `config/cache.php` under `serializable_classes`.
+    |
     */
     'cache'      => [
         /*

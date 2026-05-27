@@ -1326,3 +1326,45 @@ $this->repository->skipPresenter();
 
 $posts = $this->repository->all();
 ```
+
+## Laravel 13 Notes
+
+Version 3.0 of this package adds Laravel 13 support and raises the minimum
+PHP and Laravel versions. See [`migration-to-3.0.md`](migration-to-3.0.md) for
+a full upgrade guide.
+
+### Requirements
+
+* **PHP 8.2** or newer
+* **Laravel 8+** (Laravel 5/6/7 are no longer supported)
+
+### `cache.serializable_classes` (important)
+
+Laravel 13 disables generic deserialization of cached payloads by default. If
+you use the `CacheableRepository` trait, whitelist every Eloquent model,
+criterion class, and pagination class that flows through your repositories in
+`config/cache.php`:
+
+```php
+'serializable_classes' => [
+    Illuminate\Support\Collection::class,
+    Illuminate\Pagination\LengthAwarePaginator::class,
+    App\Repositories\Criteria\YourCriterion::class,
+    App\Models\YourEloquentModel::class,
+],
+```
+
+Without this, `unserialize()` will reject the cached payload and return
+`__PHP_Incomplete_Class` instances in place of your models and criteria —
+subsequent method calls on those instances will throw
+`Error: Cannot access property on incomplete class object`. Repository methods
+that read from cache will then fail at the call site, not at cache-read time,
+making the symptom easy to misdiagnose.
+
+### Validation
+
+Validation classes (`Prettus\Validator\LaravelValidator`,
+`Prettus\Validator\Contracts\ValidatorInterface`, etc.) are now bundled inside
+this package. The external `prettus/laravel-validation` dependency was removed.
+Existing code that references the `Prettus\Validator\*` namespace continues to
+work unchanged.

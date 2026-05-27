@@ -135,6 +135,16 @@ trait CacheableRepository
     /**
      * Serialize the criteria making sure the Closures are taken care of.
      *
+     * Laravel 13 note: when `cache.serializable_classes` is set to its hardened
+     * default (false), cached criteria collections cannot be unserialized.
+     * Consumers using cacheable repositories must whitelist their criterion
+     * classes (and `Illuminate\Support\Collection`) in `config/cache.php`:
+     *
+     *   'serializable_classes' => [
+     *       Illuminate\Support\Collection::class,
+     *       App\Repositories\Criteria\YourCriterion::class,
+     *   ],
+     *
      * @return string
      */
     protected function serializeCriteria()
@@ -178,10 +188,10 @@ trait CacheableRepository
     }
 
     /**
-     * Get cache time
-     * 
-     * Return minutes: version < 5.8
-     * Return seconds: version >= 5.8
+     * Get cache TTL in seconds.
+     *
+     * Laravel 5.8+ standardized cache TTL on seconds. As of this release,
+     * Laravel 8 is the minimum supported version, so we always return seconds.
      *
      * @return int
      */
@@ -189,14 +199,7 @@ trait CacheableRepository
     {
         $cacheMinutes = isset($this->cacheMinutes) ? $this->cacheMinutes : config('repository.cache.minutes', 30);
 
-        /**
-         * https://laravel.com/docs/5.8/upgrade#cache-ttl-in-seconds
-         */
-        if ($this->versionCompare($this->app->version(), "5.7.*", ">")) {
-            return $cacheMinutes * 60;
-        }
-
-        return $cacheMinutes;
+        return $cacheMinutes * 60;
     }
 
     /**
