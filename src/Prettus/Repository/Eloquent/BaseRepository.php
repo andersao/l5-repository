@@ -1208,7 +1208,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public static function __callStatic($method, $arguments)
     {
-        return call_user_func_array([new static(), $method], $arguments);
+        return call_user_func_array([app(static::class), $method], $arguments);
     }
 
     /**
